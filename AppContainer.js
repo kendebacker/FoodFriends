@@ -16,6 +16,8 @@ import {rootReducer} from "./Reducer"
 import { Ionicons } from '@expo/vector-icons'; 
 
 
+
+
 function FeedTabs(){
     const Stack = createNativeStackNavigator()
 
