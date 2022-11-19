@@ -60,4 +60,7 @@ const rootReducer =(state=initialState, action)=>{
     }
 }
 
+
+
+
 export {rootReducer, LOAD_PROFILE, LOAD_POST, UPDATE_PROFILE, UPDATE_POST, ADD_PROFILE, ADD_POST, DELETE_PROFILE, DELETE_POST, UPDATE_SORT}
