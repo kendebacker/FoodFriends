@@ -9,8 +9,8 @@ const LOAD_PROFILE = "LOAD_POST"
 const UPDATE_SORT = "UPDATE_SORT"
 
 
-const initialPosts = [{image: "hockey", description: " ", rating:" ", location: " ",likes:0, key: 1, poster: 1, reposts:[], date: ""}]
-const intitialProfiles = [{username: "", password: "",image:"", reposts: [], posts: [], saved: [], friends:[]}]
+const initialPosts = [{image: "dummyImage.png", description: "Not very good", rating:1, location: "Somewhere...",likes:0, key: 1, poster: 1, reposts:[2], date: Date.now().toLocaleDateString()}]
+const intitialProfiles = [{username: "ken", password: "",image:"", reposts: [], posts: [], saved: [], friends:[]}]
 
 
 const initialState = {
