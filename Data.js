@@ -7,13 +7,16 @@ import { firebaseConfig } from "./Secrets"
 
 let app, db = undefined
 
-const [profile, POST] = ["profiles", "Posts"]
+const [profile, post] = ["profiles", "Posts"]
 
 if(getApps().length < 1){
     app = initializeApp(firebaseConfig)
 }
 
 db = getFirestore(app)
+
+const initialPosts = [{image: "dummyImage.png", description: "Not very good", rating:1, location: "Somewhere...",likes:0, key: 1, poster: 1, reposts:[2], date: new Date().toLocaleDateString()}]
+const intitialProfiles = [{username: "ken", password: "mypassword",image:"profilePic.png", reposts: [1], posts: [1,2], saved: [3], friends:[1,1]}]
 
 
 const addProfileAndDispatch = async (action, dispatch) =>{
@@ -22,7 +25,6 @@ const addProfileAndDispatch = async (action, dispatch) =>{
     const coll = collection(db, profile)
     await addDoc(coll, {
         username: username,
-        password: password,
         image: image,
         reposts: reposts, 
         posts: posts,
@@ -39,7 +41,6 @@ const updateProfileAndDispatch = async (action, dispatch) =>{
     const toUpdate = doc(collection(db, profile),key)
     const newVersion= {
         username: username,
-        password: password,
         image: image,
         reposts: reposts, 
         posts: posts,
@@ -70,7 +71,7 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
 const addPostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
     const {image, description, rating, location, likes, poster, reposts, date, key}= payload
-    const coll = collection(db, POST)
+    const coll = collection(db, post)
     await addDoc(coll, {
         image: image,
         description: description,
@@ -88,7 +89,7 @@ const addPostAndDispatch = async (action, dispatch) =>{
 const updatePostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
     const {image, description, rating, location, likes, poster, reposts, date, key}= payload
-    const toUpdate = doc(collection(db, POST),key)
+    const toUpdate = doc(collection(db, post),key)
     const newVersion= {
         image: image,
         description: description,
@@ -114,13 +115,13 @@ const deleteProfileAndDispatch = async (action, dispatch) =>{
 const deletePostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
     const {key}= payload
-    const toDelete = doc(collection(db, POST),key)
+    const toDelete = doc(collection(db, post),key)
     await deleteDoc(toDelete)
     loadPostAndDispatch(action, dispatch)
 }
 
 const loadPostAndDispatch = async (action, dispatch) =>{
-    const query = await getDocs(collection(db, POST))
+    const query = await getDocs(collection(db, post))
     let newItems = []
     query.forEach(el =>{
         let newItem = el.data()
