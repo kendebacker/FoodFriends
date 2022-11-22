@@ -8,22 +8,19 @@ import {  Button} from "@rneui/themed";
 export default function FeedScreen(){
 
 
-    const [username, setUsername] = useState("")
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [checkPassword, setCheckPassword] = useState("")
-
-
-    const submit = async()=>{
-        if(password===checkPassword){
-            try{
-                const userInfo = await createUserWithEmailAndPassword(auth,email, password)
-                await updateProfile(userInfo.user, {displayName: username} )
-            }catch(error){
-                Alert.alert("error occured")
-            }
+    const updatePost = (post, key)=>{
+        const action = {
+            type: UPDATE_POST,
+            chosenGroup: chosenGroup,
+            name: name,
+            order: order,
+            payload: {...post, likes: post.likes+1}
         }
+        SaveAndDispatch(action, dispatch)
     }
+
+
+
 
     return(
         <View>
@@ -33,18 +30,37 @@ export default function FeedScreen(){
                     <TextInput style={styles.input} onChange={(text)=>{setUsername(text)}} value={username}/>
                 </View>
                 <View style={styles.inputRow}>
-                    <Text style = {styles.label}>Email</Text>
-                    <TextInput style={styles.input} onChange={(text)=>{setEmail(text)}} value={email}/>
+                    <FlatList 
+                    style={styles.contactStuff}
+                    data={posts}
+                    renderItem={({item})=>{
+                    return(
+                        <View>
+                            <View>
+                                <Text>{item.poster}</Text>
+                                <Text>{item.date}</Text>
+                            </View>
+                            <View>
+                                <Img src={item.imgSRC}/>
+                            </View>
+                            <View>
+                                <TouchableOpacity onPress={()=>{
+                                    navigation.navigate("PostScreen",{
+                                        post: item
+                                    })
+                                }}>
+                                    <Text>Details</Text>
+                                </TouchableOpacity>
+                                <View>
+                                    <Text>{item.likes}</Text>
+                                </View>
+                                <TouchableOpacity onPress={()=>{likePost(item.key)}}>
+                                    <Text>Thumb Icon</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    )}}/>
                 </View>
-                <View style={styles.inputRow}>
-                    <Text style = {styles.label}>Password</Text>
-                    <TextInput style={styles.input} onChange={(text)=>{setPassword(text)}} value={password}/>
-                </View>
-                <View style={styles.inputRow}>
-                    <Text style = {styles.label}>Confirm Password</Text>
-                    <TextInput style={styles.input} onChange={(text)=>{setCheckPassword(text)}} value={checkPassword}/>
-                </View>
-                <Button/>
             </View>
 
         </View>
