@@ -8,7 +8,7 @@ import LoginScreen from "./screens/MakeAccountScreen.js"
 import MakeAccountScreen from "./screens/MakeAccountScreen"
 import FeedScreen from "./screens/FeedScreen"
 import PostScreen from "./screens/PostScreen"
-import FriendsSreen from "./screens/FriendsSreen"
+import FriendsScreen from "./screens/FriendsScreen"
 import RecipeListScreen from "./screens/RecipeListScreen"
 
 import { FontAwesome } from '@expo/vector-icons';
@@ -63,7 +63,7 @@ function KensApp(){
                             )
                         }
                     }}/>
-                    <Tabs.Screen name="Friends" component={FriendsSreen}options={{
+                    <Tabs.Screen name="Friends" component={FriendsScreen}options={{
                         tabBarIcon:({color})=>{
                             return(
                                 <FontAwesome name="group" size={24} color={color} />  

@@ -3,7 +3,7 @@ import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWith
 import { useState } from "react"
 import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert } from "react-native";
 import {  Button} from "@rneui/themed";
-import firebaseConfig from "./Secrets"
+import {firebaseConfig} from "./Secrets"
 const apps = getApps()
 const app = apps.length===0?initializeApp(firebaseConfig):app[0]
 const auth = getAuth(app)
@@ -19,11 +19,12 @@ export default function LoginScreen(){
 
     const submit = async()=>{
         if(password===checkPassword){
-        try{
-            const userInfo = await createUserWithEmailAndPassword(auth,email, password)
-            await updateProfile(userInfo.user, {displayName: username} )
-        }catch(error){
-            Alert.alert("error occured")
+            try{
+                const userInfo = await createUserWithEmailAndPassword(auth,email, password)
+                await updateProfile(userInfo.user, {displayName: username} )
+            }catch(error){
+                Alert.alert("error occured")
+            }
         }
     }
 
@@ -31,7 +32,7 @@ export default function LoginScreen(){
         <View>
             <View style={styles.content}>
                 <View style={styles.inputRow}>
-                    <Text style = {styles.label}>Username</Text>
+                    <Text style = {styles.label}>Usernamehhgjhg</Text>
                     <TextInput style={styles.input} onChange={(text)=>{setUsername(text)}} value={username}/>
                 </View>
                 <View style={styles.inputRow}>
@@ -52,4 +53,20 @@ export default function LoginScreen(){
         </View>
     )
 
+}
+
+const styles = {
+    inputRow:{
+        width: "100%",
+        flexDirection: "row"
+    },
+    label:{
+        alignText:"center"
+    },
+    input:{
+        alignText:"center"
+    },
+    content:{
+        flexDirection: "column"
+    }
 }
