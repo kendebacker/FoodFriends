@@ -3,23 +3,25 @@ import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWith
 import { useState } from "react"
 import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert } from "react-native";
 import {  Button} from "@rneui/themed";
+import { UPDATE_POST } from "../Reducer";
 
 
 export default function FeedScreen(){
 
+    const {navigation, route} = props
+    const dispatch = useDispatch()
+    const posts = useSelector(state => state.posts)
+    const profile = useSelector(state => state.profile)
 
-    const updatePost = (post, key)=>{
+  
+
+    const updatePost = (post)=>{
         const action = {
             type: UPDATE_POST,
-            chosenGroup: chosenGroup,
-            name: name,
-            order: order,
             payload: {...post, likes: post.likes+1}
         }
         SaveAndDispatch(action, dispatch)
     }
-
-
 
 
     return(
@@ -54,7 +56,7 @@ export default function FeedScreen(){
                                 <View>
                                     <Text>{item.likes}</Text>
                                 </View>
-                                <TouchableOpacity onPress={()=>{likePost(item.key)}}>
+                                <TouchableOpacity onPress={()=>{updatePost(item)}}>
                                     <Text>Thumb Icon</Text>
                                 </TouchableOpacity>
                             </View>
@@ -64,9 +66,7 @@ export default function FeedScreen(){
             </View>
 
         </View>
-    )
-
-}
+    )}
 
 const styles = {
     inputRow:{
