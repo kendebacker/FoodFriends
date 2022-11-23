@@ -14,11 +14,9 @@ if (apps.length == 0) {
   }
 const auth = getAuth(app)
 
-export default function MakeAccountScreen(){
 
+const CreateAccountBox=()=>{
 
-
-    const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [checkPassword, setCheckPassword] = useState("")
@@ -26,10 +24,6 @@ export default function MakeAccountScreen(){
     return(
         <View>
             <View style={styles.content}>
-                <View style={styles.inputRow}>
-                    <Text style = {styles.label}>Username</Text>
-                    <TextInput style={styles.input} onChangeText={(text)=>{setUsername(text)}} value={username}/>
-                </View>
                 <View style={styles.inputRow}>
                     <Text style = {styles.label}>Email</Text>
                     <TextInput  style={styles.input} onChangeText={(text)=>{setEmail(text)}} value={email}/>
@@ -45,19 +39,83 @@ export default function MakeAccountScreen(){
                 <Button style={styles.button} title={"submit"} onPress={ async ()=>{
                  if(password===checkPassword && password !==""  && email !==""){
                     try{
-                        console.log(email, password)
-                        const userInfo = await createUserWithEmailAndPassword(auth,email, password)
-                        await updateProfile(userInfo.user, {displayName: username} )
+                        const userInfo = await signInWithEmailAndPassword(auth,email, password)
+                        console.log(userInfo.user)
+                        navigation.navigate("FeedScreen",{
+                            new: true, 
+                            user: userInfo.user
+                        })
                     }catch(error){
                         Alert.alert("error occured")
-                    }
-                }
+                    }}
                 }}/>
             </View>
 
         </View>
     )
 }
+
+const LoginBox=()=>{
+
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+
+    return(
+        <View>
+            <View style={styles.content}>
+                <View style={styles.inputRow}>
+                    <Text style = {styles.label}>Email</Text>
+                    <TextInput  style={styles.input} onChangeText={(text)=>{setEmail(text)}} value={email}/>
+                </View>
+                <View style={styles.inputRow}>
+                    <Text style = {styles.label}>Password</Text>
+                    <TextInput style={styles.input} onChangeText={(text)=>{setPassword(text)}} value={password}/>
+                </View>
+                <Button style={styles.button} title={"submit"} onPress={ async ()=>{
+                 if(password===checkPassword && password !==""  && email !==""){
+                    try{
+                        const userInfo = await createUserWithEmailAndPassword(auth,email, password)
+                        console.log(userInfo.user)
+                        navigation.navigate("FeedScreen",{
+                            new: false,
+                            user: userInfo.user
+                        })
+                    }catch(error){
+                        Alert.alert("error occured")
+                    }}
+                }}/>
+            </View>
+        </View>
+    )
+}
+
+export default function MakeAccountScreen(){
+
+    useEffect(()=>{ onAuthStateChanged(auth, user=>{
+        if(user){
+            navigation.navigate("FeedScreen",{
+                user: user,
+                new: false
+            })
+        }
+    })
+    },[])
+
+    const [signIn, setSignIn] = useState(true)
+
+
+    return(
+            <View style={styles.content}>
+                <View style={styles.inputRow}>
+                    {signIn?<LoginBox/>:<CreateAccountBox/>}
+                </View>
+                <View style={styles.inputRow}>
+                   <TouchableOpacity onPress={()=>{setSignIn(!signIn)}}>
+                        <Text>Switch</Text>
+                   </TouchableOpacity>
+                </View>
+            </View>
+    )}
 
 const styles = {
     inputRow:{

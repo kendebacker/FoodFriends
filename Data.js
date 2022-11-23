@@ -7,7 +7,7 @@ import { firebaseConfig } from "./Secrets"
 
 let app, db = undefined
 
-const [profile, post] = ["profiles", "Posts"]
+const [profile, post] = ["profiles", "posts"]
 
 if(getApps().length < 1){
     app = initializeApp(firebaseConfig)
@@ -21,7 +21,7 @@ const intitialProfiles = [{username: "ken", password: "mypassword",image:"profil
 
 const addProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {username, password, image, reposts, posts, saved, friends}= payload
+    const {username, image, reposts, posts, saved, friends, userID}= payload
     const coll = collection(db, profile)
     await addDoc(coll, {
         username: username,
@@ -29,7 +29,8 @@ const addProfileAndDispatch = async (action, dispatch) =>{
         reposts: reposts, 
         posts: posts,
         saved: saved,
-        friends: friends
+        friends: friends,
+        userID: userID
     })
     loadProfileAndDispatch(action, dispatch)
 }
@@ -37,15 +38,16 @@ const addProfileAndDispatch = async (action, dispatch) =>{
 
 const updateProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {username, password, image, reposts, posts, saved, friends, key}= payload
-    const toUpdate = doc(collection(db, profile),key)
+    const {username, image, reposts, posts, saved, friends, userID}= payload
+    const toUpdate = doc(collection(db, profile),userID)
     const newVersion= {
         username: username,
         image: image,
         reposts: reposts, 
         posts: posts,
         saved: saved,
-        friends: friends
+        friends: friends,
+        userID: userID
     }
     await updateDoc(toUpdate, newVersion)
     loadProfileAndDispatch(action, dispatch)
@@ -53,8 +55,9 @@ const updateProfileAndDispatch = async (action, dispatch) =>{
 
 
 const loadProfileAndDispatch = async (action, dispatch) =>{
-    const {chosenPOST, name, order} = action
-    const q = await getDocs(query(collection(db, profile), where("POSTs", "array-contains", chosenPOST), order==="asc"?orderBy(name):orderBy(name, order)))
+    const {payload} = action
+    const {userID} = payload
+    const q = await getDocs(query(collection(db, profile), where("userID", "==", userID)))
     let newItems = []
     q.forEach(el =>{
         let newItem = el.data()
@@ -70,7 +73,7 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
 
 const addPostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {image, description, rating, location, likes, poster, reposts, date, key}= payload
+    const {image, description, rating, location, likes, poster, reposts, date}= payload
     const coll = collection(db, post)
     await addDoc(coll, {
         image: image,
@@ -106,8 +109,8 @@ const updatePostAndDispatch = async (action, dispatch) =>{
 
 const deleteProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {key}= payload
-    const toDelete = doc(collection(db, profile),key)
+    const {userID}= payload
+    const toDelete = doc(collection(db, profile),userID)
     await deleteDoc(toDelete)
     loadProfileAndDispatch(action, dispatch)
 }
@@ -121,7 +124,9 @@ const deletePostAndDispatch = async (action, dispatch) =>{
 }
 
 const loadPostAndDispatch = async (action, dispatch) =>{
-    const query = await getDocs(collection(db, post))
+    const {payload} = action
+    const {friends}= payload
+    const query = await getDocs(collection(db, post), where("key", "in", friends))
     let newItems = []
     query.forEach(el =>{
         let newItem = el.data()

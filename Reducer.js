@@ -10,14 +10,14 @@ const UPDATE_SORT = "UPDATE_SORT"
 
 
 const initialPosts = [{image: "dummyImage.png", description: "Not very good", rating:1, location: "Somewhere...",likes:0, key: 1, poster: 1, reposts:[2], date: new Date().toLocaleDateString()}]
-const intitialProfiles = [{username: "ken", password: "mypassword",image:"profilePic.png", reposts: [1], posts: [1,2], saved: [3], friends:[1,1]}]
+const intitialProfile = [{username: "ken", password: "mypassword",image:"profilePic.png", reposts: [1], posts: [1,2], saved: [3], friends:[1,1]}]
 
 
 
 
 const initialState = {
-    PROFILEs: intitialProfiles,
-    POSTS: initialPosts,
+    profile: intitialProfile,
+    posts: initialPosts,
   }
 
 
