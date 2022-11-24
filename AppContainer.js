@@ -22,11 +22,10 @@ function FeedTabs(){
     const Stack = createNativeStackNavigator()
 
     return(
-        <Stack.Navigator initialRouteName="Login" screenOptions={{headerShown: false}}>
-            <Stack.Screen name="Login" component={LoginScreen}/>
+        <Stack.Navigator initialRouteName="MakeAccount" screenOptions={{headerShown: false}}>
             <Stack.Screen name="MakeAccount" component={MakeAccountScreen}/>
-            <Stack.Screen name="Feed" component={FeedScreen}/>
-            <Stack.Screen name="Post" component={PostScreen}/>
+            <Stack.Screen name="FeedScreen" component={FeedScreen}/>
+            <Stack.Screen name="PostScreen" component={PostScreen}/>
         </Stack.Navigator>
     )
 }

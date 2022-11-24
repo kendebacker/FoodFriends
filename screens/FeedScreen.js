@@ -1,19 +1,25 @@
 import {getApps, initializeApp} from "firebase/app"
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { useState } from "react"
-import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert } from "react-native";
+import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image } from "react-native";
 import {  Button} from "@rneui/themed";
-import { UPDATE_POST } from "../Reducer";
+import { UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
+import { useDispatch, useSelector } from "react-redux";
+import { SaveAndDispatch } from "../Data";
 
 
-export default function FeedScreen(){
+export default function FeedScreen(props){
 
     const {navigation, route} = props
+    const userID = route.params.user
+    
     const dispatch = useDispatch()
     const posts = useSelector(state => state.posts)
     const profile = useSelector(state => state.profile)
 
-  
+    const [showOverlay, setShowOverlay] = useState(profile.username==="")
+    const [username, setUsername] = useState(profile.username)
+    const [image, setImage] = useState(profile.image)
 
     const updatePost = (post)=>{
         const action = {
@@ -23,13 +29,28 @@ export default function FeedScreen(){
         SaveAndDispatch(action, dispatch)
     }
 
+    const updateProfile = (username, image, reposts, posts, saved, friends, userID)=>{
+        const action = {
+            type: UPDATE_PROFILE,
+            payload: {
+                username: username,
+                image: image,
+                reposts: reposts, 
+                posts: posts,
+                saved: saved,
+                friends: friends,
+                userID: userID
+            }
+        }
+        SaveAndDispatch(action, dispatch)
+    }
+
 
     return(
         <View>
             <View style={styles.content}>
                 <View style={styles.inputRow}>
-                    <Text style = {styles.label}>Username</Text>
-                    <TextInput style={styles.input} onChange={(text)=>{setUsername(text)}} value={username}/>
+                    <Text style = {styles.label}>{posts.length ===0?"No Posts to See":"Recent Posts"}</Text>
                 </View>
                 <View style={styles.inputRow}>
                     <FlatList 
@@ -43,7 +64,7 @@ export default function FeedScreen(){
                                 <Text>{item.date}</Text>
                             </View>
                             <View>
-                                <Img src={item.imgSRC}/>
+                                <Image src={item.imgSRC}/>
                             </View>
                             <View>
                                 <TouchableOpacity onPress={()=>{
@@ -64,6 +85,37 @@ export default function FeedScreen(){
                     )}}/>
                 </View>
             </View>
+            <Overlay
+                overlayStyle={styles.overlay}
+                isVisible={showOverlay}
+                onBackdropPress={()=>setShowOverlay(false)}>
+                <Text>Profile Details</Text>
+                <Input
+                placeholder="username"
+                value={username}
+                onChangeText={(text)=>setUsername(text)}/>
+                <Input
+                placeholder="image"
+                value={image}
+                onChangeText={(text)=>setImage(text)}/>
+                <View style={styles.buttonRow}>
+                    <Button
+                    title={"Cancel"}
+                    onPress={()=>{
+                        setUsername(profile.username)
+                        setImage(profile.image)
+                        setShowOverlay(false)
+                    }}/>
+
+                    <Button
+                    title={"Save"}
+                    onPress={()=>{
+                        updateProfile(username, image, profile.reposts, profile.posts, profile.saved, profile.friends, profile.userID)
+                        setShowOverlay(false)
+                    }}
+                    />
+                </View>
+            </Overlay>
 
         </View>
     )}

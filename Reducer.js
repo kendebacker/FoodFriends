@@ -16,7 +16,7 @@ const intitialProfile = [{username: "ken", password: "mypassword",image:"profile
 
 
 const initialState = {
-    profile: intitialProfile,
+    profile: intitialProfile[0],
     posts: initialPosts,
   }
 
@@ -39,7 +39,7 @@ const loadPost = (state, newPosts) =>{
 const loadProfile = (state, newProfiles) =>{
     return {
     ...state,
-    profiles: newProfiles,
+    profile: newProfiles[0],
 }}
 
 

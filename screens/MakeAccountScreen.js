@@ -4,6 +4,12 @@ import { useState , useEffect} from "react"
 import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert } from "react-native";
 import {  Button} from "@rneui/themed";
 import {firebaseConfig} from "../Secrets"
+import { ADD_PROFILE, LOAD_PROFILE, LOAD_POST } from "../Reducer";
+import { SaveAndDispatch } from "../Data";
+
+
+
+
 
 let app
 const apps = getApps()
@@ -15,11 +21,28 @@ if (apps.length == 0) {
 const auth = getAuth(app)
 
 
-const CreateAccountBox=()=>{
+const CreateAccountBox=({navigation})=>{
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [checkPassword, setCheckPassword] = useState("")
+
+    const addProfile = (username, image, reposts, posts, saved, friends, userID)=>{
+        const action = {
+            type: ADD_PROFILE,
+            payload: {
+                username: username,
+                image: image,
+                reposts: reposts, 
+                posts: posts,
+                saved: saved,
+                friends: friends,
+                userID: userID
+            }
+        }
+        SaveAndDispatch(action, dispatch)
+    }
+
 
     return(
         <View>
@@ -38,14 +61,13 @@ const CreateAccountBox=()=>{
                 </View>
                 <Button style={styles.button} title={"submit"} onPress={ async ()=>{
                  if(password===checkPassword && password !==""  && email !==""){
+                    console.log(email, password)
                     try{
-                        const userInfo = await signInWithEmailAndPassword(auth,email, password)
-                        console.log(userInfo.user)
-                        navigation.navigate("FeedScreen",{
-                            new: true, 
-                            user: userInfo.user
-                        })
+                        const userInfo = await createUserWithEmailAndPassword(auth,email, password)
+                        addProfile("", "", "", "", "", "", userInfo.user)
+                        navigation.navigate("FeedScreen")
                     }catch(error){
+                        console.log(error)
                         Alert.alert("error occured")
                     }}
                 }}/>
@@ -55,7 +77,7 @@ const CreateAccountBox=()=>{
     )
 }
 
-const LoginBox=()=>{
+const LoginBox=({navigation})=>{
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -74,12 +96,10 @@ const LoginBox=()=>{
                 <Button style={styles.button} title={"submit"} onPress={ async ()=>{
                  if(password===checkPassword && password !==""  && email !==""){
                     try{
-                        const userInfo = await createUserWithEmailAndPassword(auth,email, password)
-                        console.log(userInfo.user)
-                        navigation.navigate("FeedScreen",{
-                            new: false,
-                            user: userInfo.user
-                        })
+                        const userInfo = await signInWithEmailAndPassword(auth,email, password)
+                        const loadProfile = {type: LOAD_PROFILE , userID:userInfo.user}
+                        SaveAndDispatch(loadProfile, dispatch)
+                        navigation.navigate("FeedScreen")
                     }catch(error){
                         Alert.alert("error occured")
                     }}
@@ -89,14 +109,17 @@ const LoginBox=()=>{
     )
 }
 
-export default function MakeAccountScreen(){
+export default function MakeAccountScreen(props){
+
+
+    const {navigation, route} = props
+
 
     useEffect(()=>{ onAuthStateChanged(auth, user=>{
         if(user){
-            navigation.navigate("FeedScreen",{
-                user: user,
-                new: false
-            })
+            const loadProfile = {type: LOAD_PROFILE , userID:user}
+            SaveAndDispatch(loadProfile, dispatch)
+            navigation.navigate("FeedScreen")
         }
     })
     },[])
@@ -106,8 +129,9 @@ export default function MakeAccountScreen(){
 
     return(
             <View style={styles.content}>
+                <Text>{signIn?"Login":"Sign Up"}</Text>
                 <View style={styles.inputRow}>
-                    {signIn?<LoginBox/>:<CreateAccountBox/>}
+                    {signIn?<LoginBox navigation ={navigation}/>:<CreateAccountBox navigation ={navigation}/>}
                 </View>
                 <View style={styles.inputRow}>
                    <TouchableOpacity onPress={()=>{setSignIn(!signIn)}}>
@@ -121,11 +145,12 @@ const styles = {
     inputRow:{
         width: "100%",
         flexDirection: "row",
-        justifyContent: "left"
+        justifyContent: "center",
+        padding: 10
     },
     label:{
         alignText:"center",
-        width: "50%"
+        width: "40%"
     },
     input:{
         alignText:"center",
@@ -134,7 +159,9 @@ const styles = {
     },
     content:{
         flexDirection: "column",
-        paddingTop: 100
+        paddingTop: 100,
+        justifyContent: "center",
+        alignItems: "center"
     },
     button:{
         width: "50%"
