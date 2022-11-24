@@ -15,16 +15,17 @@ if(getApps().length < 1){
 
 db = getFirestore(app)
 
-const initialPosts = [{image: "dummyImage.png", description: "Not very good", rating:1, location: "Somewhere...",likes:0, key: 1, poster: 1, reposts:[2], date: new Date().toLocaleDateString()}]
-const intitialProfiles = [{username: "ken", password: "mypassword",image:"profilePic.png", reposts: [1], posts: [1,2], saved: [3], friends:[1,1]}]
+const initialPosts = [{firstName:"", lastName: "", image: "dummyImage.png", description: "Not very good", rating:1, location: "Somewhere...",likes:0, key: 1, poster: 1, reposts:[2], date: new Date().toLocaleDateString()}]
+const intitialProfiles = [{lastName:"",firstName: "ken",image:"profilePic.png", reposts: [1], posts: [1,2], saved: [3], friends:[1,1], userID:""}]
 
 
 const addProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {username, image, reposts, posts, saved, friends, userID}= payload
+    const {firstName, lastName, image, reposts, posts, saved, friends, userID}= payload
     const coll = collection(db, profile)
     await addDoc(coll, {
-        username: username,
+        firstName: firstName,
+        lastName, lastName,
         image: image,
         reposts: reposts, 
         posts: posts,
@@ -38,10 +39,11 @@ const addProfileAndDispatch = async (action, dispatch) =>{
 
 const updateProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {username, image, reposts, posts, saved, friends, userID}= payload
+    const {firstName, lastName, image, reposts, posts, saved, friends, userID}= payload
     const toUpdate = doc(collection(db, profile),userID)
     const newVersion= {
-        username: username,
+        firstName: firstName,
+        lastName, lastName,
         image: image,
         reposts: reposts, 
         posts: posts,
@@ -58,12 +60,7 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
     const {userID} = payload
     const q = await getDocs(query(collection(db, profile), where("userID", "==", userID)))
-    let newItems = []
-    q.forEach(el =>{
-        let newItem = el.data()
-        newItem.key = el.id
-        newItems = [...newItems, newItem]
-    })
+    const newItems = q.map(el => el.data())
     let posts = []
     if(newItems[0].friends.length > 0){
         const q1 = await getDocs(query(collection(db, post), where("author", "in", newItems[0].friends)))
@@ -83,9 +80,11 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
 
 const addPostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {image, description, rating, location, likes, poster, reposts, date}= payload
+    const {firstName, lastName,image, description, rating, location, likes, poster, reposts, date}= payload
     const coll = collection(db, post)
     await addDoc(coll, {
+        firstName: firstName,
+        lastName, lastName,
         image: image,
         description: description,
         rating: rating, 
@@ -101,9 +100,11 @@ const addPostAndDispatch = async (action, dispatch) =>{
 
 const updatePostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {image, description, rating, location, likes, poster, reposts, date, key}= payload
+    const {firstName, lastName,image, description, rating, location, likes, poster, reposts, date, key}= payload
     const toUpdate = doc(collection(db, post),key)
     const newVersion= {
+        firstName: firstName,
+        lastName, lastName,
         image: image,
         description: description,
         rating: rating, 

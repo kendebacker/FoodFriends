@@ -36,6 +36,8 @@ const CreateAccountBox=({navigation})=>{
             type: ADD_PROFILE,
             payload: {
                 username: "",
+                firstName:"",
+                lastName:"",
                 image: "",
                 reposts: [], 
                 posts: [],

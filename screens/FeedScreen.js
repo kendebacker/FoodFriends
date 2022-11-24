@@ -18,10 +18,16 @@ export default function FeedScreen(props){
     const state = useSelector(state => state)
     console.log(state)
 
-
+    const [makePostOverlay, setMakePostOverlay] = useState(false)
     const [showOverlay, setShowOverlay] = useState(profile.username==="")
     const [username, setUsername] = useState(profile.username)
     const [image, setImage] = useState(profile.image)
+    const [title, setTitle] = useState("")
+    const [description, setDescription] = useState("")
+    const [foodImage, setFoodImage] = useState("")
+    const [location, setLocation] = useState("")
+    const [rating, setRating] = useState(1)
+
 
 
     const refresh=()=>[
@@ -55,6 +61,41 @@ export default function FeedScreen(props){
 
     return(
         <View>
+            <Overlay
+                overlayStyle={styles.overlay}
+                isVisible={makePostOverlay}
+                onBackdropPress={()=>setMakePostOverlay(false)}>
+                <Text>Post</Text>
+                <Text>Title</Text>
+                <TextInput
+                placeholder="title"
+                value={title}
+                onChangeText={(text)=>setTitle(text)}/>
+
+                <Text>Description</Text>
+                <TextInput
+                placeholder="description"
+                value={description}
+                onChangeText={(text)=>setDescription(text)}/>
+                <View style={styles.buttonRow}>
+                    <Button
+                    title={"Cancel"}
+                    onPress={()=>{
+                        setUsername(profile.username)
+                        setImage(profile.image)
+                        setShowOverlay(false)
+                    }}/>
+
+                    <Button
+                    title={"Post"}
+                    onPress={()=>{
+                        updateProfile(username, image, profile.reposts, profile.posts, profile.saved, profile.friends, profile.userID)
+                        setShowOverlay(false)
+                    }}
+                    />
+                </View>
+            </Overlay>
+
             <View style={styles.content}>
                 <View style={styles.inputRow}>
                     <Text style = {styles.label}>{posts.length ===0?"No Posts to See":"Recent Posts"}</Text>
@@ -62,6 +103,10 @@ export default function FeedScreen(props){
                         const loadGroup = {type: LOAD_POST}
                         SaveAndDispatch(loadGroup, dispatch)
                         }}/>
+                    <Button title={"Refresh"} onPress={()=>{      
+                        const loadGroup = {type: LOAD_POST}
+                        SaveAndDispatch(loadGroup, dispatch)
+                    }}/>
                 </View>
                 <View style={styles.inputRow}>
                     <FlatList 

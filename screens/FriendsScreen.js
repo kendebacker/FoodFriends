@@ -1,62 +1,122 @@
-
-
-
-
-
-
 import {getApps, initializeApp} from "firebase/app"
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy } from "firebase/firestore"
 import { useState } from "react"
-import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert } from "react-native";
-import {  Button} from "@rneui/themed";
+import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image } from "react-native";
+import { Overlay , Input, Button} from "@rneui/themed";
+import { LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
+import { useDispatch, useSelector } from "react-redux";
+import { SaveAndDispatch } from "../Data";
 
 
-export default function FriendsScreen(){
+export default function FriendsScreen(props){
 
+    const {navigation, route} = props
+    
+    const dispatch = useDispatch()
+    const posts = useSelector(state => state.posts)
+    const profile = useSelector(state => state.profile)
+    const state = useSelector(state => state)
+    console.log(state)
 
-    const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [checkPassword, setCheckPassword] = useState("")
+    const [showOverlay, setShowOverlay] = useState(false)
 
 
-    const submit = async()=>{
-        if(password===checkPassword){
-            try{
-                const userInfo = await createUserWithEmailAndPassword(auth,email, password)
-                await updateProfile(userInfo.user, {displayName: username} )
-            }catch(error){
-                Alert.alert("error occured")
+
+    const updatePost = (post)=>{
+        const action = {
+            type: UPDATE_POST,
+            payload: {...post, likes: post.likes+1}
+        }
+        SaveAndDispatch(action, dispatch)
+    }
+
+    const updateProfile = (firstName, lastName, image, reposts, posts, saved, friends, userID)=>{
+        const action = {
+            type: UPDATE_PROFILE,
+            payload: {
+                firstName: firstName,
+                lastName: lastName,
+                image: image,
+                reposts: reposts, 
+                posts: posts,
+                saved: saved,
+                friends: friends,
+                userID: userID
             }
         }
+        SaveAndDispatch(action, dispatch)
     }
+
 
     return(
         <View>
+            <Overlay
+                overlayStyle={styles.overlay}
+                isVisible={showOverlay}
+                onBackdropPress={()=>setMakePostOverlay(false)}>
+                <Text>Search Email</Text>
+                <TextInput
+                placeholder="title"
+                value={email}
+                onChangeText={(text)=>setEmail(text)}/>
+
+                <View style={styles.buttonRow}>
+                    <Button
+                    title={"Cancel"}
+                    onPress={()=>{
+                        setEmail("")
+                        setShowOverlay(false)
+                    }}/>
+
+                    <Button
+                    title={"Post"}
+                    onPress={async ()=>{
+                        const q = await getDocs(query(collection(db, profile), where("userID", "==", userID)))
+                        const items = q.map(el =>el.data())
+                        if(items.length > 0){
+                            updateProfile(profile.firstName, profile.lastName, profile.reposts, profile.posts, profile.saved, [...profile.friends,items[0].userID ], profile.userID)
+                            setEmail("")
+                            setShowOverlay(false)
+                        }
+                    }}
+                    />
+                </View>
+            </Overlay>
+
             <View style={styles.content}>
                 <View style={styles.inputRow}>
-                    <Text style = {styles.label}>Username</Text>
-                    <TextInput style={styles.input} onChange={(text)=>{setUsername(text)}} value={username}/>
+                    <Text style = {styles.label}>{posts.length ===0?"No Posts to See":"Recent Posts"}</Text>
+                    <Button title={"Refresh"} onPress={()=>{      
+                        const loadGroup = {type: LOAD_POST}
+                        SaveAndDispatch(loadGroup, dispatch)
+                        }}/>
+                    <Button title={"Refresh"} onPress={()=>{      
+                        const loadGroup = {type: LOAD_POST}
+                        SaveAndDispatch(loadGroup, dispatch)
+                    }}/>
                 </View>
                 <View style={styles.inputRow}>
-                    <Text style = {styles.label}>Email</Text>
-                    <TextInput style={styles.input} onChange={(text)=>{setEmail(text)}} value={email}/>
+                    <FlatList 
+                    style={styles.contactStuff}
+                    data={friends}
+                    renderItem={({item})=>{
+                        console.log(item)
+                    return(
+                        <View>
+                            <View>
+                                <Text>{item.author}</Text>
+                            </View>
+                            <View>
+                                <Button/>
+                            </View>
+                        </View>
+                    )}}/>
                 </View>
-                <View style={styles.inputRow}>
-                    <Text style = {styles.label}>Password</Text>
-                    <TextInput style={styles.input} onChange={(text)=>{setPassword(text)}} value={password}/>
-                </View>
-                <View style={styles.inputRow}>
-                    <Text style = {styles.label}>Confirm Password</Text>
-                    <TextInput style={styles.input} onChange={(text)=>{setCheckPassword(text)}} value={checkPassword}/>
-                </View>
-                <Button/>
             </View>
-
         </View>
-    )
-
-}
+    )}
 
 const styles = {
     inputRow:{
@@ -73,30 +133,3 @@ const styles = {
         flexDirection: "column"
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
