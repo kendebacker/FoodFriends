@@ -4,7 +4,7 @@ import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, dele
 import { useState } from "react"
 import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image } from "react-native";
 import { Overlay , Input, Button} from "@rneui/themed";
-import { LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
+import { DELETE_PROFILE, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { SaveAndDispatch } from "../Data";
 
@@ -14,36 +14,28 @@ export default function FriendsScreen(props){
     const {navigation, route} = props
     
     const dispatch = useDispatch()
-    const posts = useSelector(state => state.posts)
     const profile = useSelector(state => state.profile)
-    const state = useSelector(state => state)
-    console.log(state)
+    const friends = useSelector(state => state.friends)
 
     const [email, setEmail] = useState("")
     const [showOverlay, setShowOverlay] = useState(false)
 
 
 
-    const updatePost = (post)=>{
+    const deleteProfile = (userID)=>{
         const action = {
-            type: UPDATE_POST,
-            payload: {...post, likes: post.likes+1}
+            type: DELETE_PROFILE,
+            payload: {userID: userID}
         }
         SaveAndDispatch(action, dispatch)
     }
 
-    const updateProfile = (firstName, lastName, image, reposts, posts, saved, friends, userID)=>{
+    const updateProfile = (friends)=>{
         const action = {
             type: UPDATE_PROFILE,
             payload: {
-                firstName: firstName,
-                lastName: lastName,
-                image: image,
-                reposts: reposts, 
-                posts: posts,
-                saved: saved,
+                ...profile,
                 friends: friends,
-                userID: userID
             }
         }
         SaveAndDispatch(action, dispatch)
@@ -58,7 +50,7 @@ export default function FriendsScreen(props){
                 onBackdropPress={()=>setMakePostOverlay(false)}>
                 <Text>Search Email</Text>
                 <TextInput
-                placeholder="title"
+                placeholder="email"
                 value={email}
                 onChangeText={(text)=>setEmail(text)}/>
 
@@ -71,12 +63,12 @@ export default function FriendsScreen(props){
                     }}/>
 
                     <Button
-                    title={"Post"}
+                    title={"Add Friend"}
                     onPress={async ()=>{
-                        const q = await getDocs(query(collection(db, profile), where("userID", "==", userID)))
+                        const q = await getDocs(query(collection(db, profile), where("email", "==", email)))
                         const items = q.map(el =>el.data())
                         if(items.length > 0){
-                            updateProfile(profile.firstName, profile.lastName, profile.reposts, profile.posts, profile.saved, [...profile.friends,items[0].userID ], profile.userID)
+                            updateProfile([...profile.friends,items[0].userID])
                             setEmail("")
                             setShowOverlay(false)
                         }
@@ -87,27 +79,25 @@ export default function FriendsScreen(props){
 
             <View style={styles.content}>
                 <View style={styles.inputRow}>
-                    <Text style = {styles.label}>{posts.length ===0?"No Posts to See":"Recent Posts"}</Text>
-                    <Button title={"Refresh"} onPress={()=>{      
-                        const loadGroup = {type: LOAD_POST}
-                        SaveAndDispatch(loadGroup, dispatch)
+                    <Text style = {styles.label}>Friends</Text>
+                    <Button title={"Find Friends"} onPress={()=>{      
+                        setShowOverlay(true)
                         }}/>
-                    <Button title={"Refresh"} onPress={()=>{      
-                        const loadGroup = {type: LOAD_POST}
-                        SaveAndDispatch(loadGroup, dispatch)
-                    }}/>
                 </View>
                 <View style={styles.inputRow}>
                     <FlatList 
                     style={styles.contactStuff}
                     data={friends}
                     renderItem={({item})=>{
-                        console.log(item)
                     return(
                         <View>
                             <View>
-                                <Text>{item.author}</Text>
+                                <Text>{item.firstName}</Text>
+                                <Text>{item.lastName}</Text>
                             </View>
+                            <Button title={"remove"} onPress={()=>{
+                                deleteProfile(item.userID)
+                            }}/>
                             <View>
                                 <Button/>
                             </View>
