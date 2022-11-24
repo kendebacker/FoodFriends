@@ -17,7 +17,7 @@ db = getFirestore(app)
 
 const initialPosts = [{firstName:"", lastName: "", image: "dummyImage.png", description: "Not very good", rating:1, location: "Somewhere...",likes:0, key: 1, poster: 1, reposts:[2], date: new Date().toLocaleDateString()}]
 const intitialProfiles = [{lastName:"",firstName: "ken",image:"profilePic.png", reposts: [1], posts: [1,2], saved: [3], friends:[1,1], userID:""}]
-
+const initialFriends = []
 
 const addProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
@@ -70,19 +70,36 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
             posts = [...posts, newItem]
         })
     }
+    let friends = []
+    if(newItems[0].friends.length > 0){
+        const q1 = await getDocs(query(collection(db, profile), where("userID", "in", newItems[0].friends)))
+        friends = q1.map(el =>el.data)
+    }
+    let saved = []
+    if(newItems[0].friends.length > 0){
+        const q1 = await getDocs(query(collection(db, post), where("key", "in", newItems[0].saved)))
+        q1.forEach(el =>{
+            let newItem = el.data()
+            newItem.key = el.id
+            saved = [...posts, newItem]
+        })
+    }
     let newAction = {
         ...action,
         payload: {newItems: newItems,
-                    posts: posts}
+                    posts: posts,
+                    friends: friends,
+                    saved: saved}
     }
     dispatch(newAction)
 }
 
 const addPostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {firstName, lastName,image, description, rating, location, likes, poster, reposts, date}= payload
+    const {title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date}= payload
     const coll = collection(db, post)
     await addDoc(coll, {
+        title: title, 
         firstName: firstName,
         lastName, lastName,
         image: image,
@@ -100,9 +117,10 @@ const addPostAndDispatch = async (action, dispatch) =>{
 
 const updatePostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {firstName, lastName,image, description, rating, location, likes, poster, reposts, date, key}= payload
+    const {title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date, key}= payload
     const toUpdate = doc(collection(db, post),key)
     const newVersion= {
+        title: title,
         firstName: firstName,
         lastName, lastName,
         image: image,

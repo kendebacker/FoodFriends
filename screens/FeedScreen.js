@@ -3,7 +3,7 @@ import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWith
 import { useState } from "react"
 import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image } from "react-native";
 import { Overlay , Input, Button} from "@rneui/themed";
-import { LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
+import { ADD_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { SaveAndDispatch } from "../Data";
 
@@ -21,6 +21,8 @@ export default function FeedScreen(props){
     const [makePostOverlay, setMakePostOverlay] = useState(false)
     const [showOverlay, setShowOverlay] = useState(profile.username==="")
     const [username, setUsername] = useState(profile.username)
+    const [firstName, setFirstName] = useState(profile.firstName)
+    const [lastName, setLastName] = useState(profile.lastName)
     const [image, setImage] = useState(profile.image)
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
@@ -42,17 +44,36 @@ export default function FeedScreen(props){
         SaveAndDispatch(action, dispatch)
     }
 
-    const updateProfile = (username, image, reposts, posts, saved, friends, userID)=>{
+    const updateProfile = (username, firstName, lastName, image)=>{
         const action = {
             type: UPDATE_PROFILE,
             payload: {
+                ...profile,
                 username: username,
-                image: image,
-                reposts: reposts, 
-                posts: posts,
-                saved: saved,
-                friends: friends,
-                userID: userID
+                firstName: firstName,
+                lastName: lastName,
+                image: image
+            }
+        }
+        SaveAndDispatch(action, dispatch)
+    }
+
+
+    const addPost = (title, firstName, lastName,foodImage, description, rating, location, likes, poster, reposts, date)=>{
+        const action = {
+            type: ADD_POST,
+            payload: {
+                title: title,
+                firstName: firstName,
+                lastName: lastName,
+                image:foodImage,
+                description:description, 
+                rating:rating, 
+                location:location, 
+                likes:likes, 
+                poster:poster, 
+                reposts:reposts, 
+                date:date
             }
         }
         SaveAndDispatch(action, dispatch)
@@ -89,7 +110,7 @@ export default function FeedScreen(props){
                     <Button
                     title={"Post"}
                     onPress={()=>{
-                        updateProfile(username, image, profile.reposts, profile.posts, profile.saved, profile.friends, profile.userID)
+                        addPost(title, firstName, lastName,foodImage, description, rating, location, likes, poster, [], date)
                         setShowOverlay(false)
                     }}
                     />
@@ -103,10 +124,6 @@ export default function FeedScreen(props){
                         const loadGroup = {type: LOAD_POST}
                         SaveAndDispatch(loadGroup, dispatch)
                         }}/>
-                    <Button title={"Refresh"} onPress={()=>{      
-                        const loadGroup = {type: LOAD_POST}
-                        SaveAndDispatch(loadGroup, dispatch)
-                    }}/>
                 </View>
                 <View style={styles.inputRow}>
                     <FlatList 
@@ -152,6 +169,14 @@ export default function FeedScreen(props){
                 value={username}
                 onChangeText={(text)=>setUsername(text)}/>
                 <TextInput
+                placeholder="first name"
+                value={firstName}
+                onChangeText={(text)=>setFirstName(text)}/>
+                <TextInput
+                placeholder="last name"
+                value={lastName}
+                onChangeText={(text)=>setLastName(text)}/>
+                <TextInput
                 placeholder="image"
                 value={image}
                 onChangeText={(text)=>setImage(text)}/>
@@ -167,7 +192,7 @@ export default function FeedScreen(props){
                     <Button
                     title={"Save"}
                     onPress={()=>{
-                        updateProfile(username, image, profile.reposts, profile.posts, profile.saved, profile.friends, profile.userID)
+                        updateProfile(username, firstName, lastName, image)
                         setShowOverlay(false)
                     }}
                     />
