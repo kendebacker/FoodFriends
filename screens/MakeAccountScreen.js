@@ -6,6 +6,8 @@ import {  Button} from "@rneui/themed";
 import {firebaseConfig} from "../Secrets"
 import { ADD_PROFILE, LOAD_PROFILE, LOAD_POST } from "../Reducer";
 import { SaveAndDispatch } from "../Data";
+import { useDispatch, useSelector } from "react-redux";
+
 
 
 
@@ -23,20 +25,22 @@ const auth = getAuth(app)
 
 const CreateAccountBox=({navigation})=>{
 
+    const dispatch = useDispatch()
+
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [checkPassword, setCheckPassword] = useState("")
 
-    const addProfile = (username, image, reposts, posts, saved, friends, userID)=>{
+    const addProfile = (userID)=>{
         const action = {
             type: ADD_PROFILE,
             payload: {
-                username: username,
-                image: image,
-                reposts: reposts, 
-                posts: posts,
-                saved: saved,
-                friends: friends,
+                username: "",
+                image: "",
+                reposts: [], 
+                posts: [],
+                saved: [],
+                friends: [],
                 userID: userID
             }
         }
@@ -61,13 +65,11 @@ const CreateAccountBox=({navigation})=>{
                 </View>
                 <Button style={styles.button} title={"submit"} onPress={ async ()=>{
                  if(password===checkPassword && password !==""  && email !==""){
-                    console.log(email, password)
                     try{
                         const userInfo = await createUserWithEmailAndPassword(auth,email, password)
-                        addProfile("", "", "", "", "", "", userInfo.user)
+                        addProfile( userInfo.user.uid)
                         navigation.navigate("FeedScreen")
                     }catch(error){
-                        console.log(error)
                         Alert.alert("error occured")
                     }}
                 }}/>
@@ -78,6 +80,7 @@ const CreateAccountBox=({navigation})=>{
 }
 
 const LoginBox=({navigation})=>{
+    const dispatch = useDispatch()
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -94,10 +97,10 @@ const LoginBox=({navigation})=>{
                     <TextInput style={styles.input} onChangeText={(text)=>{setPassword(text)}} value={password}/>
                 </View>
                 <Button style={styles.button} title={"submit"} onPress={ async ()=>{
-                 if(password===checkPassword && password !==""  && email !==""){
+                 if( password !==""  && email !==""){
                     try{
                         const userInfo = await signInWithEmailAndPassword(auth,email, password)
-                        const loadProfile = {type: LOAD_PROFILE , userID:userInfo.user}
+                        const loadProfile = {type: LOAD_PROFILE , payload:{userID:userInfo.user.uid}}
                         SaveAndDispatch(loadProfile, dispatch)
                         navigation.navigate("FeedScreen")
                     }catch(error){
@@ -114,10 +117,13 @@ export default function MakeAccountScreen(props){
 
     const {navigation, route} = props
 
+    const dispatch = useDispatch()
+
 
     useEffect(()=>{ onAuthStateChanged(auth, user=>{
         if(user){
-            const loadProfile = {type: LOAD_PROFILE , userID:user}
+            console.log(user.uid)
+            const loadProfile = {type: LOAD_PROFILE , payload: {userID:user.uid}}
             SaveAndDispatch(loadProfile, dispatch)
             navigation.navigate("FeedScreen")
         }

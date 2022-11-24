@@ -1,4 +1,4 @@
-import { ADD_PROFILE,LOAD_PROFILE, LOAD_POST, ADD_POST, DELETE_PROFILE, DELETE_POST, UPDATE_PROFILE, UPDATE_POST, DELETE_PROFILE } from "./Reducer"
+import { ADD_PROFILE,LOAD_PROFILE, LOAD_POST, ADD_POST, DELETE_PROFILE, DELETE_POST, UPDATE_PROFILE, UPDATE_POST } from "./Reducer"
 
 import { initializeApp, getApps } from "firebase/app"
 import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy } from "firebase/firestore"
@@ -64,9 +64,19 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
         newItem.key = el.id
         newItems = [...newItems, newItem]
     })
+    let posts = []
+    if(newItems[0].friends.length > 0){
+        const q1 = await getDocs(query(collection(db, post), where("poster", "in", newItems[0].friends)))
+        q1.forEach(el =>{
+            let newItem = el.data()
+            newItem.key = el.id
+            posts = [...posts, newItem]
+        })
+    }
     let newAction = {
         ...action,
-        payload: {newItems: newItems}
+        payload: {newItems: newItems,
+                    posts: posts}
     }
     dispatch(newAction)
 }
@@ -126,7 +136,7 @@ const deletePostAndDispatch = async (action, dispatch) =>{
 const loadPostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
     const {friends}= payload
-    const query = await getDocs(collection(db, post), where("key", "in", friends))
+    const query = await getDocs(query(collection(db, post), where("key", "in", friends)))
     let newItems = []
     query.forEach(el =>{
         let newItem = el.data()
@@ -135,7 +145,7 @@ const loadPostAndDispatch = async (action, dispatch) =>{
     })
     let newAction = {
         ...action,
-        payload: {newItems: newItems}
+        payload: {posts: newItems}
     }
     dispatch(newAction)
 }

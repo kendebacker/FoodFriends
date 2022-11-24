@@ -1,9 +1,9 @@
 import {getApps, initializeApp} from "firebase/app"
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { useState } from "react"
-import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image } from "react-native";
+import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Overlay } from "react-native";
 import {  Button} from "@rneui/themed";
-import { UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
+import { LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { SaveAndDispatch } from "../Data";
 
@@ -11,15 +11,22 @@ import { SaveAndDispatch } from "../Data";
 export default function FeedScreen(props){
 
     const {navigation, route} = props
-    const userID = route.params.user
     
     const dispatch = useDispatch()
     const posts = useSelector(state => state.posts)
     const profile = useSelector(state => state.profile)
 
+    console.log("Howdt")
+    console.log(posts)
+
     const [showOverlay, setShowOverlay] = useState(profile.username==="")
     const [username, setUsername] = useState(profile.username)
     const [image, setImage] = useState(profile.image)
+
+
+    const refresh=()=>[
+
+    ]
 
     const updatePost = (post)=>{
         const action = {
@@ -51,6 +58,10 @@ export default function FeedScreen(props){
             <View style={styles.content}>
                 <View style={styles.inputRow}>
                     <Text style = {styles.label}>{posts.length ===0?"No Posts to See":"Recent Posts"}</Text>
+                    <Button title={"Refresh"} onPress={()=>{      
+                        const loadGroup = {type: LOAD_POST}
+                        SaveAndDispatch(loadGroup, dispatch)
+                        }}/>
                 </View>
                 <View style={styles.inputRow}>
                     <FlatList 
@@ -90,11 +101,11 @@ export default function FeedScreen(props){
                 isVisible={showOverlay}
                 onBackdropPress={()=>setShowOverlay(false)}>
                 <Text>Profile Details</Text>
-                <Input
+                <TextInput
                 placeholder="username"
                 value={username}
                 onChangeText={(text)=>setUsername(text)}/>
-                <Input
+                <TextInput
                 placeholder="image"
                 value={image}
                 onChangeText={(text)=>setImage(text)}/>
