@@ -10,7 +10,7 @@ import FeedScreen from "./screens/FeedScreen"
 import PostScreen from "./screens/PostScreen"
 import FriendsScreen from "./screens/FriendsScreen"
 import RecipeListScreen from "./screens/RecipeListScreen"
-
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { FontAwesome } from '@expo/vector-icons';
 import {rootReducer} from "./Reducer"
 import { Ionicons } from '@expo/vector-icons'; 
@@ -65,7 +65,7 @@ function KensApp(){
                     <Tabs.Screen name="Friends" component={FriendsScreen}options={{
                         tabBarIcon:({color})=>{
                             return(
-                                <FontAwesome name="group" size={24} color={color} />  
+                                <MaterialCommunityIcons name="newspaper-variant" size={24} color={color} /> 
                             )
                         }
                     }}/>
@@ -73,7 +73,7 @@ function KensApp(){
                     options={{
                         tabBarIcon:({color})=>{
                             return(
-                                <Ionicons name="settings-sharp" size={24} color={color} />  
+                                <MaterialCommunityIcons name="content-save" size={24} color={color} /> 
                             )
                         }
                     }}/>
