@@ -40,7 +40,7 @@ const CreateAccountBox=({navigation})=>{
                 reposts: [], 
                 posts: [],
                 saved: [],
-                friends: [],
+                friends: [1],
                 userID: userID
             }
         }
@@ -122,6 +122,7 @@ export default function MakeAccountScreen(props){
 
     useEffect(()=>{ onAuthStateChanged(auth, user=>{
         if(user){
+            console.log("IM FIREING")
             console.log(user.uid)
             const loadProfile = {type: LOAD_PROFILE , payload: {userID:user.uid}}
             SaveAndDispatch(loadProfile, dispatch)

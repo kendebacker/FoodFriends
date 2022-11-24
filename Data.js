@@ -66,7 +66,7 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
     })
     let posts = []
     if(newItems[0].friends.length > 0){
-        const q1 = await getDocs(query(collection(db, post), where("poster", "in", newItems[0].friends)))
+        const q1 = await getDocs(query(collection(db, post), where("author", "in", newItems[0].friends)))
         q1.forEach(el =>{
             let newItem = el.data()
             newItem.key = el.id

@@ -1,8 +1,8 @@
 import {getApps, initializeApp} from "firebase/app"
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { useState } from "react"
-import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Overlay } from "react-native";
-import {  Button} from "@rneui/themed";
+import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image } from "react-native";
+import { Overlay , Input, Button} from "@rneui/themed";
 import { LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { SaveAndDispatch } from "../Data";
@@ -15,9 +15,9 @@ export default function FeedScreen(props){
     const dispatch = useDispatch()
     const posts = useSelector(state => state.posts)
     const profile = useSelector(state => state.profile)
+    const state = useSelector(state => state)
+    console.log(state)
 
-    console.log("Howdt")
-    console.log(posts)
 
     const [showOverlay, setShowOverlay] = useState(profile.username==="")
     const [username, setUsername] = useState(profile.username)
@@ -68,14 +68,15 @@ export default function FeedScreen(props){
                     style={styles.contactStuff}
                     data={posts}
                     renderItem={({item})=>{
+                        console.log(item)
                     return(
                         <View>
                             <View>
-                                <Text>{item.poster}</Text>
-                                <Text>{item.date}</Text>
+                                <Text>{item.author}</Text>
+                                <Text>{item.date.seconds}</Text>
                             </View>
                             <View>
-                                <Image src={item.imgSRC}/>
+                                <Image src={item.image}/>
                             </View>
                             <View>
                                 <TouchableOpacity onPress={()=>{
