@@ -70,7 +70,7 @@ const CreateAccountBox=({navigation})=>{
                     try{
                         const userInfo = await createUserWithEmailAndPassword(auth,email, password)
                         addProfile( userInfo.user.uid, email)
-                        navigation.navigate("FeedScreen")
+                        navigation.navigate("Feed")
                     }catch(error){
                         Alert.alert("error occured")
                     }}
@@ -104,7 +104,7 @@ const LoginBox=({navigation})=>{
                         const userInfo = await signInWithEmailAndPassword(auth,email, password)
                         const loadProfile = {type: LOAD_PROFILE , payload:{userID:userInfo.user.uid}}
                         SaveAndDispatch(loadProfile, dispatch)
-                        navigation.navigate("FeedScreen")
+                        navigation.navigate("Feed")
                     }catch(error){
                         Alert.alert("error occured")
                     }}
@@ -117,7 +117,6 @@ const LoginBox=({navigation})=>{
 export default function MakeAccountScreen(props){
 
     const {navigation, route} = props
-    navigation.setOptions({ tabBarVisible: false })
 
 
     const dispatch = useDispatch()
@@ -127,7 +126,7 @@ export default function MakeAccountScreen(props){
         if(user){
             const loadProfile = {type: LOAD_PROFILE , payload: {userID:user.uid}}
             SaveAndDispatch(loadProfile, dispatch)
-            navigation.navigate("FeedScreen")
+            navigation.navigate("Feed")
         }
     })
     },[])

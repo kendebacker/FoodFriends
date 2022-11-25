@@ -68,7 +68,7 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
     })
     let posts = []
     if(newItems[0].friends.length > 0){
-        const q1 = await getDocs(query(collection(db, post), where("author", "in", newItems[0].friends)))
+        const q1 = await getDocs(query(collection(db, post), where("poster", "in", newItems[0].friends)))
         q1.forEach(el =>{
             let newItem = el.data()
             newItem.key = el.id
@@ -103,9 +103,10 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
 
 const addPostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date}= payload
+    const {recipe,title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date}= payload
     const coll = collection(db, post)
     await addDoc(coll, {
+        recipe: recipe,
         title: title, 
         firstName: firstName,
         lastName, lastName,
@@ -124,9 +125,11 @@ const addPostAndDispatch = async (action, dispatch) =>{
 
 const updatePostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date, key}= payload
+    const {recipe, title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date, key}= payload
     const toUpdate = doc(collection(db, post),key)
+    console.log(likes)
     const newVersion= {
+        recipe: recipe,
         title: title,
         firstName: firstName,
         lastName, lastName,
@@ -162,9 +165,9 @@ const deletePostAndDispatch = async (action, dispatch) =>{
 const loadPostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
     const {friends}= payload
-    const query = await getDocs(query(collection(db, post), where("key", "in", friends)))
+    const q = await getDocs(query(collection(db, post), where("key", "in", friends)))
     let newItems = []
-    query.forEach(el =>{
+    q.forEach(el =>{
         let newItem = el.data()
         newItem.key = el.id
         newItems = [...newItems, newItem]

@@ -6,6 +6,7 @@ import { Overlay , Input, Button} from "@rneui/themed";
 import { ADD_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { SaveAndDispatch } from "../Data";
+import { FontAwesome } from '@expo/vector-icons';
 
 
 export default function FeedScreen(props){
@@ -15,7 +16,6 @@ export default function FeedScreen(props){
     const dispatch = useDispatch()
     const posts = useSelector(state => state.posts)
     const profile = useSelector(state => state.profile)
-    const state = useSelector(state => state)
 
     const [makePostOverlay, setMakePostOverlay] = useState(false)
     const [showOverlay, setShowOverlay] = useState(profile.username==="")
@@ -35,15 +35,17 @@ export default function FeedScreen(props){
 
     ]
 
-    const updatePost = (post)=>{
+    const updatePost = (post, profile)=>{
+        console.log(post)
+        let newLikes = post.likes.filter(el=> el === profile.userID).length === 0?[...post.likes, profile.userID]:post.likes.filter(el=> el !== profile.userID)
         const action = {
             type: UPDATE_POST,
-            payload: {...post, likes: post.likes+1}
+            payload: {...post, likes: newLikes, friends: profile.friends}
         }
         SaveAndDispatch(action, dispatch)
     }
 
-    const updateProfile = (username, firstName, lastName, image)=>{
+    const updateProfile = (username, firstName, lastName, image,)=>{
         const action = {
             type: UPDATE_PROFILE,
             payload: {
@@ -79,6 +81,7 @@ export default function FeedScreen(props){
     }
 
 
+
     return(
         <View>
             <Overlay
@@ -109,7 +112,7 @@ export default function FeedScreen(props){
                     <Button
                     title={"Post"}
                     onPress={()=>{
-                        addPost(title, firstName, lastName,foodImage, description, rating, location, likes, poster, [], date)
+                        addPost(title, firstName, lastName,foodImage, description, rating, location, [], poster, [], date)
                         setShowOverlay(false)
                     }}
                     />
@@ -118,44 +121,54 @@ export default function FeedScreen(props){
 
             <View style={styles.content}>
                 <View style={styles.inputRow}>
-                    <Text style = {styles.label}>{posts.length ===0?"No Posts to See":"Recent Posts"}</Text>
                     <Button title={"Refresh"} onPress={()=>{      
                         const loadGroup = {type: LOAD_POST}
                         SaveAndDispatch(loadGroup, dispatch)
                         }}/>
+                    <Button title={"Post"} onPress={()=>{      
+                        const loadGroup = {type: LOAD_POST}
+                        SaveAndDispatch(loadGroup, dispatch)
+                        }}/>
+                    <Button title={"Settings"} onPress={()=>{      
+                        const loadGroup = {type: LOAD_POST}
+                        SaveAndDispatch(loadGroup, dispatch)
+                        }}/>
                 </View>
-                <View style={styles.inputRow}>
-                    <FlatList 
-                    style={styles.contactStuff}
-                    data={posts}
-                    renderItem={({item})=>{
-                    return(
-                        <View>
-                            <View>
-                                <Text>{item.author}</Text>
-                                <Text>{item.date.seconds}</Text>
-                            </View>
-                            <View>
-                                <Image src={item.image}/>
-                            </View>
-                            <View>
-                                <TouchableOpacity onPress={()=>{
-                                    navigation.navigate("PostScreen",{
-                                        post: item
-                                    })
-                                }}>
-                                    <Text>Details</Text>
-                                </TouchableOpacity>
-                                <View>
-                                    <Text>{item.likes}</Text>
-                                </View>
-                                <TouchableOpacity onPress={()=>{updatePost(item)}}>
-                                    <Text>Thumb Icon</Text>
-                                </TouchableOpacity>
-                            </View>
+                <FlatList 
+                style={styles.feedContainer}
+                data={posts}
+                renderItem={({item})=>{
+                    console.log(item)
+                return(
+                    <View style={styles.post}>
+                        <View style={styles.postTitle}>
+                            <Text>{item.title}</Text>
                         </View>
-                    )}}/>
-                </View>
+                        <View style={styles.postTop}>
+                            <Text>{item.firstName} {item.lastName}</Text>
+                            <Text>{item.date}</Text>
+                        </View>
+                        <View style={styles.middleContent}>
+                        <Image
+                                style={styles.logo}
+                                source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+                                />
+                        </View>
+                        <View style={styles.inputRow}>
+                            <Button title ={"Details"} onPress={()=>{
+                                navigation.navigate("PostScreen",{
+                                    post: item
+                                })}}/>
+                            <View style={styles.thumb}>
+                                <Text>{item.likes.length}</Text>
+                                <FontAwesome name="thumbs-o-up" size={24} color="black" />
+                            </View>
+                            <Button title ={item.likes.filter(el=> el === profile.userID).length === 0?"Like":"Unlike"} onPress={()=>{
+                                    updatePost(item, profile)
+                                }}/>
+                        </View>
+                    </View>
+                )}}/>
             </View>
             <Overlay
                 overlayStyle={styles.overlay}
@@ -201,16 +214,51 @@ export default function FeedScreen(props){
     )}
 
 const styles = {
+    thumb:{flexDirection: "row"},
+    rating:{
+        flexDirection: "row",
+        width: "100%",
+        justifyContent: "center"
+    },
+middleContent:{
+    justifyContent: "center",
+    width: "100%",
+    flexDirection: "row"
+},
+logo: {
+    width: 100,
+    height: 100,
+  },
+  postTitle:{
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "center"
+  },
+    postTop:{
+        width: "100%",
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
     inputRow:{
         width: "100%",
-        flexDirection: "row"
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        paddingTop: 20
     },
-    label:{
-        alignText:"center"
+    feedContainer:{
+        width: "100%",
+        backgroundColor:"blue",
+        height: "80%",
     },
-    input:{
-        alignText:"center"
+    post:{
+        width: "90%",
+        backgroundColor: "red",
+        marginLeft: "5%",
+        marginTop: "5%",
+        padding: 10,
+        borderRadius: 5,
     },
+
     content:{
         flexDirection: "column"
     }

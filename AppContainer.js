@@ -14,6 +14,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { FontAwesome } from '@expo/vector-icons';
 import {rootReducer} from "./Reducer"
 import { Ionicons } from '@expo/vector-icons'; 
+import { useEffect } from 'react';
 
 
 
@@ -22,8 +23,7 @@ function FeedTabs(){
     const Stack = createNativeStackNavigator()
 
     return(
-        <Stack.Navigator initialRouteName="MakeAccount" screenOptions={{headerShown: false}}>
-            <Stack.Screen name="MakeAccount" component={MakeAccountScreen} />
+        <Stack.Navigator name="Feed" initialRouteName="FeedScreen" screenOptions={{headerShown: false}}>
             <Stack.Screen name="FeedScreen" component={FeedScreen}/>
             <Stack.Screen name="PostScreen" component={PostScreen}/>
         </Stack.Navigator>
@@ -50,30 +50,31 @@ const store = configureStore({
 function KensApp(){
 
     /// solving tab viewing problem https://github.com/react-navigation/react-navigation/issues/5230
-    
-    const Tabs = createBottomTabNavigator()
+    const Tabs = createBottomTabNavigator();
+
+
 
     return(
         <Provider store={store}>
             <NavigationContainer>
-                <Tabs.Navigator initialRouteName='Login' screenOptions={{headerShown:false}} tabBar={props => <BottomTabBar {...props} state={{...props.state, routes: props.state.routes.slice(1,4)}}></BottomTabBar>}>
-                    <Tabs.Screen name="Login" component={MakeAccountScreen} options={{tabBarStyle: {display: "none"}}}/>
+                <Tabs.Navigator initialRouteName='Login'  screenOptions={{headerShown:false}} >
+                <Tabs.Screen name="Login" component={MakeAccountScreen} options={{tabBarButton: () => null,tabBarStyle: {display: "none"}}}/>
 
-                    <Tabs.Screen name="Feed" component={FeedTabs}options={{
+                    <Tabs.Screen name="Feed" component={FeedTabs} options={{
                         tabBarIcon:({color})=>{
                             return(
-                                <AntDesign name="contacts" size={24} color={color}/>   
+                                <MaterialCommunityIcons name="newspaper-variant" size={24} color={color} />   
                             )
-                        },tabBarStyle: { display: "none" },
+                        }
                     }}/>
                     <Tabs.Screen name="Friends" component={FriendsScreen}options={{
                         tabBarIcon:({color})=>{
                             return(
-                                <MaterialCommunityIcons name="newspaper-variant" size={24} color={color} /> 
+                                <AntDesign name="contacts" size={24} color={color}/> 
                             )
                         }
                     }}/>
-                    <Tabs.Screen name="Recipes" component={RecipesTabs}
+                    <Tabs.Screen name="Saved" component={RecipesTabs}
                     options={{
                         tabBarIcon:({color})=>{
                             return(
@@ -81,6 +82,7 @@ function KensApp(){
                             )
                         }
                     }}/>
+
                 </Tabs.Navigator>
             </NavigationContainer>
         </Provider>

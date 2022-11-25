@@ -7,6 +7,8 @@ import { Overlay , Input, Button} from "@rneui/themed";
 import { DELETE_PROFILE, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { SaveAndDispatch } from "../Data";
+import { FontAwesome } from '@expo/vector-icons';
+
 
 
 export default function RecipeListScreen(props){
