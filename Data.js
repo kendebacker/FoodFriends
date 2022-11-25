@@ -1,8 +1,9 @@
-import { ADD_PROFILE,LOAD_PROFILE, LOAD_POST, ADD_POST, DELETE_PROFILE, DELETE_POST, UPDATE_PROFILE, UPDATE_POST } from "./Reducer"
+import { ADD_PROFILE,LOAD_PROFILE, LOAD_POST, ADD_POST, DELETE_PROFILE, DELETE_POST, UPDATE_PROFILE, UPDATE_POST ,SEARCH_PROFILE} from "./Reducer"
 
 import { initializeApp, getApps } from "firebase/app"
 import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy } from "firebase/firestore"
 import { firebaseConfig } from "./Secrets"
+
 
 
 let app, db = undefined
@@ -16,12 +17,20 @@ if(getApps().length < 1){
 db = getFirestore(app)
 
 const initialPosts = [{firstName:"", lastName: "", image: "dummyImage.png", description: "Not very good", rating:1, location: "Somewhere...",likes:0, key: 1, poster: 1, reposts:[2], date: new Date().toLocaleDateString()}]
-const intitialProfiles = [{lastName:"",firstName: "ken",image:"profilePic.png", reposts: [1], posts: [1,2], saved: [3], friends:[1,1], userID:""}]
+const intitialProfiles = [{lastName:"",firstName: "ken",image:"profilePic.png", reposts: [1], posts: [1,2], saved: [3], friends:[1,1]}]
 const initialFriends = []
+
+
+export const SearchProfileData = async (email) =>{
+    const q = await getDocs(query(collection(db, profile), where("email", "==", email)))
+    let items = []
+    q.forEach(el=> items=[...items, el.data()])
+    return items.length ===0?0:items[0].email
+}
 
 const addProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {email, firstName, lastName, image, reposts, posts, saved, friends, userID}= payload
+    const {email, firstName, lastName, image, reposts, posts, saved, friends}= payload
     const coll = collection(db, profile)
     await addDoc(coll, {
         email: email,
@@ -32,7 +41,6 @@ const addProfileAndDispatch = async (action, dispatch) =>{
         posts: posts,
         saved: saved,
         friends: friends,
-        userID: userID
     })
     loadProfileAndDispatch(action, dispatch)
 }
@@ -40,8 +48,8 @@ const addProfileAndDispatch = async (action, dispatch) =>{
 
 const updateProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {email, firstName, lastName, image, reposts, posts, saved, friends, userID}= payload
-    const toUpdate = doc(collection(db, profile),userID)
+    const {key, email, firstName, lastName, image, reposts, posts, saved, friends}= payload
+    const toUpdate = doc(collection(db, profile),key)
     const newVersion= {
         email: email, 
         firstName: firstName,
@@ -51,7 +59,6 @@ const updateProfileAndDispatch = async (action, dispatch) =>{
         posts: posts,
         saved: saved,
         friends: friends,
-        userID: userID
     }
     await updateDoc(toUpdate, newVersion)
     loadProfileAndDispatch(action, dispatch)
@@ -60,11 +67,13 @@ const updateProfileAndDispatch = async (action, dispatch) =>{
 
 const loadProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {userID} = payload
-    const q = await getDocs(query(collection(db, profile), where("userID", "==", userID)))
+    const {email} = payload
+    const q = await getDocs(query(collection(db, profile), where("email", "==", email)))
     let newItems = []
     q.forEach(el =>{
-        newItems = [...newItems, el.data()]
+        let newItem = el.data()
+        newItem.key = el.id
+        newItems = [...newItems, newItem]
     })
     let posts = []
     if(newItems[0].friends.length > 0){
@@ -77,9 +86,12 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
     }
     let friends = []
     if(newItems[0].friends.length > 0){
-        const q1 = await getDocs(query(collection(db, profile), where("userID", "in", newItems[0].friends)))
+        const q1 = await getDocs(query(collection(db, profile), where("email", "in", newItems[0].friends)))
         q1.forEach(el =>{
-            friends = [...friends, el.data()]
+            let newItem = el.data()
+            newItem.key = el.id
+            newItems = [...newItems, newItem]
+            friends = [...friends, newItem]
         })
     }
     let saved = []
@@ -127,7 +139,6 @@ const updatePostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
     const {recipe, title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date, key}= payload
     const toUpdate = doc(collection(db, post),key)
-    console.log(likes)
     const newVersion= {
         recipe: recipe,
         title: title,
@@ -148,8 +159,8 @@ const updatePostAndDispatch = async (action, dispatch) =>{
 
 const deleteProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {userID}= payload
-    const toDelete = doc(collection(db, profile),userID)
+    const {key}= payload
+    const toDelete = doc(collection(db, profile),key)
     await deleteDoc(toDelete)
     loadProfileAndDispatch(action, dispatch)
 }
@@ -165,7 +176,7 @@ const deletePostAndDispatch = async (action, dispatch) =>{
 const loadPostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
     const {friends}= payload
-    const q = await getDocs(query(collection(db, post), where("key", "in", friends)))
+    const q = await getDocs(query(collection(db, post), where("poster", "in", friends)))
     let newItems = []
     q.forEach(el =>{
         let newItem = el.data()
@@ -207,6 +218,9 @@ export const SaveAndDispatch =async(action, dispatch)=>{
         case LOAD_POST:
             loadPostAndDispatch(action, dispatch)
             return 
+        case SEARCH_PROFILE:
+            searchProfileAndDispatch(action)
+            return  
     }
 
 }

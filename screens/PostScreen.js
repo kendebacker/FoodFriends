@@ -7,13 +7,13 @@ import { ADD_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { SaveAndDispatch } from "../Data";
 import { FontAwesome } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons'; 
 
 
 
 const StarRating = ({rating})=>{
     let start = [0,0,0,0,0]
     start = start.map((el,ind)=> el = ind<rating?1:0)
-    console.log(rating)
 
     return(
         <View style={styles.rating}>
@@ -30,6 +30,7 @@ export default function PostScreen(props){
 
     const {navigation, route} = props
     const item = route.params.post
+    const saved = route.params.saved
 
     const dispatch = useDispatch()
     const profile = useSelector(state => state.profile)
@@ -49,8 +50,15 @@ export default function PostScreen(props){
 
     return(
         <View style={styles.post}>
+             <View style={styles.headingRowTop}>
+                <TouchableOpacity onPress={()=>{
+                    navigation.navigate(saved?"RecipeList":"FeedScreen")
+                }}>
+                <AntDesign name="arrowleft" size={36} color="dodgerblue" />
+                </TouchableOpacity>
+            </View>
             <View style={styles.postTitle}>
-                <Text>{item.title}</Text>
+                <Text style={styles.title}>{item.title}</Text>
             </View>
             <View style={styles.middleContent}>
             <Image
@@ -60,11 +68,11 @@ export default function PostScreen(props){
             </View>
             <View style={styles.middleContent}>
                 <Text style={styles.subtitle}>Location: </Text>
-                <Text style={styles.content}></Text>
+                <Text style={styles.content}>{item.location}</Text>
             </View>
             <View style={styles.middleContent}>
                 <Text style={styles.subtitle}>Recipe: </Text>
-                <Text style={styles.content}></Text>
+                <Text style={styles.content}>{item.recipe}</Text>
             </View>
             <View style={styles.middleContent}>
                 <Text style={styles.subtitle}>Rating: </Text>
@@ -75,10 +83,10 @@ export default function PostScreen(props){
                 <Text style={styles.content}>{item.description}</Text>
             </View>
             <View style={styles.inputRow}>
+                {profile.saved.filter(el => el === item.key).length > 0?"":
                 <Button title ={"Save"} onPress={()=>{
-                    navigation.navigate("PostScreen",{
-                        post: item
-                    })}}/>
+                        updateProfile([...profile.saved, item.key])
+                   }}/>}
             </View>
         </View>
     )}
@@ -111,7 +119,10 @@ export default function PostScreen(props){
       postTitle:{
         width: "100%",
         flexDirection: "row",
-        justifyContent: "center"
+        justifyContent: "center",
+      },
+      title:{
+        fontSize: 45
       },
         postTop:{
             width: "100%",

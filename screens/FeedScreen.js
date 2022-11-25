@@ -31,13 +31,14 @@ export default function FeedScreen(props){
 
 
 
+
+
     const refresh=()=>[
 
     ]
 
     const updatePost = (post, profile)=>{
-        console.log(post)
-        let newLikes = post.likes.filter(el=> el === profile.userID).length === 0?[...post.likes, profile.userID]:post.likes.filter(el=> el !== profile.userID)
+        let newLikes = post.likes.filter(el=> el === profile.email).length === 0?[...post.likes, profile.email]:post.likes.filter(el=> el !== profile.email)
         const action = {
             type: UPDATE_POST,
             payload: {...post, likes: newLikes, friends: profile.friends}
@@ -138,7 +139,6 @@ export default function FeedScreen(props){
                 style={styles.feedContainer}
                 data={posts}
                 renderItem={({item})=>{
-                    console.log(item)
                 return(
                     <View style={styles.post}>
                         <View style={styles.postTitle}>
@@ -157,13 +157,14 @@ export default function FeedScreen(props){
                         <View style={styles.inputRow}>
                             <Button title ={"Details"} onPress={()=>{
                                 navigation.navigate("PostScreen",{
-                                    post: item
+                                    post: item,
+                                    saved: false
                                 })}}/>
                             <View style={styles.thumb}>
                                 <Text>{item.likes.length}</Text>
                                 <FontAwesome name="thumbs-o-up" size={24} color="black" />
                             </View>
-                            <Button title ={item.likes.filter(el=> el === profile.userID).length === 0?"Like":"Unlike"} onPress={()=>{
+                            <Button title ={item.likes.filter(el=> el === profile.email).length === 0?"Like":"Unlike"} onPress={()=>{
                                     updatePost(item, profile)
                                 }}/>
                         </View>

@@ -31,7 +31,7 @@ const CreateAccountBox=({navigation})=>{
     const [password, setPassword] = useState("")
     const [checkPassword, setCheckPassword] = useState("")
 
-    const addProfile = (userID, email)=>{
+    const addProfile = (email)=>{
         const action = {
             type: ADD_PROFILE,
             payload: {
@@ -43,7 +43,6 @@ const CreateAccountBox=({navigation})=>{
                 posts: [],
                 saved: [],
                 friends: [1],
-                userID: userID
             }
         }
         SaveAndDispatch(action, dispatch)
@@ -102,7 +101,7 @@ const LoginBox=({navigation})=>{
                  if( password !==""  && email !==""){
                     try{
                         const userInfo = await signInWithEmailAndPassword(auth,email, password)
-                        const loadProfile = {type: LOAD_PROFILE , payload:{userID:userInfo.user.uid}}
+                        const loadProfile = {type: LOAD_PROFILE , payload:{email:userInfo.user.email}}
                         SaveAndDispatch(loadProfile, dispatch)
                         navigation.navigate("Feed")
                     }catch(error){
@@ -124,7 +123,7 @@ export default function MakeAccountScreen(props){
 
     useEffect(()=>{ onAuthStateChanged(auth, user=>{
         if(user){
-            const loadProfile = {type: LOAD_PROFILE , payload: {userID:user.uid}}
+            const loadProfile = {type: LOAD_PROFILE , payload: {email:user.email}}
             SaveAndDispatch(loadProfile, dispatch)
             navigation.navigate("Feed")
         }

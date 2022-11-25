@@ -4,9 +4,9 @@ import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, dele
 import { useState } from "react"
 import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image } from "react-native";
 import { Overlay , Input, Button} from "@rneui/themed";
-import { DELETE_PROFILE, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
+import {SEARCH_PROFILE, DELETE_PROFILE, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
-import { SaveAndDispatch } from "../Data";
+import { SaveAndDispatch, SearchProfileData } from "../Data";
 
 
 export default function FriendsScreen(props){
@@ -17,16 +17,21 @@ export default function FriendsScreen(props){
     const profile = useSelector(state => state.profile)
     const friends = useSelector(state => state.friends)
 
+
+
     const [email, setEmail] = useState("")
     const [showOverlay, setShowOverlay] = useState(false)
     const [friend, setFriend] = useState(null)
 
+    const searchProfile = async ()=>{
+        const answer = await SearchProfileData(email)
+        setFriend(answer)
+    }
 
-
-    const deleteProfile = (userID)=>{
+    const deleteProfile = (key)=>{
         const action = {
             type: DELETE_PROFILE,
-            payload: {userID: userID}
+            payload: {key: key}
         }
         SaveAndDispatch(action, dispatch)
     }
@@ -48,7 +53,7 @@ export default function FriendsScreen(props){
             <Overlay
                 overlayStyle={styles.overlay}
                 isVisible={showOverlay}
-                onBackdropPress={()=>setMakePostOverlay(false)}>
+                onBackdropPress={()=>setShowOverlay(false)}>
                 <Text>Search Email</Text>
                 <TextInput
                 style={styles.emailInput}
@@ -65,19 +70,14 @@ export default function FriendsScreen(props){
                     }}/>
 
                     <Button
-                    title={"Add Friend"}
-                    onPress={async ()=>{
-                        const q = await getDocs(query(collection(db, profile), where("email", "==", email)))
-                        let items = []
-                        q.forEach(el=> items=[...items, el.data()])
-                        setFriend(items.length ===0?0:items[0])
-                    }}/>
+                    title={"Search"}
+                    onPress={()=>{searchProfile() }}/>
                 </View>
                 <View>
                     {friend===null?"":<View>
                         <Text>{friend===0?"Friend Not Found":"Friend Found"}</Text>
                         <Button onPress={()=>{
-                            updateProfile([...profile.friends,items[0].userID])
+                            updateProfile(profile.friends.filter(el => el ===friend).length==0?[...profile.friends,friend]:profile.friends)
                             setEmail("")
                             setShowOverlay(false)
                         }} title={"Add Friend"}/>
@@ -87,7 +87,6 @@ export default function FriendsScreen(props){
 
             <View style={styles.content}>
                 <View style={styles.inputRow}>
-                    <Text style = {styles.label}>Friends</Text>
                     <Button title={"Find Friends"} onPress={()=>{      
                         setShowOverlay(true)
                         }}/>
@@ -104,7 +103,7 @@ export default function FriendsScreen(props){
                                 <Text>{item.lastName}</Text>
                             </View>
                             <Button title={"remove"} onPress={()=>{
-                                deleteProfile(item.userID)
+                                deleteProfile(item.key)
                             }}/>
                             <View>
                                 <Button/>
@@ -126,8 +125,10 @@ const styles = {
         height: "50%"
     },
     inputRow:{
+        marginTop: 30,
         width: "100%",
-        flexDirection: "row"
+        flexDirection: "row",
+        justifyContent: "center"
     },
     label:{
         alignText:"center"
