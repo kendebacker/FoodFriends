@@ -18,7 +18,6 @@ export default function FriendsScreen(props){
     const friends = useSelector(state => state.friends)
 
 
-
     const [email, setEmail] = useState("")
     const [showOverlay, setShowOverlay] = useState(false)
     const [friend, setFriend] = useState(null)
@@ -91,22 +90,21 @@ export default function FriendsScreen(props){
                         setShowOverlay(true)
                         }}/>
                 </View>
-                <View style={styles.inputRow}>
+                <View style={styles.main}>
                     <FlatList 
                     style={styles.contactStuff}
                     data={friends}
                     renderItem={({item})=>{
                     return(
                         <View>
-                            <View>
+                            <View style={styles.friend}>
                                 <Text>{item.firstName}</Text>
                                 <Text>{item.lastName}</Text>
-                            </View>
-                            <Button title={"remove"} onPress={()=>{
+                                <Button title={"remove"} onPress={()=>{
                                 deleteProfile(item.key)
-                            }}/>
+                                }}/>
+                            </View>
                             <View>
-                                <Button/>
                             </View>
                         </View>
                     )}}/>
@@ -116,6 +114,24 @@ export default function FriendsScreen(props){
     )}
 
 const styles = {
+    contactStuff:{
+        height: "80%",
+        width: "100%",
+    },main:{
+        marginTop: 20
+    },
+
+    friend:{
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        alignItems: "center",
+        backgroundColor: "red",
+        width: "90%",
+        marginLeft: "5%",
+        padding: 10,
+        borderRadius: 5
+
+    },
     emailInput:{
         borderWidth: 1
     },
@@ -137,6 +153,6 @@ const styles = {
         alignText:"center"
     },
     content:{
-        flexDirection: "column"
+        flexDirection: "column",
     }
 }

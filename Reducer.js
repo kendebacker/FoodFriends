@@ -40,11 +40,14 @@ const loadPost = (state, newPosts) =>{
     }
 }
 
-const loadProfile = (state, newProfiles, posts) =>{
+
+const loadProfile = (state, newProfiles, posts, friends, saved) =>{
     return {
     ...state,
     profile: newProfiles[0],
-    posts: posts
+    posts: posts,
+    friends: friends,
+    saved: saved
 }}
 
 
@@ -54,7 +57,7 @@ const rootReducer =(state=initialState, action)=>{
         case UPDATE_PROFILE:
         case DELETE_PROFILE:
         case LOAD_PROFILE:
-            return loadProfile(state, action.payload.newItems,action.payload.posts)
+            return loadProfile(state, action.payload.newItems,action.payload.posts,action.payload.friends,action.payload.saved)
         case LOAD_POST:
         case UPDATE_POST:
         case DELETE_POST:

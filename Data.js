@@ -96,13 +96,15 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
     }
     let saved = []
     if(newItems[0].saved.length > 0){
-        const q1 = await getDocs(query(collection(db, post), where("key", "in", newItems[0].saved)))
-        q1.forEach(el =>{
+        const q1 = await getDocs(query(collection(db, post), where("id", "in", newItems[0].saved)))
+        q1.forEach((el,ind) =>{
+            console.log(0)
             let newItem = el.data()
             newItem.key = el.id
-            saved = [...posts, newItem]
+            saved = [...saved, newItem]
         })
     }
+    console.log(saved)
     let newAction = {
         ...action,
         payload: {newItems: newItems,
@@ -129,7 +131,8 @@ const addPostAndDispatch = async (action, dispatch) =>{
         likes: likes,
         poster: poster,
         reposts: reposts,
-        date: date
+        date: date,
+        id: Date.now()
     })
     loadPostAndDispatch(action, dispatch)
 }
@@ -137,7 +140,7 @@ const addPostAndDispatch = async (action, dispatch) =>{
 
 const updatePostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {recipe, title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date, key}= payload
+    const {recipe, title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date, key, id}= payload
     const toUpdate = doc(collection(db, post),key)
     const newVersion= {
         recipe: recipe,
@@ -151,7 +154,8 @@ const updatePostAndDispatch = async (action, dispatch) =>{
         likes: likes,
         poster: poster,
         reposts: reposts,
-        date: date
+        date: date,
+        id: id
     }
     await updateDoc(toUpdate, newVersion)
     loadPostAndDispatch(action, dispatch)
@@ -218,9 +222,6 @@ export const SaveAndDispatch =async(action, dispatch)=>{
         case LOAD_POST:
             loadPostAndDispatch(action, dispatch)
             return 
-        case SEARCH_PROFILE:
-            searchProfileAndDispatch(action)
-            return  
     }
 
 }

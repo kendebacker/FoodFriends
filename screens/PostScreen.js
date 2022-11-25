@@ -83,9 +83,9 @@ export default function PostScreen(props){
                 <Text style={styles.content}>{item.description}</Text>
             </View>
             <View style={styles.inputRow}>
-                {profile.saved.filter(el => el === item.key).length > 0?"":
+                {profile.saved.filter(el => el === item.id).length > 0?"":
                 <Button title ={"Save"} onPress={()=>{
-                        updateProfile([...profile.saved, item.key])
+                        updateProfile([...profile.saved, item.id])
                    }}/>}
             </View>
         </View>
