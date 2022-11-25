@@ -21,9 +21,10 @@ const initialFriends = []
 
 const addProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {firstName, lastName, image, reposts, posts, saved, friends, userID}= payload
+    const {email, firstName, lastName, image, reposts, posts, saved, friends, userID}= payload
     const coll = collection(db, profile)
     await addDoc(coll, {
+        email: email,
         firstName: firstName,
         lastName, lastName,
         image: image,
@@ -39,9 +40,10 @@ const addProfileAndDispatch = async (action, dispatch) =>{
 
 const updateProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {firstName, lastName, image, reposts, posts, saved, friends, userID}= payload
+    const {email, firstName, lastName, image, reposts, posts, saved, friends, userID}= payload
     const toUpdate = doc(collection(db, profile),userID)
     const newVersion= {
+        email: email, 
         firstName: firstName,
         lastName, lastName,
         image: image,
@@ -60,7 +62,10 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
     const {userID} = payload
     const q = await getDocs(query(collection(db, profile), where("userID", "==", userID)))
-    const newItems = q.map(el => el.data())
+    let newItems = []
+    q.forEach(el =>{
+        newItems = [...newItems, el.data()]
+    })
     let posts = []
     if(newItems[0].friends.length > 0){
         const q1 = await getDocs(query(collection(db, post), where("author", "in", newItems[0].friends)))
@@ -73,10 +78,12 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
     let friends = []
     if(newItems[0].friends.length > 0){
         const q1 = await getDocs(query(collection(db, profile), where("userID", "in", newItems[0].friends)))
-        friends = q1.map(el =>el.data)
+        q1.forEach(el =>{
+            friends = [...friends, el.data()]
+        })
     }
     let saved = []
-    if(newItems[0].friends.length > 0){
+    if(newItems[0].saved.length > 0){
         const q1 = await getDocs(query(collection(db, post), where("key", "in", newItems[0].saved)))
         q1.forEach(el =>{
             let newItem = el.data()

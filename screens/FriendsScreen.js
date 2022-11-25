@@ -19,6 +19,7 @@ export default function FriendsScreen(props){
 
     const [email, setEmail] = useState("")
     const [showOverlay, setShowOverlay] = useState(false)
+    const [friend, setFriend] = useState(null)
 
 
 
@@ -50,6 +51,7 @@ export default function FriendsScreen(props){
                 onBackdropPress={()=>setMakePostOverlay(false)}>
                 <Text>Search Email</Text>
                 <TextInput
+                style={styles.emailInput}
                 placeholder="email"
                 value={email}
                 onChangeText={(text)=>setEmail(text)}/>
@@ -66,14 +68,20 @@ export default function FriendsScreen(props){
                     title={"Add Friend"}
                     onPress={async ()=>{
                         const q = await getDocs(query(collection(db, profile), where("email", "==", email)))
-                        const items = q.map(el =>el.data())
-                        if(items.length > 0){
+                        let items = []
+                        q.forEach(el=> items=[...items, el.data()])
+                        setFriend(items.length ===0?0:items[0])
+                    }}/>
+                </View>
+                <View>
+                    {friend===null?"":<View>
+                        <Text>{friend===0?"Friend Not Found":"Friend Found"}</Text>
+                        <Button onPress={()=>{
                             updateProfile([...profile.friends,items[0].userID])
                             setEmail("")
                             setShowOverlay(false)
-                        }
-                    }}
-                    />
+                        }} title={"Add Friend"}/>
+                        </View>}
                 </View>
             </Overlay>
 
@@ -109,6 +117,14 @@ export default function FriendsScreen(props){
     )}
 
 const styles = {
+    emailInput:{
+        borderWidth: 1
+    },
+    overlay:{
+        column: "row",
+        width: "50%",
+        height: "50%"
+    },
     inputRow:{
         width: "100%",
         flexDirection: "row"

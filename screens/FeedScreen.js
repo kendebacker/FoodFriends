@@ -16,7 +16,6 @@ export default function FeedScreen(props){
     const posts = useSelector(state => state.posts)
     const profile = useSelector(state => state.profile)
     const state = useSelector(state => state)
-    console.log(state)
 
     const [makePostOverlay, setMakePostOverlay] = useState(false)
     const [showOverlay, setShowOverlay] = useState(profile.username==="")
@@ -130,7 +129,6 @@ export default function FeedScreen(props){
                     style={styles.contactStuff}
                     data={posts}
                     renderItem={({item})=>{
-                        console.log(item)
                     return(
                         <View>
                             <View>

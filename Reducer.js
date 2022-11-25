@@ -34,7 +34,6 @@ const updateSort =(state, name, order)=>{
 }
 
 const loadPost = (state, newPosts) =>{
-    console.log("A")
     return {
         ...state,
         posts: newPosts,
@@ -42,7 +41,6 @@ const loadPost = (state, newPosts) =>{
 }
 
 const loadProfile = (state, newProfiles, posts) =>{
-    console.log("B")
     return {
     ...state,
     profile: newProfiles[0],

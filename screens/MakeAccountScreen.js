@@ -31,11 +31,11 @@ const CreateAccountBox=({navigation})=>{
     const [password, setPassword] = useState("")
     const [checkPassword, setCheckPassword] = useState("")
 
-    const addProfile = (userID)=>{
+    const addProfile = (userID, email)=>{
         const action = {
             type: ADD_PROFILE,
             payload: {
-                username: "",
+                email:email,
                 firstName:"",
                 lastName:"",
                 image: "",
@@ -69,7 +69,7 @@ const CreateAccountBox=({navigation})=>{
                  if(password===checkPassword && password !==""  && email !==""){
                     try{
                         const userInfo = await createUserWithEmailAndPassword(auth,email, password)
-                        addProfile( userInfo.user.uid)
+                        addProfile( userInfo.user.uid, email)
                         navigation.navigate("FeedScreen")
                     }catch(error){
                         Alert.alert("error occured")
@@ -116,16 +116,15 @@ const LoginBox=({navigation})=>{
 
 export default function MakeAccountScreen(props){
 
-
     const {navigation, route} = props
+    navigation.setOptions({ tabBarVisible: false })
+
 
     const dispatch = useDispatch()
 
 
     useEffect(()=>{ onAuthStateChanged(auth, user=>{
         if(user){
-            console.log("IM FIREING")
-            console.log(user.uid)
             const loadProfile = {type: LOAD_PROFILE , payload: {userID:user.uid}}
             SaveAndDispatch(loadProfile, dispatch)
             navigation.navigate("FeedScreen")
@@ -138,19 +137,25 @@ export default function MakeAccountScreen(props){
 
     return(
             <View style={styles.content}>
-                <Text>{signIn?"Login":"Sign Up"}</Text>
+                <Text style={styles.title}>{signIn?"Login":"Sign Up"}</Text>
                 <View style={styles.inputRow}>
                     {signIn?<LoginBox navigation ={navigation}/>:<CreateAccountBox navigation ={navigation}/>}
                 </View>
                 <View style={styles.inputRow}>
+                    <Text>{signIn?"Want to create a new account? ":"Want to login? "}
                    <TouchableOpacity onPress={()=>{setSignIn(!signIn)}}>
                         <Text>Switch</Text>
                    </TouchableOpacity>
+                   to our {signIn?"Sign up":"Sign In"}
+                   </Text>
                 </View>
             </View>
     )}
 
 const styles = {
+    title:{
+        fontSize : 30
+    },
     inputRow:{
         width: "100%",
         flexDirection: "row",
