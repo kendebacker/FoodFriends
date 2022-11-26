@@ -1,12 +1,14 @@
 import {getApps, initializeApp} from "firebase/app"
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { useEffect, useState } from "react"
-import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image } from "react-native";
+import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Platform, Linking } from "react-native";
 import { Overlay , Input, Button} from "@rneui/themed";
 import { ADD_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { SaveAndDispatch } from "../Data";
 import { FontAwesome } from '@expo/vector-icons';
+import * as Location from 'expo-location';
+
 
 
 const StarRating = ({rating, setRating})=>{
@@ -49,10 +51,26 @@ export default function FeedScreen(props){
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const [foodImage, setFoodImage] = useState("")
-    const [location, setLocation] = useState("")
     const [rating, setRating] = useState(1)
+    const [recipe, setRecipe] = useState("")
+    const [location, setLocation] = useState(null)
 
 
+
+    const getLocation=async()=>{
+        // https://stackoverflow.com/questions/43214062/open-maps-google-maps-in-react-native
+        let locationAllowed = await Location.requestForegroundPermissionsAsync().status
+        if (locationAllowed !== 'granted') {
+            Alert.alert("You have not allowed geo-location")
+          }
+        const curLocation = await Location.getCurrentPositionAsync({})
+        setLocation(curLocation);
+        const url = Platform.select({
+            ios: `maps:0,0?q=${title}@${curLocation.coords.latitude},${curLocation.coords.longitude}`,
+            android: `geo:0,0?q=${curLocation.coords.latitude},${curLocation.coords.longitude}(${title})`
+          });
+          Linking.openURL(url);
+    }
 
     const updatePost = (post, profile)=>{
         let newLikes = post.likes.filter(el=> el === profile.email).length === 0?[...post.likes, profile.email]:post.likes.filter(el=> el !== profile.email)
@@ -105,42 +123,66 @@ export default function FeedScreen(props){
                 overlayStyle={styles.overlay}
                 isVisible={makePostOverlay}
                 onBackdropPress={()=>setMakePostOverlay(false)}>
-                <Text>Title</Text>
-                <TextInput
-                style={styles.textInput}
-                placeholder="title"
-                value={title}
-                onChangeText={(text)=>setTitle(text)}/>
-                <Text>Rating</Text>
-                <StarRating rating = {rating} setRating = {setRating} />
-                <Text>Description</Text>
-                <TextInput
-                style={styles.textInput}
-                placeholder="description"
-                value={description}
-                onChangeText={(text)=>setDescription(text)}/>
-                {picURL===null?<Text>No picture selected yet</Text>:<Image
-                style={styles.logo}
-                source={{uri: picURL}}
-                />}
-                <Button title={"pic"} onPress={()=>{
-                    setMakePostOverlay(false)
-                    navigation.navigate("Camera")}}/>
-                <View style={styles.submitRow}>
-                    <Button
-                    title={"Cancel"}
-                    onPress={()=>{
-                        setImage(profile.image)
-                        setShowOverlay(false)
-                    }}/>
+                <View>
+                    <View style={styles.inputRowOverlay}>
+                        <Text>Title</Text>
+                        <TextInput
+                        style={styles.textInput}
+                        placeholder="title"
+                        value={title}
+                        onChangeText={(text)=>setTitle(text)}/>
+                    </View>
+                    <View style={styles.inputRowOverlay}>
+                        <Text>Rating</Text>
+                        <StarRating rating = {rating} setRating = {setRating} />
+                    </View>
+                    <View style={styles.inputRowOverlay}>
+                        {picURL===null?<Text>No picture selected yet</Text>:<Image
+                        style={styles.logo}
+                        source={{uri: picURL}}
+                        />}
+                        <Button title={"pic"} onPress={()=>{
+                        setMakePostOverlay(false)
+                        navigation.navigate("Camera")}}/>
+                    </View>
+                    <View style={styles.inputRowOverlay}>
+                        {location===null?<Text>No Location Added</Text>:<Text>Location Added</Text>}
+                        <Button title={"loc"} onPress={()=>{
+                            getLocation()
+                            }}/>
+                    </View>
+                    <View style={styles.inputRowOverlay}>
+                        <Text>Description</Text>
+                        <TextInput
+                        style={styles.textInput}
+                        placeholder="description"
+                        value={description}
+                        onChangeText={(text)=>setDescription(text)}/>
+                    </View>
+                    <View style={styles.inputRowOverlay}>
+                        <Text>Recipe</Text>
+                        <TextInput
+                        style={styles.textInput}
+                        placeholder="description"
+                        value={recipe}
+                        onChangeText={(text)=>setRecipe(text)}/>
+                    </View>
+                    <View style={styles.submitRow}>
+                        <Button
+                        title={"Cancel"}
+                        onPress={()=>{
+                            setImage(profile.image)
+                            setShowOverlay(false)
+                        }}/>
 
-                    <Button
-                    title={"Post"}
-                    onPress={()=>{
-                        addPost(title, firstName, lastName,foodImage, description, rating, location, [], poster, [], date)
-                        setShowOverlay(false)
-                    }}
-                    />
+                        <Button
+                        title={"Post"}
+                        onPress={()=>{
+                            addPost(title, firstName, lastName,foodImage, description, rating, location, [], poster, [], date)
+                            setShowOverlay(false)
+                        }}
+                        />
+                    </View>
                 </View>
             </Overlay>
 
@@ -198,34 +240,36 @@ export default function FeedScreen(props){
                 overlayStyle={styles.overlay}
                 isVisible={showOverlay}
                 onBackdropPress={()=>setShowOverlay(false)}>
-                <Text>Profile Details</Text>
-                <TextInput
-                placeholder="first name"
-                value={firstName}
-                onChangeText={(text)=>setFirstName(text)}/>
-                <TextInput
-                placeholder="last name"
-                value={lastName}
-                onChangeText={(text)=>setLastName(text)}/>
-                <TextInput
-                placeholder="image"
-                value={image}
-                onChangeText={(text)=>setImage(text)}/>
-                <View style={styles.buttonRow}>
-                    <Button
-                    title={"Cancel"}
-                    onPress={()=>{
-                        setImage(profile.image)
-                        setShowOverlay(false)
-                    }}/>
+                <View>
+                    <Text>Profile Details</Text>
+                    <TextInput
+                    placeholder="first name"
+                    value={firstName}
+                    onChangeText={(text)=>setFirstName(text)}/>
+                    <TextInput
+                    placeholder="last name"
+                    value={lastName}
+                    onChangeText={(text)=>setLastName(text)}/>
+                    <TextInput
+                    placeholder="image"
+                    value={image}
+                    onChangeText={(text)=>setImage(text)}/>
+                    <View style={styles.buttonRow}>
+                        <Button
+                        title={"Cancel"}
+                        onPress={()=>{
+                            setImage(profile.image)
+                            setShowOverlay(false)
+                        }}/>
 
-                    <Button
-                    title={"Save"}
-                    onPress={()=>{
-                        updateProfile(firstName, lastName, image)
-                        setShowOverlay(false)
-                    }}
-                    />
+                        <Button
+                        title={"Save"}
+                        onPress={()=>{
+                            updateProfile(firstName, lastName, image)
+                            setShowOverlay(false)
+                        }}
+                        />
+                    </View>
                 </View>
             </Overlay>
 
@@ -233,8 +277,22 @@ export default function FeedScreen(props){
     )}
 
 const styles = {
+    inputRowOverlay:{
+        width: "100%",
+        flexDirection: "column",
+        paddingTop: 20,
+        alignItems: "center"
+    },
+    inputRow:{
+        width: "100%",
+        padding: 20,
+        flexDirection: "col",
+        alignItems: "center"
+    },
     submitRow:{
-        flexDirection: "row"
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        padding: 15
     },
     thumb:{flexDirection: "row"},
     rating:{
