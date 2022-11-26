@@ -27,7 +27,7 @@ function FeedTabs(){
         <Stack.Navigator name="Feed" initialRouteName="FeedScreen" screenOptions={{headerShown: false}}>
             <Stack.Screen name="FeedScreen" component={FeedScreen}/>
             <Stack.Screen name="PostScreen" component={PostScreen}/>
-            <Stack.Screen name="CameraScreen" component={CameraScreen}/>
+            <Stack.Screen name="Camera" component={CameraScreen}/>
         </Stack.Navigator>
     )
 }

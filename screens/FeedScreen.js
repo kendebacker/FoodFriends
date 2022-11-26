@@ -1,6 +1,6 @@
 import {getApps, initializeApp} from "firebase/app"
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image } from "react-native";
 import { Overlay , Input, Button} from "@rneui/themed";
 import { ADD_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
@@ -32,10 +32,16 @@ export default function FeedScreen(props){
     const dispatch = useDispatch()
     const posts = useSelector(state => state.posts)
     const profile = useSelector(state => state.profile)
+    const camera = route.params
+    const picURL = route.params===undefined?null:route.params.picture
+    
 
-    console.log(posts)
+    useEffect(()=>{
+        setMakePostOverlay(camera!==undefined)
+    }, [camera])
 
-    const [makePostOverlay, setMakePostOverlay] = useState(false)
+
+    const [makePostOverlay, setMakePostOverlay] = useState(camera!==undefined)
     const [showOverlay, setShowOverlay] = useState(profile.username==="")
     const [username, setUsername] = useState(profile.username)
     const [firstName, setFirstName] = useState(profile.firstName)
@@ -46,6 +52,8 @@ export default function FeedScreen(props){
     const [foodImage, setFoodImage] = useState("")
     const [location, setLocation] = useState("")
     const [rating, setRating] = useState(1)
+
+
 
     const updatePost = (post, profile)=>{
         let newLikes = post.likes.filter(el=> el === profile.email).length === 0?[...post.likes, profile.email]:post.likes.filter(el=> el !== profile.email)
@@ -113,6 +121,13 @@ export default function FeedScreen(props){
                 placeholder="description"
                 value={description}
                 onChangeText={(text)=>setDescription(text)}/>
+                {picURL===null?<Text>No picture selected yet</Text>:<Image
+                style={styles.logo}
+                source={{uri: picURL}}
+                />}
+                <Button title={"pic"} onPress={()=>{
+                    setMakePostOverlay(false)
+                    navigation.navigate("Camera")}}/>
                 <View style={styles.submitRow}>
                     <Button
                     title={"Cancel"}

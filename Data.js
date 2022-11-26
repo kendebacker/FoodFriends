@@ -1,5 +1,5 @@
-import { ADD_PROFILE,LOAD_PROFILE, LOAD_POST, ADD_POST, DELETE_PROFILE, DELETE_POST, UPDATE_PROFILE, UPDATE_POST ,SEARCH_PROFILE} from "./Reducer"
-import {getStorage} from "firebase/storage"
+import { ADD_PROFILE,LOAD_PROFILE, LOAD_POST, ADD_POST, DELETE_PROFILE, DELETE_POST, UPDATE_PROFILE, UPDATE_POST ,SEARCH_PROFILE, SAVE_PICTURE} from "./Reducer"
+import {getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage"
 import { initializeApp, getApps } from "firebase/app"
 import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy } from "firebase/firestore"
 import { firebaseConfig } from "./Secrets"
@@ -9,12 +9,16 @@ import { firebaseConfig } from "./Secrets"
 
 const [profile, post] = ["profiles", "posts"]
 
+let firebaseApp = null
+
 const myApp = ()=>{
+    if(!firebaseApp){
     if(getApps().length < 1){
         return initializeApp(firebaseConfig)
     }else{
         return getApps()[0]
     }
+}
 }
 
 export const myDB =()=>{
@@ -25,12 +29,39 @@ export const myStorage=()=>{
     return getStorage(myApp())
 }
 
-const db = getDB()
+const db = myDB()
 
 
 const initialPosts = [{firstName:"", lastName: "", image: "dummyImage.png", description: "Not very good", rating:1, location: "Somewhere...",likes:0, key: 1, poster: 1, reposts:[2], date: new Date().toLocaleDateString()}]
 const intitialProfiles = [{lastName:"",firstName: "ken",image:"profilePic.png", reposts: [1], posts: [1,2], saved: [3], friends:[1,1]}]
 const initialFriends = []
+
+const dataLoader =(list)=>{
+    let newItems = []
+    list.forEach(el =>{
+        let newItem = el.data()
+        newItem.key = el.id
+        newItems = [...newItems, newItem]
+    })
+    return newItems
+}
+
+const savePictureAndDispatch=async (action, dispatch)=>{
+    const picture = action.payload.picture
+    const storageRef = ref(myStorage())
+    const fileParts = picture.uri.split("/")
+    const fileName = fileParts[fileParts.length-1]
+    const pictureRef = ref(storageRef, fileName)
+    try{
+        const data = await fetch(picture.uri)
+        const blob = await data.blob()
+        await uploadBytes(pictureRef, blob)
+        const pictureURL = await getDownloadURL(pictureRef)
+        console.log(pictureURL)
+    }catch(e){
+        console.log(e)
+    }
+}
 
 
 const addProfileAndDispatch = async (action, dispatch) =>{
@@ -74,48 +105,25 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
     const {email} = payload
     const q = await getDocs(query(collection(db, profile), where("email", "==", email)))
-    let newItems = []
-    q.forEach(el =>{
-        let newItem = el.data()
-        newItem.key = el.id
-        newItems = [...newItems, newItem]
-    })
+    const newItems = dataLoader(q)
     let posts = []
     if(newItems[0].friends.length > 0){
         const q1 = await getDocs(query(collection(db, post), where("poster", "in", newItems[0].friends)))
-        q1.forEach(el =>{
-            let newItem = el.data()
-            newItem.key = el.id
-            posts = [...posts, newItem]
-        })
+        posts = dataLoader(q1)
     }
     let friends = []
     if(newItems[0].friends.length > 0){
         const q1 = await getDocs(query(collection(db, profile), where("email", "in", newItems[0].friends)))
-        q1.forEach(el =>{
-            let newItem = el.data()
-            newItem.key = el.id
-            newItems = [...newItems, newItem]
-            friends = [...friends, newItem]
-        })
+        friends = dataLoader(q1)
     }
     let saved = []
     if(newItems[0].saved.length > 0){
         const q1 = await getDocs(query(collection(db, post), where("id", "in", newItems[0].saved)))
-        q1.forEach((el,ind) =>{
-            console.log(0)
-            let newItem = el.data()
-            newItem.key = el.id
-            saved = [...saved, newItem]
-        })
+        saved = dataLoader(q1)
     }
-    console.log(saved)
     let newAction = {
         ...action,
-        payload: {newItems: newItems,
-                    posts: posts,
-                    friends: friends,
-                    saved: saved}
+        payload: {newItems: newItems, posts: posts, friends: friends, saved: saved}
     }
     dispatch(newAction)
 }
@@ -186,12 +194,7 @@ const loadPostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
     const {friends}= payload
     const q = await getDocs(query(collection(db, post), where("poster", "in", friends)))
-    let newItems = []
-    q.forEach(el =>{
-        let newItem = el.data()
-        newItem.key = el.id
-        newItems = [...newItems, newItem]
-    })
+    const newItems = dataLoader(q)
     let newAction = {
         ...action,
         payload: {posts: newItems}
@@ -226,6 +229,9 @@ export const SaveAndDispatch =async(action, dispatch)=>{
             return
         case LOAD_POST:
             loadPostAndDispatch(action, dispatch)
+            return 
+        case SAVE_PICTURE:
+            savePictureAndDispatch(action, dispatch)
             return 
     }
 
