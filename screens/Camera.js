@@ -6,7 +6,7 @@ import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Im
 import { Overlay , Input, Button} from "@rneui/themed";
 import { SAVE_PICTURE, SEARCH_PROFILE, DELETE_PROFILE, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
-import { SaveAndDispatch, myDB } from "../Data"
+import { SaveAndDispatch, myDB, savePicture } from "../Data"
 import { Camera, CameraType } from "expo-camera";
 import { AntDesign } from '@expo/vector-icons'; 
 
@@ -21,14 +21,8 @@ export default function CameraScreen(props){
 
     const [permission, setPermission] = useState(false)
     const [cameraView, setCameraView] = useState(true)
+    const [taken, setTaken] = useState(false)
 
-    const savePicture = (picture)=>{
-        const action = {
-            type: SAVE_PICTURE,
-            payload: {profile: profile, picture: picture}
-        }
-        SaveAndDispatch(action, dispatch)
-    }
 
     const getPermission = async ()=>{
         const {status} = await Camera.requestCameraPermissionsAsync()
@@ -60,16 +54,22 @@ export default function CameraScreen(props){
                     ref={ref=>theCamera = ref}/>:<Text>Camera access not given</Text>}
 
                 </View>
+                {!taken?
                 <View style={styles.buttonRow}>
-                    <Button title={"Take Picture"} onPress={async()=>{      
+                    <Button title={"Take Picture"} onPress={async()=>{  
+                            setTaken(true)    
                             let picture = await theCamera.takePictureAsync({quality: 0.1})
-                            savePicture(picture)
-                            navigation.navigate("FeedScreen",{camera: true})
+                            const action = {
+                                type: SAVE_PICTURE,
+                                payload: {profile: profile, picture: picture}
+                            }
+                            const imgUrl = await savePicture(action)
+                            navigation.navigate("FeedScreen",{picture: imgUrl})
                             }}/>
                     <Button title={"Switch"} onPress={async()=>{      
                             setCameraView(!cameraView)
                             }}/>
-                </View>
+                </View>:<Text>Processing...</Text>}
             </View>
         </View>
     )}

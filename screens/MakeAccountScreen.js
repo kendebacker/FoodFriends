@@ -68,7 +68,7 @@ const CreateAccountBox=({navigation})=>{
                  if(password===checkPassword && password !==""  && email !==""){
                     try{
                         const userInfo = await createUserWithEmailAndPassword(auth,email, password)
-                        addProfile( userInfo.user.uid, email)
+                        addProfile( email)
                         navigation.navigate("Feed")
                     }catch(error){
                         Alert.alert("error occured")

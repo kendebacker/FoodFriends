@@ -42,8 +42,7 @@ export default function FeedScreen(props){
 
 
     const [makePostOverlay, setMakePostOverlay] = useState(camera!==undefined)
-    const [showOverlay, setShowOverlay] = useState(profile.username==="")
-    const [username, setUsername] = useState(profile.username)
+    const [showOverlay, setShowOverlay] = useState(profile.firstName==="")
     const [firstName, setFirstName] = useState(profile.firstName)
     const [lastName, setLastName] = useState(profile.lastName)
     const [image, setImage] = useState(profile.image)
@@ -64,12 +63,11 @@ export default function FeedScreen(props){
         SaveAndDispatch(action, dispatch)
     }
 
-    const updateProfile = (username, firstName, lastName, image,)=>{
+    const updateProfile = (firstName, lastName, image,)=>{
         const action = {
             type: UPDATE_PROFILE,
             payload: {
                 ...profile,
-                username: username,
                 firstName: firstName,
                 lastName: lastName,
                 image: image
@@ -132,7 +130,6 @@ export default function FeedScreen(props){
                     <Button
                     title={"Cancel"}
                     onPress={()=>{
-                        setUsername(profile.username)
                         setImage(profile.image)
                         setShowOverlay(false)
                     }}/>
@@ -203,10 +200,6 @@ export default function FeedScreen(props){
                 onBackdropPress={()=>setShowOverlay(false)}>
                 <Text>Profile Details</Text>
                 <TextInput
-                placeholder="username"
-                value={username}
-                onChangeText={(text)=>setUsername(text)}/>
-                <TextInput
                 placeholder="first name"
                 value={firstName}
                 onChangeText={(text)=>setFirstName(text)}/>
@@ -222,7 +215,6 @@ export default function FeedScreen(props){
                     <Button
                     title={"Cancel"}
                     onPress={()=>{
-                        setUsername(profile.username)
                         setImage(profile.image)
                         setShowOverlay(false)
                     }}/>
@@ -230,7 +222,7 @@ export default function FeedScreen(props){
                     <Button
                     title={"Save"}
                     onPress={()=>{
-                        updateProfile(username, firstName, lastName, image)
+                        updateProfile(firstName, lastName, image)
                         setShowOverlay(false)
                     }}
                     />

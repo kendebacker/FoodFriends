@@ -1,8 +1,9 @@
 import { ADD_PROFILE,LOAD_PROFILE, LOAD_POST, ADD_POST, DELETE_PROFILE, DELETE_POST, UPDATE_PROFILE, UPDATE_POST ,SEARCH_PROFILE, SAVE_PICTURE} from "./Reducer"
 import {getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage"
 import { initializeApp, getApps } from "firebase/app"
-import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy } from "firebase/firestore"
+import { setDoc, getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy } from "firebase/firestore"
 import { firebaseConfig } from "./Secrets"
+import { getAuth } from "firebase/auth"
 
 
 
@@ -19,6 +20,10 @@ const myApp = ()=>{
         return getApps()[0]
     }
 }
+}
+
+export const getCred=()=>{
+    return getAuth(myApp())
 }
 
 export const myDB =()=>{
@@ -46,7 +51,7 @@ const dataLoader =(list)=>{
     return newItems
 }
 
-const savePictureAndDispatch=async (action, dispatch)=>{
+export const savePicture=async (action)=>{
     const picture = action.payload.picture
     const storageRef = ref(myStorage())
     const fileParts = picture.uri.split("/")
@@ -57,7 +62,7 @@ const savePictureAndDispatch=async (action, dispatch)=>{
         const blob = await data.blob()
         await uploadBytes(pictureRef, blob)
         const pictureURL = await getDownloadURL(pictureRef)
-        console.log(pictureURL)
+        return pictureURL
     }catch(e){
         console.log(e)
     }
@@ -67,8 +72,8 @@ const savePictureAndDispatch=async (action, dispatch)=>{
 const addProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
     const {email, firstName, lastName, image, reposts, posts, saved, friends}= payload
-    const coll = collection(db, profile)
-    await addDoc(coll, {
+    const coll = doc(collection(db, profile),getCred().currentUser.uid)
+    await setDoc(coll, {
         email: email,
         firstName: firstName,
         lastName, lastName,
@@ -85,7 +90,7 @@ const addProfileAndDispatch = async (action, dispatch) =>{
 const updateProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
     const {key, email, firstName, lastName, image, reposts, posts, saved, friends}= payload
-    const toUpdate = doc(collection(db, profile),key)
+    const toUpdate = doc(collection(db, profile),getCred().currentUser.uid)
     const newVersion= {
         email: email, 
         firstName: firstName,
@@ -102,28 +107,26 @@ const updateProfileAndDispatch = async (action, dispatch) =>{
 
 
 const loadProfileAndDispatch = async (action, dispatch) =>{
-    const {payload} = action
-    const {email} = payload
-    const q = await getDocs(query(collection(db, profile), where("email", "==", email)))
-    const newItems = dataLoader(q)
+    const userData = await getDoc(doc(db, profile, getCred().currentUser.uid))
+    const userProf = userData.data()
     let posts = []
-    if(newItems[0].friends.length > 0){
-        const q1 = await getDocs(query(collection(db, post), where("poster", "in", newItems[0].friends)))
+    if(userProf.friends.length > 0){
+        const q1 = await getDocs(query(collection(db, post), where("poster", "in", userProf.friends)))
         posts = dataLoader(q1)
     }
     let friends = []
-    if(newItems[0].friends.length > 0){
-        const q1 = await getDocs(query(collection(db, profile), where("email", "in", newItems[0].friends)))
+    if(userProf.friends.length > 0){
+        const q1 = await getDocs(query(collection(db, profile), where("email", "in", userProf.friends)))
         friends = dataLoader(q1)
     }
     let saved = []
-    if(newItems[0].saved.length > 0){
-        const q1 = await getDocs(query(collection(db, post), where("id", "in", newItems[0].saved)))
+    if(userProf.saved.length > 0){
+        const q1 = await getDocs(query(collection(db, post), where("id", "in", userProf.saved)))
         saved = dataLoader(q1)
     }
     let newAction = {
         ...action,
-        payload: {newItems: newItems, posts: posts, friends: friends, saved: saved}
+        payload: {profile: userProf, posts: posts, friends: friends, saved: saved}
     }
     dispatch(newAction)
 }

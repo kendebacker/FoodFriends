@@ -11,7 +11,7 @@ const SEARCH_PROFILE = "SEARCH_PROFILE"
 const SAVE_PICTURE = "SAVE_PICTURE"
 
 const initialPosts = [{recipe: "asdfsafdasfdas",image: "dummyImage.png", description: "Not very good", rating:1, location: "Somewhere...",likes:[], key: 1, poster: 1, reposts:[2], date: new Date().toLocaleDateString()}]
-const intitialProfile = [{userID:"VEFomrjRKGTaqxrobClLOkRRpVA3", username: "ken", password: "mypassword",image:"profilePic.png", reposts: [1], posts: [1,2], saved: [3], friends:[1]}]
+const intitialProfile = [{userID:"VEFomrjRKGTaqxrobClLOkRRpVA3", password: "mypassword",image:"profilePic.png", reposts: [1], posts: [1,2], saved: [3], friends:[1]}]
 const initialFriends = []
 const initialSaved = []
 
@@ -42,10 +42,10 @@ const loadPost = (state, newPosts) =>{
 }
 
 
-const loadProfile = (state, newProfiles, posts, friends, saved) =>{
+const loadProfile = (state, profile, posts, friends, saved) =>{
     return {
     ...state,
-    profile: newProfiles[0],
+    profile: profile,
     posts: posts,
     friends: friends,
     saved: saved
@@ -58,7 +58,7 @@ const rootReducer =(state=initialState, action)=>{
         case UPDATE_PROFILE:
         case DELETE_PROFILE:
         case LOAD_PROFILE:
-            return loadProfile(state, action.payload.newItems,action.payload.posts,action.payload.friends,action.payload.saved)
+            return loadProfile(state, action.payload.profile,action.payload.posts,action.payload.friends,action.payload.saved)
         case LOAD_POST:
         case UPDATE_POST:
         case DELETE_POST:
