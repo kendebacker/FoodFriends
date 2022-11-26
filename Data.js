@@ -72,7 +72,7 @@ export const savePicture=async (action)=>{
 const addProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
     const {email, firstName, lastName, image, reposts, posts, saved, friends}= payload
-    const coll = doc(collection(db, profile),getCred().currentUser.uid)
+    const coll = doc(db, profile,getCred().currentUser.uid)
     await setDoc(coll, {
         email: email,
         firstName: firstName,

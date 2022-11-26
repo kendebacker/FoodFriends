@@ -1,7 +1,7 @@
 import {getApps, initializeApp} from "firebase/app"
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { useState } from "react"
-import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image } from "react-native";
+import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Linking, Platform } from "react-native";
 import { Overlay , Input, Button} from "@rneui/themed";
 import { ADD_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
@@ -45,6 +45,15 @@ export default function PostScreen(props){
             }
         }
         SaveAndDispatch(action, dispatch)
+    }
+
+
+    const openMap= ()=>{
+        const url = Platform.select({
+            ios: `maps:0,0?q=${item.title}@${item.location[0]},${item.location[1]}`,
+            android: `geo:0,0?q=${item.location[0]},${item.location[1]}(${item.title})`
+          });
+          Linking.openURL(url);
     }
 
 

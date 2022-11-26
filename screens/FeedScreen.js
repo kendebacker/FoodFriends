@@ -8,6 +8,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { SaveAndDispatch } from "../Data";
 import { FontAwesome } from '@expo/vector-icons';
 import * as Location from 'expo-location';
+import { AntDesign } from '@expo/vector-icons'; 
+import { Entypo } from '@expo/vector-icons'; 
+import { MaterialIcons } from '@expo/vector-icons'; 
+
+
 
 
 
@@ -19,8 +24,8 @@ const StarRating = ({rating, setRating})=>{
         <View style={styles.rating}>
             {start.map((el,ind) => 
             <TouchableOpacity key={ind} onPress={()=>{setRating(ind+1)}}>{el===1?
-                <FontAwesome name="star" size={24} color="black" />:
-                <FontAwesome name="star-o" size={24} color="black" />}
+                <FontAwesome name="star" size={24} color="dodgerblue" />:
+                <FontAwesome name="star-o" size={24} color="dodgerblue" />}
             </TouchableOpacity>)}
         </View>
     )
@@ -35,7 +40,9 @@ export default function FeedScreen(props){
     const posts = useSelector(state => state.posts)
     const profile = useSelector(state => state.profile)
     const camera = route.params
-    const picURL = route.params===undefined?null:route.params.picture
+    const postURL = route.params===undefined?null:route.params.picture
+    const profileURL = route.params===undefined?null:route.params.picture
+
     
 
     useEffect(()=>{
@@ -47,7 +54,6 @@ export default function FeedScreen(props){
     const [showOverlay, setShowOverlay] = useState(profile.firstName==="")
     const [firstName, setFirstName] = useState(profile.firstName)
     const [lastName, setLastName] = useState(profile.lastName)
-    const [image, setImage] = useState(profile.image)
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const [foodImage, setFoodImage] = useState("")
@@ -64,12 +70,7 @@ export default function FeedScreen(props){
             Alert.alert("You have not allowed geo-location")
           }
         const curLocation = await Location.getCurrentPositionAsync({})
-        setLocation(curLocation);
-        const url = Platform.select({
-            ios: `maps:0,0?q=${title}@${curLocation.coords.latitude},${curLocation.coords.longitude}`,
-            android: `geo:0,0?q=${curLocation.coords.latitude},${curLocation.coords.longitude}(${title})`
-          });
-          Linking.openURL(url);
+        setLocation([curLocation.coords.latitude,curLocation.coords.longitude]);
     }
 
     const updatePost = (post, profile)=>{
@@ -125,7 +126,7 @@ export default function FeedScreen(props){
                 onBackdropPress={()=>setMakePostOverlay(false)}>
                 <View>
                     <View style={styles.inputRowOverlay}>
-                        <Text>Title</Text>
+                        <Text style={styles.labelText}>Title</Text>
                         <TextInput
                         style={styles.textInput}
                         placeholder="title"
@@ -133,34 +134,40 @@ export default function FeedScreen(props){
                         onChangeText={(text)=>setTitle(text)}/>
                     </View>
                     <View style={styles.inputRowOverlay}>
-                        <Text>Rating</Text>
+                        <Text style={styles.labelText}>Rating</Text>
                         <StarRating rating = {rating} setRating = {setRating} />
                     </View>
                     <View style={styles.inputRowOverlay}>
-                        {picURL===null?<Text>No picture selected yet</Text>:<Image
+                        <Text style={styles.labelText}>Image</Text>
+                        {postURL===null?<Text>No picture selected yet</Text>:<Image
                         style={styles.logo}
-                        source={{uri: picURL}}
+                        source={{uri: postURL}}
                         />}
-                        <Button title={"pic"} onPress={()=>{
-                        setMakePostOverlay(false)
-                        navigation.navigate("Camera")}}/>
+                        <TouchableOpacity  onPress={()=>{
+                            setMakePostOverlay(false)
+                            navigation.navigate("Camera")}}>
+                          <AntDesign name="camera" size={50} color="dodgerblue" />  
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.inputRowOverlay}>
+                        <Text style={styles.labelText}>Location</Text>
                         {location===null?<Text>No Location Added</Text>:<Text>Location Added</Text>}
-                        <Button title={"loc"} onPress={()=>{
+                        <TouchableOpacity title={"loc"} onPress={()=>{
                             getLocation()
-                            }}/>
+                            }}>
+                            <Entypo name="location" size={50} color="dodgerblue" />    
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.inputRowOverlay}>
-                        <Text>Description</Text>
+                        <Text style={styles.labelText}>Description</Text>
                         <TextInput
                         style={styles.textInput}
-                        placeholder="description"
+                        placeholder={"description"}
                         value={description}
                         onChangeText={(text)=>setDescription(text)}/>
                     </View>
                     <View style={styles.inputRowOverlay}>
-                        <Text>Recipe</Text>
+                        <Text style={styles.labelText}>Recipe</Text>
                         <TextInput
                         style={styles.textInput}
                         placeholder="description"
@@ -168,20 +175,24 @@ export default function FeedScreen(props){
                         onChangeText={(text)=>setRecipe(text)}/>
                     </View>
                     <View style={styles.submitRow}>
-                        <Button
+                        <TouchableOpacity
                         title={"Cancel"}
                         onPress={()=>{
                             setImage(profile.image)
                             setShowOverlay(false)
-                        }}/>
+                        }}>
+                            <MaterialIcons name="cancel" size={50} color="red" />
+                        </TouchableOpacity>
 
-                        <Button
+                        <TouchableOpacity
                         title={"Post"}
                         onPress={()=>{
                             addPost(title, firstName, lastName,foodImage, description, rating, location, [], poster, [], date)
                             setShowOverlay(false)
                         }}
-                        />
+                        >
+                           <MaterialIcons name="check-circle" size={50} color="green" />
+                        </TouchableOpacity>
                     </View>
                 </View>
             </Overlay>
@@ -196,8 +207,7 @@ export default function FeedScreen(props){
                         setMakePostOverlay(true)
                         }}/>
                     <Button title={"Settings"} onPress={()=>{      
-                        const loadGroup = {type: LOAD_POST}
-                        SaveAndDispatch(loadGroup, dispatch)
+                        setShowOverlay(true)
                         }}/>
                 </View>
                 <FlatList 
@@ -216,7 +226,7 @@ export default function FeedScreen(props){
                         <View style={styles.middleContent}>
                         <Image
                                 style={styles.logo}
-                                source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+                                source={{uri: profileURL}}
                                 />
                         </View>
                         <View style={styles.inputRow}>
@@ -241,34 +251,54 @@ export default function FeedScreen(props){
                 isVisible={showOverlay}
                 onBackdropPress={()=>setShowOverlay(false)}>
                 <View>
-                    <Text>Profile Details</Text>
-                    <TextInput
-                    placeholder="first name"
-                    value={firstName}
-                    onChangeText={(text)=>setFirstName(text)}/>
-                    <TextInput
-                    placeholder="last name"
-                    value={lastName}
-                    onChangeText={(text)=>setLastName(text)}/>
-                    <TextInput
-                    placeholder="image"
-                    value={image}
-                    onChangeText={(text)=>setImage(text)}/>
-                    <View style={styles.buttonRow}>
-                        <Button
+                    <View style={styles.inputRowOverlay}>
+                        <Text style={styles.labelText}>First Name</Text>
+                        <TextInput
+                        style={styles.textInput}
+                        placeholder="title"
+                        value={title}
+                        onChangeText={(text)=>setTitle(text)}/>
+                    </View>
+                    <View style={styles.inputRowOverlay}>
+                        <Text style={styles.labelText}>Last Name</Text>
+                        <TextInput
+                        style={styles.textInput}
+                        placeholder="title"
+                        value={title}
+                        onChangeText={(text)=>setTitle(text)}/>
+                    </View>
+
+                    <View style={styles.inputRowOverlay}>
+                        <Text style={styles.labelText}>Image</Text>
+                        {profileURL===null?<Text>No picture selected yet</Text>:<Image
+                        style={styles.logo}
+                        source={{uri: profileURL}}
+                        />}
+                        <TouchableOpacity  onPress={()=>{
+                            setMakePostOverlay(false)
+                            navigation.navigate("Camera")}}>
+                          <AntDesign name="camera" size={50} color="dodgerblue" />  
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.submitRow}>
+                        <TouchableOpacity
                         title={"Cancel"}
                         onPress={()=>{
                             setImage(profile.image)
                             setShowOverlay(false)
-                        }}/>
+                        }}>
+                            <MaterialIcons name="cancel" size={50} color="red" />
+                        </TouchableOpacity>
 
-                        <Button
-                        title={"Save"}
+                        <TouchableOpacity
+                        title={"Post"}
                         onPress={()=>{
-                            updateProfile(firstName, lastName, image)
+                            addPost(title, firstName, lastName,foodImage, description, rating, location, [], poster, [], date)
                             setShowOverlay(false)
                         }}
-                        />
+                        >
+                           <MaterialIcons name="check-circle" size={50} color="green" />
+                        </TouchableOpacity>
                     </View>
                 </View>
             </Overlay>
@@ -277,6 +307,9 @@ export default function FeedScreen(props){
     )}
 
 const styles = {
+    labelText:{
+        fontSize: 20
+    },
     inputRowOverlay:{
         width: "100%",
         flexDirection: "column",
@@ -340,7 +373,8 @@ logo: {
     },
     textInput:{
         borderWidth: 1,
-        padding: 2
+        padding: 2,
+        width: "75%"
     },
 
     content:{
