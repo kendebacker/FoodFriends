@@ -1,32 +1,37 @@
 import { ADD_PROFILE,LOAD_PROFILE, LOAD_POST, ADD_POST, DELETE_PROFILE, DELETE_POST, UPDATE_PROFILE, UPDATE_POST ,SEARCH_PROFILE} from "./Reducer"
-
+import {getStorage} from "firebase/storage"
 import { initializeApp, getApps } from "firebase/app"
 import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy } from "firebase/firestore"
 import { firebaseConfig } from "./Secrets"
 
 
 
-let app, db = undefined
 
 const [profile, post] = ["profiles", "posts"]
 
-if(getApps().length < 1){
-    app = initializeApp(firebaseConfig)
+const myApp = ()=>{
+    if(getApps().length < 1){
+        return initializeApp(firebaseConfig)
+    }else{
+        return getApps()[0]
+    }
 }
 
-db = getFirestore(app)
+export const myDB =()=>{
+    return getFirestore(myApp())
+}
+
+export const myStorage=()=>{
+    return getStorage(myApp())
+}
+
+const db = getDB()
+
 
 const initialPosts = [{firstName:"", lastName: "", image: "dummyImage.png", description: "Not very good", rating:1, location: "Somewhere...",likes:0, key: 1, poster: 1, reposts:[2], date: new Date().toLocaleDateString()}]
 const intitialProfiles = [{lastName:"",firstName: "ken",image:"profilePic.png", reposts: [1], posts: [1,2], saved: [3], friends:[1,1]}]
 const initialFriends = []
 
-
-export const SearchProfileData = async (email) =>{
-    const q = await getDocs(query(collection(db, profile), where("email", "==", email)))
-    let items = []
-    q.forEach(el=> items=[...items, el.data()])
-    return items.length ===0?0:items[0].email
-}
 
 const addProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action

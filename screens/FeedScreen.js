@@ -9,6 +9,22 @@ import { SaveAndDispatch } from "../Data";
 import { FontAwesome } from '@expo/vector-icons';
 
 
+const StarRating = ({rating, setRating})=>{
+    let start = [0,0,0,0,0]
+    start = start.map((el,ind)=> el = ind<rating?1:0)
+
+    return(
+        <View style={styles.rating}>
+            {start.map((el,ind) => 
+            <TouchableOpacity key={ind} onPress={()=>{setRating(ind+1)}}>{el===1?
+                <FontAwesome name="star" size={24} color="black" />:
+                <FontAwesome name="star-o" size={24} color="black" />}
+            </TouchableOpacity>)}
+        </View>
+    )
+}
+
+
 export default function FeedScreen(props){
 
     const {navigation, route} = props
@@ -16,6 +32,8 @@ export default function FeedScreen(props){
     const dispatch = useDispatch()
     const posts = useSelector(state => state.posts)
     const profile = useSelector(state => state.profile)
+
+    console.log(posts)
 
     const [makePostOverlay, setMakePostOverlay] = useState(false)
     const [showOverlay, setShowOverlay] = useState(profile.username==="")
@@ -28,14 +46,6 @@ export default function FeedScreen(props){
     const [foodImage, setFoodImage] = useState("")
     const [location, setLocation] = useState("")
     const [rating, setRating] = useState(1)
-
-
-
-
-
-    const refresh=()=>[
-
-    ]
 
     const updatePost = (post, profile)=>{
         let newLikes = post.likes.filter(el=> el === profile.email).length === 0?[...post.likes, profile.email]:post.likes.filter(el=> el !== profile.email)
@@ -89,19 +99,21 @@ export default function FeedScreen(props){
                 overlayStyle={styles.overlay}
                 isVisible={makePostOverlay}
                 onBackdropPress={()=>setMakePostOverlay(false)}>
-                <Text>Post</Text>
                 <Text>Title</Text>
                 <TextInput
+                style={styles.textInput}
                 placeholder="title"
                 value={title}
                 onChangeText={(text)=>setTitle(text)}/>
-
+                <Text>Rating</Text>
+                <StarRating rating = {rating} setRating = {setRating} />
                 <Text>Description</Text>
                 <TextInput
+                style={styles.textInput}
                 placeholder="description"
                 value={description}
                 onChangeText={(text)=>setDescription(text)}/>
-                <View style={styles.buttonRow}>
+                <View style={styles.submitRow}>
                     <Button
                     title={"Cancel"}
                     onPress={()=>{
@@ -127,8 +139,7 @@ export default function FeedScreen(props){
                         SaveAndDispatch(loadGroup, dispatch)
                         }}/>
                     <Button title={"Post"} onPress={()=>{      
-                        const loadGroup = {type: LOAD_POST}
-                        SaveAndDispatch(loadGroup, dispatch)
+                        setMakePostOverlay(true)
                         }}/>
                     <Button title={"Settings"} onPress={()=>{      
                         const loadGroup = {type: LOAD_POST}
@@ -215,6 +226,9 @@ export default function FeedScreen(props){
     )}
 
 const styles = {
+    submitRow:{
+        flexDirection: "row"
+    },
     thumb:{flexDirection: "row"},
     rating:{
         flexDirection: "row",
@@ -258,6 +272,10 @@ logo: {
         marginTop: "5%",
         padding: 10,
         borderRadius: 5,
+    },
+    textInput:{
+        borderWidth: 1,
+        padding: 2
     },
 
     content:{

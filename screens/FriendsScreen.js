@@ -6,7 +6,7 @@ import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Im
 import { Overlay , Input, Button} from "@rneui/themed";
 import {SEARCH_PROFILE, DELETE_PROFILE, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
-import { SaveAndDispatch, SearchProfileData } from "../Data";
+import { SaveAndDispatch, myDB } from "../Data";
 
 
 export default function FriendsScreen(props){
@@ -23,17 +23,13 @@ export default function FriendsScreen(props){
     const [friend, setFriend] = useState(null)
 
     const searchProfile = async ()=>{
-        const answer = await SearchProfileData(email)
-        setFriend(answer)
+        const db = myDB()
+        const q = await getDocs(query(collection(db, "profiles"), where("email", "==", email)))
+        let items = []
+        q.forEach(el=> items=[...items, el.data()])
+        setFriend(items.length ===0?0:items[0].email)
     }
 
-    const deleteProfile = (key)=>{
-        const action = {
-            type: DELETE_PROFILE,
-            payload: {key: key}
-        }
-        SaveAndDispatch(action, dispatch)
-    }
 
     const updateProfile = (friends)=>{
         const action = {
@@ -101,7 +97,7 @@ export default function FriendsScreen(props){
                                 <Text>{item.firstName}</Text>
                                 <Text>{item.lastName}</Text>
                                 <Button title={"remove"} onPress={()=>{
-                                deleteProfile(item.key)
+                                updateProfile(profile.friends.filter(el=>el!==item.email))
                                 }}/>
                             </View>
                             <View>

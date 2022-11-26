@@ -10,6 +10,7 @@ import FeedScreen from "./screens/FeedScreen"
 import PostScreen from "./screens/PostScreen"
 import FriendsScreen from "./screens/FriendsScreen"
 import RecipeListScreen from "./screens/RecipeListScreen"
+import CameraScreen from "./screens/Camera"
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { FontAwesome } from '@expo/vector-icons';
 import {rootReducer} from "./Reducer"
@@ -26,6 +27,7 @@ function FeedTabs(){
         <Stack.Navigator name="Feed" initialRouteName="FeedScreen" screenOptions={{headerShown: false}}>
             <Stack.Screen name="FeedScreen" component={FeedScreen}/>
             <Stack.Screen name="PostScreen" component={PostScreen}/>
+            <Stack.Screen name="CameraScreen" component={CameraScreen}/>
         </Stack.Navigator>
     )
 }
