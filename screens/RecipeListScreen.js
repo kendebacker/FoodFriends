@@ -48,9 +48,8 @@ export default function RecipeListScreen(props){
                             </View>
                             <View style={styles.right}>
                                 <Button title={"View"} onPress={()=>{
-                                     navigation.navigate("PostScreen",{
+                                     navigation.navigate("SavedPost",{
                                         post: item,
-                                        saved: true
                                      })
                                 }}/>
                                 <Button title={"remove"} onPress={()=>{

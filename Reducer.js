@@ -11,7 +11,7 @@ const SEARCH_PROFILE = "SEARCH_PROFILE"
 const SAVE_PICTURE = "SAVE_PICTURE"
 
 const initialPosts = []
-const intitialProfile = [{userID:"VEFomrjRKGTaqxrobClLOkRRpVA3", password: "mypassword",image:"profilePic.png", reposts: [1], posts: [1,2], saved: [3], friends:[1]}]
+const intitialProfile = [{firstName:"",lastName:"", password: "mypassword",image:"profilePic.png", reposts: [1], posts: [1,2], saved: [3], friends:[1]}]
 const initialFriends = []
 const initialSaved = []
 

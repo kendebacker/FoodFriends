@@ -62,7 +62,7 @@ export default function PostScreen(props){
         <View style={styles.post}>
              <View style={styles.headingRowTop}>
                 <TouchableOpacity onPress={()=>{
-                    navigation.navigate("FeedScreen")
+                    navigation.navigate("RecipeList")
                 }}>
                 <AntDesign name="arrowleft" size={36} color="dodgerblue" />
                 </TouchableOpacity>

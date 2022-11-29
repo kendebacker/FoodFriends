@@ -43,6 +43,7 @@ const CreateAccountBox=({navigation})=>{
                 posts: [],
                 saved: [],
                 friends: [email],
+                
             }
         }
         SaveAndDispatch(action, dispatch)

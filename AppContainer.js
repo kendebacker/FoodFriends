@@ -8,6 +8,7 @@ import LoginScreen from "./screens/MakeAccountScreen.js"
 import MakeAccountScreen from "./screens/MakeAccountScreen"
 import FeedScreen from "./screens/FeedScreen"
 import PostScreen from "./screens/PostScreen"
+import SavedPostScreen from "./screens/SavedPostScreen"
 import FriendsScreen from "./screens/FriendsScreen"
 import RecipeListScreen from "./screens/RecipeListScreen"
 import CameraScreen from "./screens/Camera"
@@ -26,7 +27,7 @@ function FeedTabs(){
     return(
         <Stack.Navigator name="Feed" initialRouteName="FeedScreen" screenOptions={{headerShown: false}}>
             <Stack.Screen name="FeedScreen" component={FeedScreen}/>
-            <Stack.Screen name="PostScreen" component={PostScreen}/>
+            <Stack.Screen name="Post" component={PostScreen}/>
             <Stack.Screen name="Camera" component={CameraScreen}/>
         </Stack.Navigator>
     )
@@ -39,7 +40,7 @@ function RecipesTabs(){
     return(
         <Stack.Navigator initialRouteName="RecipeList" screenOptions={{headerShown: false}}>
             <Stack.Screen name="RecipeList" component={RecipeListScreen}/>
-            <Stack.Screen name="Post" component={PostScreen}/>
+            <Stack.Screen name="SavedPost" component={SavedPostScreen}/>
         </Stack.Navigator>
     )
 }
@@ -67,7 +68,7 @@ function KensApp(){
                             return(
                                 <MaterialCommunityIcons name="newspaper-variant" size={24} color={color} />   
                             )
-                        }
+                        },
                     }}/>
                     <Tabs.Screen name="Friends" component={FriendsScreen}options={{
                         tabBarIcon:({color})=>{

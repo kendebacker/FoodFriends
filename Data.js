@@ -102,6 +102,19 @@ const updateProfileAndDispatch = async (action, dispatch) =>{
         friends: friends,
     }
     await updateDoc(toUpdate, newVersion)
+    const q1 = await getDocs(query(collection(db, post), where("poster", "==", email)))
+    const postsToUpdate = dataLoader(q1)
+    for(let x = 0; x < postsToUpdate.length; x++){
+        const toUpdate = doc(collection(db, post),postsToUpdate[x].id)
+        console.log(toUpdate)
+        const newVersion= {
+            ...postsToUpdate[x],
+            firstName: firstName,
+            lastName, lastName,
+            image: image,
+        }
+        await updateDoc(toUpdate, newVersion)
+    }
     loadProfileAndDispatch(action, dispatch)
 }
 
@@ -133,9 +146,9 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
 
 const addPostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {recipe,title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date}= payload
-    const coll = collection(db, post)
-    await addDoc(coll, {
+    const {comments, recipe,title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date, id}= payload
+    const coll = doc(db, post,`${id}`)
+    await setDoc(coll, {
         recipe: recipe,
         title: title, 
         firstName: firstName,
@@ -148,7 +161,8 @@ const addPostAndDispatch = async (action, dispatch) =>{
         poster: poster,
         reposts: reposts,
         date: date,
-        id: Date.now()
+        id: `${poster}${id}`,
+        comments: comments
     })
     loadPostAndDispatch(action, dispatch)
 }
@@ -156,8 +170,8 @@ const addPostAndDispatch = async (action, dispatch) =>{
 
 const updatePostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {recipe, title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date, key, id}= payload
-    const toUpdate = doc(collection(db, post),key)
+    const {comments, recipe, title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date, id}= payload
+    const toUpdate = doc(collection(db, post),id)
     const newVersion= {
         recipe: recipe,
         title: title,
@@ -171,7 +185,8 @@ const updatePostAndDispatch = async (action, dispatch) =>{
         poster: poster,
         reposts: reposts,
         date: date,
-        id: id
+        id: id,
+        comments: comments
     }
     await updateDoc(toUpdate, newVersion)
     loadPostAndDispatch(action, dispatch)

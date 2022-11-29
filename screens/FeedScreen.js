@@ -31,6 +31,68 @@ const StarRating = ({rating, setRating})=>{
     )
 }
 
+const Post = (props)=>{
+    const {navigation, item, profile} = props
+
+    const [showComments, setShowComments] = useState(false)
+
+    const dispatch = useDispatch()
+
+    const updatePost = (post, profile)=>{
+        let newLikes = post.likes.filter(el=> el === profile.email).length === 0?[...post.likes, profile.email]:post.likes.filter(el=> el !== profile.email)
+        const action = {
+            type: UPDATE_POST,
+            payload: {...post, likes: newLikes, friends: profile.friends}
+        }
+        SaveAndDispatch(action, dispatch)
+    }
+
+    return(
+        <View style={styles.post}>
+            <View style={styles.postTitle}>
+                <Text>{item.title}</Text>
+            </View>
+            <View style={styles.postTop}>
+                <Text>{item.firstName} {item.lastName}</Text>
+                <Text>{item.date}</Text>
+            </View>
+            <View style={styles.middleContent}>
+            <Image
+                    style={styles.logo}
+                    source={{uri: item.image}}
+                    />
+            </View>
+            <View style={styles.inputRow}>
+                <Button title ={"Details"} onPress={()=>{
+                    navigation.navigate("Post",{
+                        post: item,
+                    })}}/>
+                <View style={styles.thumb}>
+                    <Text>{item.likes.length}</Text>
+                    <FontAwesome name="thumbs-o-up" size={24} color="black" />
+                </View>
+                <Button title ={item.likes.filter(el=> el === profile.email).length === 0?"Like":"Unlike"} onPress={()=>{
+                        updatePost(item, profile)
+                    }}/>
+            </View>
+            {showComments?
+            <View>
+                <FlatList 
+                style={styles.feedContainer}
+                data={item.comments}
+                renderItem={({item})=>{
+
+                return(
+                <View>
+                    <Text>{item.poster}</Text>
+                    <Text>{item.post}</Text>
+                </View>)
+                }}/>
+            </View>:""}
+        </View>
+    )
+}
+
 
 export default function FeedScreen(props){
 
@@ -39,17 +101,16 @@ export default function FeedScreen(props){
     const dispatch = useDispatch()
     const posts = useSelector(state => state.posts)
     const profile = useSelector(state => state.profile)
-
     const [makePostOverlay, setMakePostOverlay] = useState(camera!==undefined)
     const [showOverlay, setShowOverlay] = useState(profile.firstName==="")
     const [firstName, setFirstName] = useState(profile.firstName)
+    const [image, setImage] = useState(profile.image)
     const [lastName, setLastName] = useState(profile.lastName)
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const [rating, setRating] = useState(1)
     const [recipe, setRecipe] = useState("")
     const [location, setLocation] = useState(null)
-
 
     const camera = route.params
     const postURL = route.params===undefined?null:route.params.postURL
@@ -59,7 +120,10 @@ export default function FeedScreen(props){
     useEffect(()=>{
         setMakePostOverlay(postURL !== null)
         setShowOverlay(profileURL !== null)
-    }, [postURL, profileURL])
+        setImage(profile.image)
+        setLastName(profile.lastName)
+        setFirstName(profile.firstName)
+    }, [postURL, profileURL, profile.lastName, profile.firstName, profile.image])
 
 
 
@@ -75,15 +139,6 @@ export default function FeedScreen(props){
         setLocation([curLocation.coords.latitude,curLocation.coords.longitude]);
     }
 
-    const updatePost = (post, profile)=>{
-        let newLikes = post.likes.filter(el=> el === profile.email).length === 0?[...post.likes, profile.email]:post.likes.filter(el=> el !== profile.email)
-        const action = {
-            type: UPDATE_POST,
-            payload: {...post, likes: newLikes, friends: profile.friends}
-        }
-        SaveAndDispatch(action, dispatch)
-    }
-
     const updateProfile = (firstName, lastName, image)=>{
         const action = {
             type: UPDATE_PROFILE,
@@ -97,7 +152,7 @@ export default function FeedScreen(props){
         SaveAndDispatch(action, dispatch)
     }
 
-    const addPost = (recipe,title, firstName, lastName,foodImage, description, rating, location, likes, poster, reposts, date, friends)=>{
+    const addPost = (comments, recipe,title, firstName, lastName,foodImage, description, rating, location, likes, poster, reposts, date, friends, id)=>{
         const action = {
             type: ADD_POST,
             payload: {
@@ -113,7 +168,9 @@ export default function FeedScreen(props){
                 poster:poster, 
                 reposts:reposts, 
                 date:date,
-                friends: friends
+                friends: friends,
+                comments: comments,
+                id: id
             }
         }
         SaveAndDispatch(action, dispatch)
@@ -190,7 +247,7 @@ export default function FeedScreen(props){
                         <TouchableOpacity
                         title={"Post"}
                         onPress={()=>{
-                            addPost(recipe, title, profile.firstName, profile.lastName,postURL, description, rating, location, [], profile.email, [], new Date().toLocaleDateString(), profile.friends)
+                            addPost([],recipe, title, profile.firstName, profile.lastName,postURL, description, rating, location, [], profile.email, [], new Date().toLocaleDateString(), profile.friends, Date.now())
                             setMakePostOverlay(false)
                         }}
                         >
@@ -224,37 +281,9 @@ export default function FeedScreen(props){
                 data={posts}
                 renderItem={({item})=>{
                 return(
-                    <View style={styles.post}>
-                        <View style={styles.postTitle}>
-                            <Text>{item.title}</Text>
-                        </View>
-                        <View style={styles.postTop}>
-                            <Text>{item.firstName} {item.lastName}</Text>
-                            <Text>{item.date}</Text>
-                        </View>
-                        <View style={styles.middleContent}>
-                        <Image
-                                style={styles.logo}
-                                source={{uri: item.image}}
-                                />
-                        </View>
-                        <View style={styles.inputRow}>
-                            <Button title ={"Details"} onPress={()=>{
-                                navigation.navigate("PostScreen",{
-                                    post: item,
-                                    saved: false
-                                })}}/>
-                            <View style={styles.thumb}>
-                                <Text>{item.likes.length}</Text>
-                                <FontAwesome name="thumbs-o-up" size={24} color="black" />
-                            </View>
-                            <Button title ={item.likes.filter(el=> el === profile.email).length === 0?"Like":"Unlike"} onPress={()=>{
-                                    updatePost(item, profile)
-                                }}/>
-                        </View>
-                    </View>
+                    <Post item={item} navigation={navigation} profile={profile}/>
                 )}}/>
-            </View>
+                </View>
             <Overlay
                 overlayStyle={styles.overlay}
                 isVisible={showOverlay}
@@ -311,7 +340,6 @@ export default function FeedScreen(props){
                     </View>
                 </View>
             </Overlay>
-
         </View>
     )}
 
