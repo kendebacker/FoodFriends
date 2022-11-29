@@ -15,7 +15,6 @@ export default function CameraScreen(props){
 
     const {navigation, route} = props
     
-    const dispatch = useDispatch()
     const profile = useSelector(state => state.profile)
 
 
@@ -23,6 +22,7 @@ export default function CameraScreen(props){
     const [cameraView, setCameraView] = useState(true)
     const [taken, setTaken] = useState(false)
 
+    const prev = route.params.prev
 
     const getPermission = async ()=>{
         const {status} = await Camera.requestCameraPermissionsAsync()
@@ -64,7 +64,7 @@ export default function CameraScreen(props){
                                 payload: {profile: profile, picture: picture}
                             }
                             const imgUrl = await savePicture(action)
-                            navigation.navigate("FeedScreen",{picture: imgUrl})
+                            navigation.navigate("FeedScreen",{profileURL: prev==="profile"?imgUrl:null, postURL: prev==="post"?imgUrl:null})
                             }}/>
                     <Button title={"Switch"} onPress={async()=>{      
                             setCameraView(!cameraView)

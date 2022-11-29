@@ -35,20 +35,10 @@ const StarRating = ({rating, setRating})=>{
 export default function FeedScreen(props){
 
     const {navigation, route} = props
-    
+
     const dispatch = useDispatch()
     const posts = useSelector(state => state.posts)
     const profile = useSelector(state => state.profile)
-    const camera = route.params
-    const postURL = route.params===undefined?null:route.params.picture
-    const profileURL = route.params===undefined?null:route.params.picture
-
-    
-
-    useEffect(()=>{
-        setMakePostOverlay(camera!==undefined)
-    }, [camera])
-
 
     const [makePostOverlay, setMakePostOverlay] = useState(camera!==undefined)
     const [showOverlay, setShowOverlay] = useState(profile.firstName==="")
@@ -56,10 +46,22 @@ export default function FeedScreen(props){
     const [lastName, setLastName] = useState(profile.lastName)
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
-    const [foodImage, setFoodImage] = useState("")
     const [rating, setRating] = useState(1)
     const [recipe, setRecipe] = useState("")
     const [location, setLocation] = useState(null)
+
+
+    const camera = route.params
+    const postURL = route.params===undefined?null:route.params.postURL
+    const profileURL = route.params===undefined?null:route.params.profileURL
+
+
+    useEffect(()=>{
+        setMakePostOverlay(postURL !== null)
+        setShowOverlay(profileURL !== null)
+    }, [postURL, profileURL])
+
+
 
 
 
@@ -82,7 +84,7 @@ export default function FeedScreen(props){
         SaveAndDispatch(action, dispatch)
     }
 
-    const updateProfile = (firstName, lastName, image,)=>{
+    const updateProfile = (firstName, lastName, image)=>{
         const action = {
             type: UPDATE_PROFILE,
             payload: {
@@ -95,11 +97,11 @@ export default function FeedScreen(props){
         SaveAndDispatch(action, dispatch)
     }
 
-
-    const addPost = (title, firstName, lastName,foodImage, description, rating, location, likes, poster, reposts, date)=>{
+    const addPost = (recipe,title, firstName, lastName,foodImage, description, rating, location, likes, poster, reposts, date, friends)=>{
         const action = {
             type: ADD_POST,
             payload: {
+                recipe: recipe,
                 title: title,
                 firstName: firstName,
                 lastName: lastName,
@@ -110,7 +112,8 @@ export default function FeedScreen(props){
                 likes:likes, 
                 poster:poster, 
                 reposts:reposts, 
-                date:date
+                date:date,
+                friends: friends
             }
         }
         SaveAndDispatch(action, dispatch)
@@ -145,7 +148,7 @@ export default function FeedScreen(props){
                         />}
                         <TouchableOpacity  onPress={()=>{
                             setMakePostOverlay(false)
-                            navigation.navigate("Camera")}}>
+                            navigation.navigate("Camera",{prev:"post"})}}>
                           <AntDesign name="camera" size={50} color="dodgerblue" />  
                         </TouchableOpacity>
                     </View>
@@ -187,8 +190,8 @@ export default function FeedScreen(props){
                         <TouchableOpacity
                         title={"Post"}
                         onPress={()=>{
-                            addPost(title, firstName, lastName,foodImage, description, rating, location, [], poster, [], date)
-                            setShowOverlay(false)
+                            addPost(recipe, title, profile.firstName, profile.lastName,postURL, description, rating, location, [], profile.email, [], new Date().toLocaleDateString(), profile.friends)
+                            setMakePostOverlay(false)
                         }}
                         >
                            <MaterialIcons name="check-circle" size={50} color="green" />
@@ -199,16 +202,22 @@ export default function FeedScreen(props){
 
             <View style={styles.content}>
                 <View style={styles.inputRow}>
-                    <Button title={"Refresh"} onPress={()=>{      
-                        const loadGroup = {type: LOAD_POST}
-                        SaveAndDispatch(loadGroup, dispatch)
-                        }}/>
-                    <Button title={"Post"} onPress={()=>{      
+                    <TouchableOpacity onPress={()=>{      
+                        const loadPost = {type: LOAD_POST, payload:{friends: profile.friends}}
+                        SaveAndDispatch(loadPost, dispatch)
+                        }}>
+                        <FontAwesome name="refresh" size={50} color="black" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={()=>{      
                         setMakePostOverlay(true)
-                        }}/>
-                    <Button title={"Settings"} onPress={()=>{      
+                        }}>
+                        <MaterialIcons name="post-add" size={50} color="black" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={()=>{      
                         setShowOverlay(true)
-                        }}/>
+                        }}>
+                        <MaterialIcons name="settings" size={50} color="black" />
+                    </TouchableOpacity>
                 </View>
                 <FlatList 
                 style={styles.feedContainer}
@@ -226,7 +235,7 @@ export default function FeedScreen(props){
                         <View style={styles.middleContent}>
                         <Image
                                 style={styles.logo}
-                                source={{uri: profileURL}}
+                                source={{uri: item.image}}
                                 />
                         </View>
                         <View style={styles.inputRow}>
@@ -256,16 +265,16 @@ export default function FeedScreen(props){
                         <TextInput
                         style={styles.textInput}
                         placeholder="title"
-                        value={title}
-                        onChangeText={(text)=>setTitle(text)}/>
+                        value={firstName}
+                        onChangeText={(text)=>setFirstName(text)}/>
                     </View>
                     <View style={styles.inputRowOverlay}>
                         <Text style={styles.labelText}>Last Name</Text>
                         <TextInput
                         style={styles.textInput}
                         placeholder="title"
-                        value={title}
-                        onChangeText={(text)=>setTitle(text)}/>
+                        value={lastName}
+                        onChangeText={(text)=>setLastName(text)}/>
                     </View>
 
                     <View style={styles.inputRowOverlay}>
@@ -275,8 +284,8 @@ export default function FeedScreen(props){
                         source={{uri: profileURL}}
                         />}
                         <TouchableOpacity  onPress={()=>{
-                            setMakePostOverlay(false)
-                            navigation.navigate("Camera")}}>
+                            setShowOverlay(false)
+                            navigation.navigate("Camera",{prev: "profile"})}}>
                           <AntDesign name="camera" size={50} color="dodgerblue" />  
                         </TouchableOpacity>
                     </View>
@@ -293,7 +302,7 @@ export default function FeedScreen(props){
                         <TouchableOpacity
                         title={"Post"}
                         onPress={()=>{
-                            addPost(title, firstName, lastName,foodImage, description, rating, location, [], poster, [], date)
+                            updateProfile(firstName, lastName, profileURL)
                             setShowOverlay(false)
                         }}
                         >
@@ -361,7 +370,7 @@ logo: {
     feedContainer:{
         width: "100%",
         backgroundColor:"blue",
-        height: "80%",
+        height: "90%",
     },
     post:{
         width: "90%",

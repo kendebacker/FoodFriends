@@ -198,6 +198,7 @@ const loadPostAndDispatch = async (action, dispatch) =>{
     const {friends}= payload
     const q = await getDocs(query(collection(db, post), where("poster", "in", friends)))
     const newItems = dataLoader(q)
+    console.log(newItems)
     let newAction = {
         ...action,
         payload: {posts: newItems}

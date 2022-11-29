@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { SaveAndDispatch } from "../Data";
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
+import { FontAwesome5 } from '@expo/vector-icons'; 
+
 
 
 
@@ -18,10 +20,10 @@ const StarRating = ({rating})=>{
     return(
         <View style={styles.rating}>
             {start.map((el,ind) => 
-            <TouchableOpacity key={ind} onPress={()=>{setRating(ind+1)}}>{el===1?
+            <View key={ind} >{el===1?
                 <FontAwesome name="star" size={24} color="black" />:
                 <FontAwesome name="star-o" size={24} color="black" />}
-            </TouchableOpacity>)}
+            </View>)}
         </View>
     )
 }
@@ -72,12 +74,15 @@ export default function PostScreen(props){
             <View style={styles.middleContent}>
             <Image
                     style={styles.logo}
-                    source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+                    source={{uri: item.image}}
                     />
             </View>
             <View style={styles.middleContent}>
                 <Text style={styles.subtitle}>Location: </Text>
-                <Text style={styles.content}>{item.location}</Text>
+                {item.location.length >0?
+                <TouchableOpacity onPress={()=>openMap()}>
+                    <FontAwesome5 name="map-marked-alt" size={36} color="dodgerblue" />
+                </TouchableOpacity>:""}
             </View>
             <View style={styles.middleContent}>
                 <Text style={styles.subtitle}>Recipe: </Text>

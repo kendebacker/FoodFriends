@@ -10,7 +10,7 @@ const UPDATE_SORT = "UPDATE_SORT"
 const SEARCH_PROFILE = "SEARCH_PROFILE"
 const SAVE_PICTURE = "SAVE_PICTURE"
 
-const initialPosts = [{recipe: "asdfsafdasfdas",image: "dummyImage.png", description: "Not very good", rating:1, location: "Somewhere...",likes:[], key: 1, poster: 1, reposts:[2], date: new Date().toLocaleDateString()}]
+const initialPosts = []
 const intitialProfile = [{userID:"VEFomrjRKGTaqxrobClLOkRRpVA3", password: "mypassword",image:"profilePic.png", reposts: [1], posts: [1,2], saved: [3], friends:[1]}]
 const initialFriends = []
 const initialSaved = []
