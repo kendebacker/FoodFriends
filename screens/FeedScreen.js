@@ -1,5 +1,5 @@
 import {getApps, initializeApp} from "firebase/app"
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import {signOut, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { useEffect, useState } from "react"
 import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Platform, Linking, ScrollView , Switch} from "react-native";
 import { Overlay , Input, Button} from "@rneui/themed";
@@ -12,6 +12,13 @@ import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { Post } from "../components/Post";
+
+const backgroundColor = "#C2EFB3"
+const postColor = "#FFFCF2"
+const textColor = "#023C40"
+const iconColor = "#119DA4"
+const menuColor = "#412234"
+const heartColor = "#8BE9E0"
 
 const StarRating = ({rating, setRating})=>{
     let start = [0,0,0,0,0]
@@ -46,7 +53,7 @@ export default function FeedScreen(props){
     const [description, setDescription] = useState("")
     const [rating, setRating] = useState(1)
     const [recipe, setRecipe] = useState("")
-    const [location, setLocation] = useState(null)
+    const [location, setLocation] = useState([0,0])
     const [dayMode, setDayMode] = useState(true)
 
     const camera = route.params
@@ -64,7 +71,7 @@ export default function FeedScreen(props){
 
 
 
-
+    console.log(profile.image)
 
     const getLocation=async()=>{
         // https://stackoverflow.com/questions/43214062/open-maps-google-maps-in-react-native
@@ -129,9 +136,10 @@ export default function FeedScreen(props){
                     onValueChange={()=>setDayMode(!dayMode)}
                     value={dayMode}
                 />
-                <TouchableOpacity  onPress={()=>{
+                <TouchableOpacity  onPress={async ()=>{
                         setShowSettings(false)
-                        navigation.navigate("Camera",{prev: "profile"})}}>
+                        await signOut(getAuth())
+                        navigation.navigate("Login")}}>
                         <AntDesign name="logout" size={50} color="black" />
                 </TouchableOpacity>
             </Overlay>
@@ -166,7 +174,7 @@ export default function FeedScreen(props){
                     </View>
                     <View style={styles.inputRowOverlay}>
                         <Text style={styles.labelText}>Location</Text>
-                        {location===null?<Text>No Location Added</Text>:<Text>Location Added</Text>}
+                        {location[0]===0?<Text>No Location Added</Text>:<Text>Location Added</Text>}
                         <TouchableOpacity title={"loc"} onPress={()=>{
                             getLocation()
                             }}>
@@ -295,7 +303,7 @@ export default function FeedScreen(props){
                         <TouchableOpacity
                         title={"Post"}
                         onPress={()=>{
-                            updateProfile(firstName, lastName, profileURL)
+                            updateProfile(firstName, lastName, profileURL?profile.image:profileURL)
                             setShowOverlay(false)
                         }}
                         >
@@ -390,12 +398,12 @@ logo: {
     },
     feedContainer:{
         width: "100%",
-        backgroundColor:"blue",
+        backgroundColor: backgroundColor,
         height: "90%",
     },
     post:{
         width: "90%",
-        backgroundColor: "red",
+        backgroundColor: postColor,
         marginLeft: "5%",
         marginTop: "5%",
         padding: 10,

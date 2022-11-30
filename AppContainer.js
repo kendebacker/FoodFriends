@@ -49,6 +49,13 @@ const store = configureStore({
     reducer: rootReducer
 })
 
+const backgroundColor = "#C2EFB3"
+const postColor = "#FFFCF2"
+const textColor = "#023C40"
+const iconColor = "#119DA4"
+const menuColor = "#412234"
+const heartColor = "#e6848d"
+
 
 function KensApp(){
 
@@ -60,7 +67,20 @@ function KensApp(){
     return(
         <Provider store={store}>
             <NavigationContainer>
-                <Tabs.Navigator initialRouteName='Login'  screenOptions={{headerShown:false}} >
+                <Tabs.Navigator initialRouteName='Login'   
+                screenOptions={{
+                    headerShown:false,
+                    tabBarActiveTintColor: postColor,
+                    tabBarInactiveTintColor: "lightgray",
+                    tabBarActiveBackgroundColor: iconColor,
+                    tabBarInactiveBackgroundColor:  iconColor,
+                    tabBarStyle: [
+                      {
+                        "display": "flex"
+                      },
+                      null
+                    ]
+                  }}>
                 <Tabs.Screen name="Login" component={MakeAccountScreen} options={{tabBarButton: () => null,tabBarStyle: {display: "none"}}}/>
 
                     <Tabs.Screen name="Feed" component={FeedTabs} options={{

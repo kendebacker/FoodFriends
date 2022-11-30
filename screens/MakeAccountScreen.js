@@ -9,6 +9,12 @@ import { SaveAndDispatch } from "../Data";
 import { useDispatch, useSelector } from "react-redux";
 
 
+const backgroundColor = "#C2EFB3"
+const postColor = "#FFFCF2"
+const textColor = "#023C40"
+const iconColor = "#119DA4"
+const menuColor = "#412234"
+const heartColor = "#e6848d"
 
 
 
@@ -52,7 +58,7 @@ const CreateAccountBox=({navigation})=>{
 
     return(
         <View>
-            <View style={styles.content}>
+            <View style={styles.signContent}>
                 <View style={styles.inputRow}>
                     <Text style = {styles.label}>Email</Text>
                     <TextInput  style={styles.input} onChangeText={(text)=>{setEmail(text)}} value={email}/>
@@ -61,12 +67,8 @@ const CreateAccountBox=({navigation})=>{
                     <Text style = {styles.label}>Password</Text>
                     <TextInput style={styles.input} onChangeText={(text)=>{setPassword(text)}} value={password}/>
                 </View>
-                <View style={styles.inputRow}>
-                    <Text style = {styles.label}>Confirm Password</Text>
-                    <TextInput  style={styles.input} onChangeText={(text)=>{setCheckPassword(text)}} value={checkPassword}/>
-                </View>
-                <Button style={styles.button} title={"submit"} onPress={ async ()=>{
-                 if(password===checkPassword && password !==""  && email !==""){
+                <TouchableOpacity style={styles.button} onPress={ async ()=>{
+                 if(password !==""  && email !==""){
                     try{
                         const userInfo = await createUserWithEmailAndPassword(auth,email, password)
                         addProfile( email)
@@ -74,7 +76,9 @@ const CreateAccountBox=({navigation})=>{
                     }catch(error){
                         Alert.alert("error occured")
                     }}
-                }}/>
+                }}>
+                    <Text style={styles.buttonText}>Sign up</Text> 
+                </TouchableOpacity>
             </View>
 
         </View>
@@ -89,7 +93,7 @@ const LoginBox=({navigation})=>{
 
     return(
         <View>
-            <View style={styles.content}>
+            <View style={styles.loginContent}>
                 <View style={styles.inputRow}>
                     <Text style = {styles.label}>Email</Text>
                     <TextInput  style={styles.input} onChangeText={(text)=>{setEmail(text)}} value={email}/>
@@ -98,7 +102,7 @@ const LoginBox=({navigation})=>{
                     <Text style = {styles.label}>Password</Text>
                     <TextInput style={styles.input} onChangeText={(text)=>{setPassword(text)}} value={password}/>
                 </View>
-                <Button style={styles.button} title={"submit"} onPress={ async ()=>{
+                <TouchableOpacity style={styles.button} onPress={ async ()=>{
                  if( password !==""  && email !==""){
                     try{
                         const userInfo = await signInWithEmailAndPassword(auth,email, password)
@@ -108,7 +112,10 @@ const LoginBox=({navigation})=>{
                     }catch(error){
                         Alert.alert("error occured")
                     }}
-                }}/>
+                }}>
+                    <Text style={styles.buttonText}>Login</Text> 
+                </TouchableOpacity>
+        
             </View>
         </View>
     )
@@ -136,47 +143,112 @@ export default function MakeAccountScreen(props){
 
     return(
             <View style={styles.content}>
-                <Text style={styles.title}>{signIn?"Login":"Sign Up"}</Text>
-                <View style={styles.inputRow}>
-                    {signIn?<LoginBox navigation ={navigation}/>:<CreateAccountBox navigation ={navigation}/>}
+                <View style={styles.titleRow}>
+                    <Text style={styles.title}>{"FoodFriends"}</Text>
                 </View>
-                <View style={styles.inputRow}>
-                    <Text>{signIn?"Want to create a new account? ":"Want to login? "}
-                   <TouchableOpacity onPress={()=>{setSignIn(!signIn)}}>
-                        <Text>Switch</Text>
-                   </TouchableOpacity>
-                   to our {signIn?"Sign up":"Sign In"}
-                   </Text>
+                <View style={styles.labelRow}>
+                    <Text style={styles.labelTitle}>{signIn?"Login":"Sign Up"}</Text>
+                </View>
+                <View style={styles.contentBox}>
+                    {signIn?<LoginBox navigation ={navigation}/>:<CreateAccountBox navigation ={navigation}/>}
+                    <View style={styles.switchOption}>
+                        <Text style={styles.normalText}>{signIn?"New? ":"Want to login? "}</Text>
+                        <TouchableOpacity onPress={()=>{setSignIn(!signIn)}}>
+                                <Text style={{color:iconColor}}>Switch</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.normalText}> to {signIn?"Sign up":"Login"}</Text>
+                    </View>
                 </View>
             </View>
     )}
 
 const styles = {
-    title:{
-        fontSize : 30
+    button:{
+        marginTop: 10,
+        color: backgroundColor,
+        backgroundColor: iconColor,
+        padding: 12.5,
+        borderRadius: 5
+    },
+    buttonText:{
+        color: postColor
+    },
+    normalText:{
+        color: textColor
+    },
+    switchOption:{
+        flex: .33,
+        alignItems:"center",
+        justifyContent:"start",
+        flexDirection:"row"
+    },
+    labelRow:{
+        flex: .1,
+        color: textColor
+    },
+    loginContent:{
+        marginTop: 20,
+        padding: 10,
+         width: "90%",
+        flex:.7,
+        flexDirection: "column",
+        justifyContent:"start",
+        alignItems: "center"
+    },
+    signContent:{
+        marginTop: 20,
+        padding: 10,
+        width: "90%",
+        flex:.7,
+        flexDirection: "column",
+        justifyContent:"start",
+        alignItems: "center"
     },
     inputRow:{
         width: "100%",
         flexDirection: "row",
-        justifyContent: "center",
-        padding: 10
+        marginBottom: 10
+    },
+    titleRow:{
+        flex: .35,
+        justifyContent: "center"
+    },
+    title:{
+        fontSize : 50,
+        color: menuColor
+    },
+    labelTitle:{
+        fontSize : 30,
+        color: textColor
+    },
+    contentBox:{
+        flex: .35,
+        width: "90%",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: 10,
+        backgroundColor: postColor,
+        borderRadius: 5,
+        backgroundColor: postColor
     },
     label:{
         alignText:"center",
-        width: "40%"
+        width: "40%",
+        color: textColor
     },
     input:{
         alignText:"center",
         borderWidth: 1,
-        width: "50%"
+        width: "50%",
+        height: 20,
+        color: textColor
     },
     content:{
         flexDirection: "column",
-        paddingTop: 100,
-        justifyContent: "center",
-        alignItems: "center"
+        justifyContent: "start",
+        alignItems: "center",
+        backgroundColor: backgroundColor,
+        flex:1
     },
-    button:{
-        width: "50%"
-    }
+
 }

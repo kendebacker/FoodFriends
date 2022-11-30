@@ -106,7 +106,6 @@ const updateProfileAndDispatch = async (action, dispatch) =>{
     const postsToUpdate = dataLoader(q1)
     for(let x = 0; x < postsToUpdate.length; x++){
         const toUpdate = doc(collection(db, post),postsToUpdate[x].id)
-        console.log(toUpdate)
         const newVersion= {
             ...postsToUpdate[x],
             firstName: firstName,
@@ -147,7 +146,7 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
 const addPostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
     const {profImage, comments, recipe,title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date, id}= payload
-    const coll = doc(db, post,`${id}`)
+    const coll = doc(db, post,`${poster}${id}`)
     await setDoc(coll, {
         profImage: profImage,
         recipe: recipe,
@@ -214,7 +213,6 @@ const loadPostAndDispatch = async (action, dispatch) =>{
     const {friends}= payload
     const q = await getDocs(query(collection(db, post), where("poster", "in", friends)))
     const newItems = dataLoader(q)
-    console.log(newItems)
     let newAction = {
         ...action,
         payload: {posts: newItems}

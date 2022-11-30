@@ -12,6 +12,12 @@ import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons'; 
 
+const backgroundColor = "#C2EFB3"
+const postColor = "#FFFCF2"
+const textColor = "#023C40"
+const iconColor = "#119DA4"
+const menuColor = "#412234"
+const heartColor = "#e6848d"
 
 export const Post = (props)=>{
     const {navigation, userPost, profile} = props
@@ -49,14 +55,15 @@ export const Post = (props)=>{
                         <Image
                         style={styles.profImg}
                         source={{uri: profile.image}}
+                        resizeMode={"cover"}
                         />
-                        <Text>{userPost.firstName} {userPost.lastName}</Text>
-                        <Text> on {userPost.date}</Text>
+                        <Text style={styles.profText}>{userPost.firstName} {userPost.lastName}</Text>
+                        <Text style ={styles.profText}> on {userPost.date}</Text>
                     </View>
                     <View style={styles.thumb}>
-                        <Text>{userPost.likes.length}</Text>
+                        <Text style={styles.heartCounter}>{userPost.likes.length}</Text>
                         <TouchableOpacity onPress={()=>{updateLikes(userPost, profile)}}>
-                        {userPost.likes.filter(el=> el === profile.email).length === 0?<AntDesign name="hearto" size={24} color="black" />:<AntDesign name="heart" size={24} color="black" />}
+                        {userPost.likes.filter(el=> el === profile.email).length === 0?<AntDesign name="hearto" size={24} color={heartColor} />:<AntDesign name="heart" size={24} color={heartColor} />}
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -70,13 +77,19 @@ export const Post = (props)=>{
                         />
                 </View>
                 <View style={styles.inputRow}>
-                    <Button title ={"Details"} onPress={()=>{
-                        navigation.navigate("Post",{
-                            post: userPost,
-                        })}}/>
-                    <Button title ={!showComments?"Show Comments":"Hide Comments"} onPress={()=>{
+                    <TouchableOpacity style={styles.button} onPress={()=>{
+                            navigation.navigate("Post",{
+                                post: userPost,
+                            })
+                        }}>
+                        <Text style={styles.buttonText}>{"Details"}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={()=>{
                             setShowComments(!showComments)
-                        }}/>
+                        }}>
+                        <Text style={styles.buttonText}>{!showComments?"Show Comments":"Hide Comments"}</Text>
+                    </TouchableOpacity>
+
                 
                 </View>
             </View>
@@ -132,6 +145,21 @@ const styles2={
 }
 
 const styles = {
+    button:{
+        color: backgroundColor,
+        backgroundColor: iconColor,
+        padding: 12.5,
+        borderRadius: 5
+    },
+    buttonText:{
+        color: postColor
+    },
+    heartCounter:{
+        color: heartColor
+    },
+    profText:{
+        color: textColor
+    },
     all:{
         flex:1
     },
@@ -185,7 +213,10 @@ profImg:{
     width: 50,
     height: 50,
     marginRight: 5,
-    borderRadius: "50%"
+    borderRadius: "50%",
+    borderColor: iconColor,
+    borderWidth: 3,
+
 },
 logo: {
     width: 100,
@@ -219,7 +250,7 @@ logo: {
     },
     post:{
         width: "90%",
-        backgroundColor: "red",
+        backgroundColor: postColor,
         marginLeft: "5%",
         marginTop: "5%",
         padding: 10,
