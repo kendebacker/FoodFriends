@@ -91,6 +91,7 @@ export default function FriendsScreen(props){
                     style={styles.contactStuff}
                     data={friends}
                     renderItem={({item})=>{
+                        if(item.email !== profile.email){
                     return(
                         <View>
                             <View style={styles.friend}>
@@ -103,7 +104,7 @@ export default function FriendsScreen(props){
                             <View>
                             </View>
                         </View>
-                    )}}/>
+                    )}}}/>
                 </View>
             </View>
         </View>

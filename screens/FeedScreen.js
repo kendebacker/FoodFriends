@@ -1,7 +1,7 @@
 import {getApps, initializeApp} from "firebase/app"
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { useEffect, useState } from "react"
-import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Platform, Linking } from "react-native";
+import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Platform, Linking, ScrollView } from "react-native";
 import { Overlay , Input, Button} from "@rneui/themed";
 import { ADD_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,7 +32,7 @@ const StarRating = ({rating, setRating})=>{
 }
 
 const Post = (props)=>{
-    const {navigation, item, profile} = props
+    const {navigation, userPost, profile} = props
 
     const [showComments, setShowComments] = useState(false)
 
@@ -49,48 +49,72 @@ const Post = (props)=>{
 
     return(
         <View style={styles.post}>
-            <View style={styles.postTitle}>
-                <Text>{item.title}</Text>
-            </View>
-            <View style={styles.postTop}>
-                <Text>{item.firstName} {item.lastName}</Text>
-                <Text>{item.date}</Text>
-            </View>
-            <View style={styles.middleContent}>
-            <Image
-                    style={styles.logo}
-                    source={{uri: item.image}}
-                    />
-            </View>
-            <View style={styles.inputRow}>
-                <Button title ={"Details"} onPress={()=>{
-                    navigation.navigate("Post",{
-                        post: item,
-                    })}}/>
-                <View style={styles.thumb}>
-                    <Text>{item.likes.length}</Text>
-                    <FontAwesome name="thumbs-o-up" size={24} color="black" />
+            <View style={styles.mainBody}>
+                <View style={styles.postTitle}>
+                    <Text>{userPost.title}</Text>
                 </View>
-                <Button title ={item.likes.filter(el=> el === profile.email).length === 0?"Like":"Unlike"} onPress={()=>{
-                        updatePost(item, profile)
-                    }}/>
+                <View style={styles.postTop}>
+                    <Text>{userPost.firstName} {userPost.lastName}</Text>
+                    <Text>{userPost.date}</Text>
+                </View>
+                <View style={styles.middleContent}>
+                <Image
+                        style={styles.logo}
+                        source={{uri: userPost.image}}
+                        />
+                </View>
+                <View style={styles.inputRow}>
+                    <Button title ={"Details"} onPress={()=>{
+                        navigation.navigate("Post",{
+                            post: userPost,
+                        })}}/>
+                    <View style={styles.thumb}>
+                        <Text>{userPost.likes.length}</Text>
+                        <FontAwesome name="thumbs-o-up" size={24} color="black" />
+                    </View>
+                    <Button title ={userPost.likes.filter(el=> el === profile.email).length === 0?"Like":"Unlike"} onPress={()=>{
+                            updatePost(userPost, profile)
+                        }}/>
+                    <Button title ={"Com"} onPress={()=>{
+                            setShowComments(!showComments)
+                        }}/>
+                </View>
             </View>
             {showComments?
             <View>
-                <FlatList 
-                style={styles.feedContainer}
-                data={item.comments}
-                renderItem={({item})=>{
-
-                return(
+                <ScrollView style={styles2.comments}>
+                    <FlatList 
+                    style={{flexGrow: 0}}
+                    data={userPost.comments}
+                    renderItem={({item})=>{
+                    return(
+                        <View style={styles2.row}>
+                                <Text>{item.poster}</Text>
+                                <Text>{item.post}</Text>
+                        </View>
+                    )}}/>
+                </ScrollView>
                 <View>
-                    <Text>{item.poster}</Text>
-                    <Text>{item.post}</Text>
-                </View>)
-                }}/>
-            </View>:""}
+                    <TextInput/>
+                    <Button></Button>
+                </View>
+            </View>
+        :""}
         </View>
     )
+}
+
+const styles2={
+    comments:{
+        marginTop: 25,
+        width: "100%",
+        backgroundColor:"green",
+        flex: .25,
+        height:100,
+        flexDirection: "column"
+    },row:{
+        backgroundColor: "blue"
+    }
 }
 
 
@@ -179,7 +203,7 @@ export default function FeedScreen(props){
 
 
     return(
-        <View>
+        <View style={styles.all}>
             <Overlay
                 overlayStyle={styles.overlay}
                 isVisible={makePostOverlay}
@@ -277,11 +301,12 @@ export default function FeedScreen(props){
                     </TouchableOpacity>
                 </View>
                 <FlatList 
+                nestedScrollEnabled={true}
                 style={styles.feedContainer}
                 data={posts}
                 renderItem={({item})=>{
                 return(
-                    <Post item={item} navigation={navigation} profile={profile}/>
+                    <Post userPost={item} navigation={navigation} profile={profile}/>
                 )}}/>
                 </View>
             <Overlay
@@ -344,6 +369,22 @@ export default function FeedScreen(props){
     )}
 
 const styles = {
+    all:{
+        flex:1
+    },
+    mainBody:{
+        flex:7
+    },
+    commentLine:{
+        flexDirection: "column"
+    },
+
+    commentsList:{
+        width: "100%",
+        backgroundColor:"purple",
+        height: "20%",
+        flex: .2,
+    },
     labelText:{
         fontSize: 20
     },
@@ -354,6 +395,7 @@ const styles = {
         alignItems: "center"
     },
     inputRow:{
+        flex:.2,
         width: "100%",
         padding: 20,
         flexDirection: "col",
@@ -371,6 +413,7 @@ const styles = {
         justifyContent: "center"
     },
 middleContent:{
+    flex:.5,
     justifyContent: "center",
     width: "100%",
     flexDirection: "row"
@@ -407,6 +450,7 @@ logo: {
         marginTop: "5%",
         padding: 10,
         borderRadius: 5,
+        flex:1
     },
     textInput:{
         borderWidth: 1,
@@ -415,6 +459,7 @@ logo: {
     },
 
     content:{
-        flexDirection: "column"
+        flexDirection: "column",
+        flex:1
     }
 }
