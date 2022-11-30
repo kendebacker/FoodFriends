@@ -35,14 +35,16 @@ const Post = (props)=>{
     const {navigation, userPost, profile} = props
 
     const [showComments, setShowComments] = useState(false)
+    const [comment, setComment] = useState("")
+
 
     const dispatch = useDispatch()
 
-    const updatePost = (post, profile)=>{
-        let newLikes = post.likes.filter(el=> el === profile.email).length === 0?[...post.likes, profile.email]:post.likes.filter(el=> el !== profile.email)
+    const updatePost = ()=>{
+        let newComments = [...userPost.comments, {post: comment, poster: userPost.firstName}]
         const action = {
             type: UPDATE_POST,
-            payload: {...post, likes: newLikes, friends: profile.friends}
+            payload: {...userPost, comments: newComments, friends: profile.friends}
         }
         SaveAndDispatch(action, dispatch)
     }
@@ -68,16 +70,15 @@ const Post = (props)=>{
                         navigation.navigate("Post",{
                             post: userPost,
                         })}}/>
-                    <View style={styles.thumb}>
-                        <Text>{userPost.likes.length}</Text>
-                        <FontAwesome name="thumbs-o-up" size={24} color="black" />
-                    </View>
-                    <Button title ={userPost.likes.filter(el=> el === profile.email).length === 0?"Like":"Unlike"} onPress={()=>{
-                            updatePost(userPost, profile)
-                        }}/>
-                    <Button title ={"Com"} onPress={()=>{
+                    <Button title ={!showComments?"Show Comments":"Hide Comments"} onPress={()=>{
                             setShowComments(!showComments)
                         }}/>
+                    <View style={styles.thumb}>
+                        <Text>{userPost.likes.length}</Text>
+                        <TouchableOpacity onPress={()=>{updatePost(userPost, profile)}}>
+                        {userPost.likes.filter(el=> el === profile.email).length === 0?<AntDesign name="hearto" size={24} color="black" />:<AntDesign name="heart" size={24} color="black" />}
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
             {showComments?
@@ -89,14 +90,20 @@ const Post = (props)=>{
                     renderItem={({item})=>{
                     return(
                         <View style={styles2.row}>
-                                <Text>{item.poster}</Text>
+                                <Text style={styles2.poster}>{item.poster}: </Text>
                                 <Text>{item.post}</Text>
                         </View>
                     )}}/>
                 </ScrollView>
-                <View>
-                    <TextInput/>
-                    <Button></Button>
+                <View style={styles2.inputRow}>
+                    <TextInput
+                        style={styles.textInput}
+                        placeholder="comment"
+                        value={comment}
+                        onChangeText={(text)=>setComment(text)}/>
+                    <Button title={"add"} onPress={()=>{
+                    updatePost()
+                    setComment("")}}/>
                 </View>
             </View>
         :""}
@@ -105,6 +112,12 @@ const Post = (props)=>{
 }
 
 const styles2={
+    inputRow:{
+        flexDirection: "row"
+    },
+    poster:{
+        fontWeight: "bold"
+    },
     comments:{
         marginTop: 25,
         width: "100%",
@@ -113,7 +126,9 @@ const styles2={
         height:100,
         flexDirection: "column"
     },row:{
-        backgroundColor: "blue"
+        backgroundColor: "blue",
+        flexDirection: "row",
+        margin: 1
     }
 }
 
