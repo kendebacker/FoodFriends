@@ -146,9 +146,10 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
 
 const addPostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {comments, recipe,title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date, id}= payload
+    const {profImage, comments, recipe,title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date, id}= payload
     const coll = doc(db, post,`${id}`)
     await setDoc(coll, {
+        profImage: profImage,
         recipe: recipe,
         title: title, 
         firstName: firstName,

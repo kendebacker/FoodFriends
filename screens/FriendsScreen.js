@@ -27,7 +27,7 @@ export default function FriendsScreen(props){
         const q = await getDocs(query(collection(db, "profiles"), where("email", "==", email)))
         let items = []
         q.forEach(el=> items=[...items, el.data()])
-        setFriend(items.length ===0?0:items[0].email)
+        setFriend(items.length ===0?0:items[0])
     }
 
 
@@ -70,9 +70,16 @@ export default function FriendsScreen(props){
                 </View>
                 <View>
                     {friend===null?"":<View>
-                        <Text>{friend===0?"Friend Not Found":"Friend Found"}</Text>
+                        <Text>{friend===0?"Friend Not Found":
+                        <View>
+                        <Image
+                        style={styles.logo}
+                        source={{uri: friend.image}}
+                        />
+                        <Text>{friend.firstName} {friend.lastName}</Text>
+                        </View>}</Text>
                         <Button onPress={()=>{
-                            updateProfile(profile.friends.filter(el => el ===friend).length==0?[...profile.friends,friend]:profile.friends)
+                            updateProfile(profile.friends.filter(el => el ===friend).length==0?[...profile.friends,friend.email]:profile.friends)
                             setEmail("")
                             setShowOverlay(false)
                         }} title={"Add Friend"}/>
@@ -81,11 +88,6 @@ export default function FriendsScreen(props){
             </Overlay>
 
             <View style={styles.content}>
-                <View style={styles.inputRow}>
-                    <Button title={"Find Friends"} onPress={()=>{      
-                        setShowOverlay(true)
-                        }}/>
-                </View>
                 <View style={styles.main}>
                     <FlatList 
                     style={styles.contactStuff}
@@ -106,6 +108,11 @@ export default function FriendsScreen(props){
                         </View>
                     )}}}/>
                 </View>
+                <View style={styles.inputRow}>
+                    <Button title={"Find Friends"} onPress={()=>{      
+                        setShowOverlay(true)
+                        }}/>
+                </View>
             </View>
         </View>
     )}
@@ -116,6 +123,10 @@ const styles = {
         width: "100%",
     },main:{
         marginTop: 20
+    },
+    buttonRow:{
+        flexDirection: "row",
+        justifyContent: "space-evenly"
     },
 
     friend:{
@@ -135,7 +146,9 @@ const styles = {
     overlay:{
         column: "row",
         width: "50%",
-        height: "50%"
+        height: "50%",
+        justifyContent: "space-evenly",
+        alignItems: "center"
     },
     inputRow:{
         marginTop: 30,

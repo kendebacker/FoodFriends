@@ -38,7 +38,7 @@ const CreateAccountBox=({navigation})=>{
                 email:email,
                 firstName:"",
                 lastName:"",
-                image: "",
+                image: "https://firebasestorage.googleapis.com/v0/b/ken-homework-5.appspot.com/o/Screen%20Shot%202022-11-29%20at%2010.12.42%20PM.png?alt=media&token=20deda07-8d92-4aac-b957-8f8883d9fc9e",
                 reposts: [], 
                 posts: [],
                 saved: [],

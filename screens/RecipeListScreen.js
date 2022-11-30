@@ -33,7 +33,7 @@ export default function RecipeListScreen(props){
         <View>
             <View style={styles.content}>
                 <View style={styles.inputRow}>
-                    <Text>Recipes</Text>
+                    <Text style={styles.title}>Recipes</Text>
                 </View>
                 <View style={styles.main}>
                     <FlatList 
@@ -115,5 +115,8 @@ const styles = {
     },
     content:{
         flexDirection: "column",
+    },
+    title:{
+        fontSize: 40
     }
 }

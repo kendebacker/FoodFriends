@@ -1,7 +1,7 @@
 import {getApps, initializeApp} from "firebase/app"
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { useEffect, useState } from "react"
-import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Platform, Linking, ScrollView } from "react-native";
+import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Platform, Linking, ScrollView , Switch} from "react-native";
 import { Overlay , Input, Button} from "@rneui/themed";
 import { ADD_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,10 +11,7 @@ import * as Location from 'expo-location';
 import { AntDesign } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons'; 
-
-
-
-
+import { Post } from "../components/Post";
 
 const StarRating = ({rating, setRating})=>{
     let start = [0,0,0,0,0]
@@ -31,107 +28,6 @@ const StarRating = ({rating, setRating})=>{
     )
 }
 
-const Post = (props)=>{
-    const {navigation, userPost, profile} = props
-
-    const [showComments, setShowComments] = useState(false)
-    const [comment, setComment] = useState("")
-
-
-    const dispatch = useDispatch()
-
-    const updatePost = ()=>{
-        let newComments = [...userPost.comments, {post: comment, poster: userPost.firstName}]
-        const action = {
-            type: UPDATE_POST,
-            payload: {...userPost, comments: newComments, friends: profile.friends}
-        }
-        SaveAndDispatch(action, dispatch)
-    }
-
-    return(
-        <View style={styles.post}>
-            <View style={styles.mainBody}>
-                <View style={styles.postTitle}>
-                    <Text>{userPost.title}</Text>
-                </View>
-                <View style={styles.postTop}>
-                    <Text>{userPost.firstName} {userPost.lastName}</Text>
-                    <Text>{userPost.date}</Text>
-                </View>
-                <View style={styles.middleContent}>
-                <Image
-                        style={styles.logo}
-                        source={{uri: userPost.image}}
-                        />
-                </View>
-                <View style={styles.inputRow}>
-                    <Button title ={"Details"} onPress={()=>{
-                        navigation.navigate("Post",{
-                            post: userPost,
-                        })}}/>
-                    <Button title ={!showComments?"Show Comments":"Hide Comments"} onPress={()=>{
-                            setShowComments(!showComments)
-                        }}/>
-                    <View style={styles.thumb}>
-                        <Text>{userPost.likes.length}</Text>
-                        <TouchableOpacity onPress={()=>{updatePost(userPost, profile)}}>
-                        {userPost.likes.filter(el=> el === profile.email).length === 0?<AntDesign name="hearto" size={24} color="black" />:<AntDesign name="heart" size={24} color="black" />}
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </View>
-            {showComments?
-            <View>
-                <ScrollView style={styles2.comments}>
-                    <FlatList 
-                    style={{flexGrow: 0}}
-                    data={userPost.comments}
-                    renderItem={({item})=>{
-                    return(
-                        <View style={styles2.row}>
-                                <Text style={styles2.poster}>{item.poster}: </Text>
-                                <Text>{item.post}</Text>
-                        </View>
-                    )}}/>
-                </ScrollView>
-                <View style={styles2.inputRow}>
-                    <TextInput
-                        style={styles.textInput}
-                        placeholder="comment"
-                        value={comment}
-                        onChangeText={(text)=>setComment(text)}/>
-                    <Button title={"add"} onPress={()=>{
-                    updatePost()
-                    setComment("")}}/>
-                </View>
-            </View>
-        :""}
-        </View>
-    )
-}
-
-const styles2={
-    inputRow:{
-        flexDirection: "row"
-    },
-    poster:{
-        fontWeight: "bold"
-    },
-    comments:{
-        marginTop: 25,
-        width: "100%",
-        backgroundColor:"green",
-        flex: .25,
-        height:100,
-        flexDirection: "column"
-    },row:{
-        backgroundColor: "blue",
-        flexDirection: "row",
-        margin: 1
-    }
-}
-
 
 export default function FeedScreen(props){
 
@@ -140,6 +36,7 @@ export default function FeedScreen(props){
     const dispatch = useDispatch()
     const posts = useSelector(state => state.posts)
     const profile = useSelector(state => state.profile)
+    const [showSettings, setShowSettings] = useState(false)
     const [makePostOverlay, setMakePostOverlay] = useState(camera!==undefined)
     const [showOverlay, setShowOverlay] = useState(profile.firstName==="")
     const [firstName, setFirstName] = useState(profile.firstName)
@@ -150,6 +47,7 @@ export default function FeedScreen(props){
     const [rating, setRating] = useState(1)
     const [recipe, setRecipe] = useState("")
     const [location, setLocation] = useState(null)
+    const [dayMode, setDayMode] = useState(true)
 
     const camera = route.params
     const postURL = route.params===undefined?null:route.params.postURL
@@ -191,10 +89,11 @@ export default function FeedScreen(props){
         SaveAndDispatch(action, dispatch)
     }
 
-    const addPost = (comments, recipe,title, firstName, lastName,foodImage, description, rating, location, likes, poster, reposts, date, friends, id)=>{
+    const addPost = (profImage,comments, recipe,title, firstName, lastName,foodImage, description, rating, location, likes, poster, reposts, date, friends, id)=>{
         const action = {
             type: ADD_POST,
             payload: {
+                profImage, profImage,
                 recipe: recipe,
                 title: title,
                 firstName: firstName,
@@ -219,6 +118,23 @@ export default function FeedScreen(props){
 
     return(
         <View style={styles.all}>
+            <Overlay
+                overlayStyle={styles.overlay}
+                isVisible={showSettings}
+                onBackdropPress={()=>setShowSettings(false)}>
+                <Switch
+                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    thumbColor={dayMode ? "#f5dd4b" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={()=>setDayMode(!dayMode)}
+                    value={dayMode}
+                />
+                <TouchableOpacity  onPress={()=>{
+                        setShowSettings(false)
+                        navigation.navigate("Camera",{prev: "profile"})}}>
+                        <AntDesign name="logout" size={50} color="black" />
+                </TouchableOpacity>
+            </Overlay>
             <Overlay
                 overlayStyle={styles.overlay}
                 isVisible={makePostOverlay}
@@ -286,7 +202,7 @@ export default function FeedScreen(props){
                         <TouchableOpacity
                         title={"Post"}
                         onPress={()=>{
-                            addPost([],recipe, title, profile.firstName, profile.lastName,postURL, description, rating, location, [], profile.email, [], new Date().toLocaleDateString(), profile.friends, Date.now())
+                            addPost(profile.image, [],recipe, title, profile.firstName, profile.lastName,postURL, description, rating, location, [], profile.email, [], new Date().toLocaleDateString(), profile.friends, Date.now())
                             setMakePostOverlay(false)
                         }}
                         >
@@ -298,6 +214,11 @@ export default function FeedScreen(props){
 
             <View style={styles.content}>
                 <View style={styles.inputRow}>
+                    <TouchableOpacity onPress={()=>{      
+                        setShowSettings(true)
+                        }}>
+                        <MaterialIcons name="settings" size={50} color="black" />
+                    </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{      
                         const loadPost = {type: LOAD_POST, payload:{friends: profile.friends}}
                         SaveAndDispatch(loadPost, dispatch)
@@ -312,7 +233,7 @@ export default function FeedScreen(props){
                     <TouchableOpacity onPress={()=>{      
                         setShowOverlay(true)
                         }}>
-                        <MaterialIcons name="settings" size={50} color="black" />
+                        <FontAwesome name="user" size={50} color="black" />
                     </TouchableOpacity>
                 </View>
                 <FlatList 
@@ -348,7 +269,10 @@ export default function FeedScreen(props){
 
                     <View style={styles.inputRowOverlay}>
                         <Text style={styles.labelText}>Image</Text>
-                        {profileURL===null?<Text>No picture selected yet</Text>:<Image
+                        {profileURL===null?<Image
+                        style={styles.logo}
+                        source={{uri: profile.image}}
+                        />:<Image
                         style={styles.logo}
                         source={{uri: profileURL}}
                         />}
@@ -433,6 +357,12 @@ middleContent:{
     width: "100%",
     flexDirection: "row"
 },
+profImg:{
+    width: 50,
+    height: 50,
+    marginRight: 5,
+    borderRadius: "50%"
+},
 logo: {
     width: 100,
     height: 100,
@@ -442,12 +372,17 @@ logo: {
     flexDirection: "row",
     justifyContent: "center"
   },
+    postTopSub:{
+        flexDirection: "row",
+        justifyContent: "start",
+        height: 50,
+        alignItems: "center"
+    },
     postTop:{
         width: "100%",
         flexDirection: "row",
         justifyContent: "space-between"
-    },
-    inputRow:{
+    },inputRow:{
         width: "100%",
         flexDirection: "row",
         justifyContent: "space-evenly",
