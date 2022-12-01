@@ -11,14 +11,10 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons'; 
 
 
-const backgroundColor = "#C2EFB3"
-const postColor = "#FFFCF2"
-const textColor = "#023C40"
-const iconColor = "#119DA4"
-const menuColor = "#412234"
-const heartColor = "#e6848d"
 
 export default function FriendsScreen(props){
+    const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
+    const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
 
     const {navigation, route} = props
     
@@ -148,113 +144,117 @@ export default function FriendsScreen(props){
             </View>
         </View>
     )}
-
-const styles = {
-    nameRow:{
-        flexDirection: "row",
-        padding: 10,
-    },
-    standard:{
-        color: textColor
-    },
-    standard2:{
-        color: textColor,
-        fontSize: 20
-    },
-    profile:{
-        alignItems: "center",
-    },
-    profImg:{
-        width: 50,
-        height: 50,
-        borderRadius: "50%",
-        borderColor: iconColor,
-        borderWidth: 3,
-        
-    },
-    profImg2:{
-        width: 100,
-        height: 100,
-        marginTop: 10,
-        borderRadius: "50%",
-        borderColor: iconColor,
-        borderWidth: 3,
-    },
-    overlay:{
-        width: "75%",
-        backgroundColor: postColor,
-        alignItems: "center"
-    },
-    allContent:{
-        flex: 1,
-        backgroundColor: backgroundColor
-    },
-    topRow:{
-        position: "absolute",
-        left:5,
-        top:5,
-        width:"100%",
-        flexDirection: "row",
-        justifyContent: "start"
-    },
-    button:{
-        color: backgroundColor,
-        backgroundColor: iconColor,
-        padding: 12.5,
-        borderRadius: 5,
-        flexDirection: "row",
-        alignItems: "center",
-        margin: 10
-    },
-    buttonText:{
-        color: postColor,
-        fontSize: 16
-    },
-    contactStuff:{
-        height: "80%",
-        width: "100%",
-    },
-    buttonRow:{
-        flexDirection: "row",
-        justifyContent: "space-evenly"
-    },
-
-    friend:{
-        flexDirection: "column",
-        justifyContent: "space-evenly",
-        alignItems: "center",
-        backgroundColor: postColor,
-        width: "90%",
-        marginLeft: "5%",
-        padding: 10,
-        borderRadius: 5
-
-    },
-    inputLabel:{
-        padding: 10, 
-        color: textColor,
-        fontSize: 20
-    },
-    emailInput:{
-        borderWidth: 1,
-        margin:10,
-        width: "75%"
-    },
-    inputRow:{
-        marginTop: 30,
-        width: "100%",
-        flexDirection: "row",
-        justifyContent: "center"
-    },
-    label:{
-        alignText:"center",
-        
-    },
-    input:{
-        alignText:"center"
-    },
-    content:{
-        flexDirection: "column",
-        marginTop: 35
+    
+const getStyles=(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)=>{
+    const styles = {
+        nameRow:{
+            flexDirection: "row",
+            padding: 10,
+        },
+        standard:{
+            color: textColor
+        },
+        standard2:{
+            color: textColor,
+            fontSize: 20
+        },
+        profile:{
+            alignItems: "center",
+        },
+        profImg:{
+            width: 50,
+            height: 50,
+            borderRadius: "50%",
+            borderColor: iconColor,
+            borderWidth: 3,
+            
+        },
+        profImg2:{
+            width: 100,
+            height: 100,
+            marginTop: 10,
+            borderRadius: "50%",
+            borderColor: iconColor,
+            borderWidth: 3,
+        },
+        overlay:{
+            width: "75%",
+            backgroundColor: postColor,
+            alignItems: "center"
+        },
+        allContent:{
+            flex: 1,
+            backgroundColor: backgroundColor
+        },
+        topRow:{
+            position: "absolute",
+            left:5,
+            top:5,
+            width:"100%",
+            flexDirection: "row",
+            justifyContent: "start"
+        },
+        button:{
+            color: backgroundColor,
+            backgroundColor: iconColor,
+            padding: 12.5,
+            borderRadius: 5,
+            flexDirection: "row",
+            alignItems: "center",
+            margin: 10
+        },
+        buttonText:{
+            color: postColor,
+            fontSize: 16
+        },
+        contactStuff:{
+            height: "80%",
+            width: "100%",
+        },
+        buttonRow:{
+            flexDirection: "row",
+            justifyContent: "space-evenly"
+        },
+    
+        friend:{
+            flexDirection: "column",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            backgroundColor: postColor,
+            width: "90%",
+            marginLeft: "5%",
+            padding: 10,
+            borderRadius: 5
+    
+        },
+        inputLabel:{
+            padding: 10, 
+            color: textColor,
+            fontSize: 20
+        },
+        emailInput:{
+            borderWidth: 1,
+            margin:10,
+            width: "75%"
+        },
+        inputRow:{
+            marginTop: 30,
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "center"
+        },
+        label:{
+            alignText:"center",
+            
+        },
+        input:{
+            alignText:"center"
+        },
+        content:{
+            flexDirection: "column",
+            marginTop: 35
+        }
     }
+    return(styles)
 }
+

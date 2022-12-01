@@ -17,6 +17,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import {rootReducer} from "./Reducer"
 import { Ionicons } from '@expo/vector-icons'; 
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+
 
 
 
@@ -58,6 +60,9 @@ const heartColor = "#e6848d"
 
 
 function KensApp(){
+    const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
+    const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
+
 
     /// solving tab viewing problem https://github.com/react-navigation/react-navigation/issues/5230
     const Tabs = createBottomTabNavigator();
