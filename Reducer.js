@@ -22,15 +22,15 @@ const colors = {day:{
     postColor: "#FFFCF2",
     textColor: "#023C40",
     iconColor: "#119DA4",
-    menuColor: "#412234",
+    menuColor: "#023C40",
     heartColor: "#e6848d"
 },night:{
-    backgroundColor: "black",
-    postColor: "black",
-    textColor: "black",
-    iconColor: "black",
-    menuColor: "black",
-    heartColor: "black"
+    backgroundColor: "#023C40",
+    postColor: "#119DA4",
+    textColor: "#FFFCF2",
+    iconColor: "#C2EFB3",
+    menuColor: "#023C40",
+    heartColor: "#e6848d"
 }}
 
 const initialState = {

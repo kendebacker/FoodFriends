@@ -148,7 +148,7 @@ export default function FeedScreen(props){
                     </TouchableOpacity>
                 </View>
                 <View style={styles.settingsInputRow}>
-                    <Text style={styles.labelText}>Rating</Text>
+                    <Text style={styles.labelText}>Night Mode</Text>
                     <Switch
                     style={{margin: 10}}
                     trackColor={{ false: backgroundColor, true: backgroundColor }}
@@ -157,7 +157,7 @@ export default function FeedScreen(props){
                     onValueChange={()=>{
                         updateColor(!dayMode)
                         setDayMode(!dayMode)}}
-                    value={dayMode}
+                    value={!dayMode}
                     />
                 </View>
                 <View style={styles.settingsInputRow}>
