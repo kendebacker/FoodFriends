@@ -164,7 +164,8 @@ export default function PostScreen(props){
         justifyContent: "center",
       },
       title:{
-        fontSize: 45
+        fontSize: 45,
+        color: textColor
       },
         postTop:{
             width: "100%",

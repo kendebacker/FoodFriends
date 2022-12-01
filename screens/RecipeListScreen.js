@@ -7,7 +7,16 @@ import { Overlay , Input, Button} from "@rneui/themed";
 import {SEARCH_PROFILE, DELETE_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { SaveAndDispatch, SearchProfileData } from "../Data";
+import { MaterialIcons } from '@expo/vector-icons'; 
+import { Entypo } from '@expo/vector-icons'; 
 
+
+const backgroundColor = "#C2EFB3"
+const postColor = "#FFFCF2"
+const textColor = "#023C40"
+const iconColor = "#119DA4"
+const menuColor = "#412234"
+const heartColor = "#e6848d"
 
 export default function RecipeListScreen(props){
 
@@ -30,7 +39,6 @@ export default function RecipeListScreen(props){
 
 
     return(
-        <View>
             <View style={styles.content}>
                 <View style={styles.inputRow}>
                     <Text style={styles.title}>Recipes</Text>
@@ -43,32 +51,44 @@ export default function RecipeListScreen(props){
                     return(
                         <View style={styles.row}>
                             <View style={styles.left}>
-                                <Text>{item.firstName} {item.lastName}</Text>
-                                <Text>{item.title}</Text>
-                            </View>
-                            <View style={styles.right}>
-                                <Button title={"View"} onPress={()=>{
-                                     navigation.navigate("SavedPost",{
+                            <TouchableOpacity
+                            onPress={()=>{
+                                updateProfile(profile.saved.filter(el => el!==item.id))
+                            }}>
+                                <MaterialIcons name="cancel" size={45} color={heartColor} />
+                            </TouchableOpacity>
+                                <Text style={styles.standard}>{item.firstName} {item.lastName}</Text>
+                                <Text style={styles.standard}>{item.title}</Text>
+                                <TouchableOpacity
+                                onPress={()=>{
+                                    navigation.navigate("SavedPost",{
                                         post: item,
                                      })
-                                }}/>
-                                <Button title={"remove"} onPress={()=>{
-                                    updateProfile(profile.saved.filter(el => el!==item.id))
-                                }}/>
+                                }}>
+                                    <Entypo name="magnifying-glass" size={50} color={iconColor} />
+                                </TouchableOpacity>
                             </View>
+                    
                         </View>
                     )}}/>
                 </View>
             </View>
-        </View>
     )}
 
 const styles = {
+    topRow:{
+        flex:.2,
+        flexDirection: "row",
+        justifyContent: "start",
+    },
+    standard:{
+        color: textColor
+    },
     row:{
         flexDirection: "row",
         justifyContent: "space-evenly",
         alignItems: "center",
-        backgroundColor: "red",
+        backgroundColor: postColor,
         width: "90%",
         marginLeft: "5%",
         padding: 10,
@@ -82,9 +102,10 @@ const styles = {
     },
 
     left:{
-      width: "50%" ,
+      width: "100%" ,
       flexDirection: "row",
-      justifyContent: "space-evenly"
+      justifyContent: "space-evenly",
+      alignItems: "center"
 
     },
     right:{
@@ -115,8 +136,11 @@ const styles = {
     },
     content:{
         flexDirection: "column",
+        flex: 1,
+        backgroundColor: backgroundColor
     },
     title:{
-        fontSize: 40
+        fontSize: 40,
+        color: textColor
     }
 }

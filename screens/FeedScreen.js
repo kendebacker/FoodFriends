@@ -56,14 +56,15 @@ export default function FeedScreen(props){
     const [location, setLocation] = useState([0,0])
     const [dayMode, setDayMode] = useState(true)
 
+    const placeholderPic = "https://firebasestorage.googleapis.com/v0/b/ken-homework-5.appspot.com/o/Screen%20Shot%202022-11-30%20at%2010.16.54%20PM.png?alt=media&token=b89c852e-c1b1-4516-a494-0534cd2267ce"
     const camera = route.params
-    const postURL = route.params===undefined?null:route.params.postURL
-    const profileURL = route.params===undefined?null:route.params.profileURL
+    const postURL = route.params===undefined?placeholderPic:route.params.postURL
+    const profileURL = route.params===undefined?placeholderPic:route.params.profileURL
 
 
     useEffect(()=>{
-        setMakePostOverlay(postURL !== null)
-        setShowOverlay(profileURL !== null)
+        setMakePostOverlay(postURL !== placeholderPic)
+        setShowOverlay(profileURL !== placeholderPic)
         setImage(profile.image)
         setLastName(profile.lastName)
         setFirstName(profile.firstName)
@@ -158,8 +159,7 @@ export default function FeedScreen(props){
                         <TouchableOpacity
                         title={"Cancel"}
                         onPress={()=>{
-                            setImage(profile.image)
-                            setShowOverlay(false)
+                            setMakePostOverlay(false)
                         }}>
                             <MaterialIcons name="cancel" size={45} color={heartColor} />
                         </TouchableOpacity>

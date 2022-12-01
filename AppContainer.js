@@ -71,7 +71,7 @@ function KensApp(){
                 screenOptions={{
                     headerShown:false,
                     tabBarActiveTintColor: postColor,
-                    tabBarInactiveTintColor: "lightgray",
+                    tabBarInactiveTintColor: textColor,
                     tabBarActiveBackgroundColor: iconColor,
                     tabBarInactiveBackgroundColor:  iconColor,
                     tabBarStyle: [
