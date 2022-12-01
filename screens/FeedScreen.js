@@ -225,23 +225,23 @@ export default function FeedScreen(props){
                     <TouchableOpacity onPress={()=>{      
                         setShowSettings(true)
                         }}>
-                        <MaterialIcons name="settings" size={50} color="black" />
+                        <MaterialIcons name="settings" size={30} color={textColor} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{      
                         const loadPost = {type: LOAD_POST, payload:{friends: profile.friends}}
                         SaveAndDispatch(loadPost, dispatch)
                         }}>
-                        <FontAwesome name="refresh" size={50} color="black" />
+                        <FontAwesome name="refresh" size={30} color={textColor} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{      
                         setMakePostOverlay(true)
                         }}>
-                        <MaterialIcons name="post-add" size={50} color="black" />
+                        <MaterialIcons name="post-add" size={30} color={textColor} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{      
                         setShowOverlay(true)
                         }}>
-                        <FontAwesome name="user" size={50} color="black" />
+                        <FontAwesome name="user" size={30} color={textColor} />
                     </TouchableOpacity>
                 </View>
                 <FlatList 
@@ -346,7 +346,8 @@ const styles = {
         width: "100%",
         padding: 20,
         flexDirection: "col",
-        alignItems: "center"
+        alignItems: "center",
+        backgroundColor: backgroundColor
     },
     submitRow:{
         flexDirection: "row",
@@ -394,7 +395,8 @@ logo: {
         width: "100%",
         flexDirection: "row",
         justifyContent: "space-evenly",
-        paddingTop: 20
+        paddingTop: 20,
+        backgroundColor: backgroundColor
     },
     feedContainer:{
         width: "100%",
