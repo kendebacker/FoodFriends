@@ -72,7 +72,6 @@ export default function FeedScreen(props){
 
 
 
-    console.log(profile.image)
 
     const getLocation=async()=>{
         // https://stackoverflow.com/questions/43214062/open-maps-google-maps-in-react-native
@@ -130,23 +129,35 @@ export default function FeedScreen(props){
                 overlayStyle={styles.overlay}
                 isVisible={showSettings}
                 onBackdropPress={()=>setShowSettings(false)}>
-                <View style={styles.inputRowOverlay}>
+                <View style={styles.topRow}>
+                    <TouchableOpacity
+                    title={"Cancel"}
+                    onPress={()=>{
+                        setShowSettings(false)
+                    }}>
+                        <MaterialIcons name="cancel" size={45} color={heartColor} />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.settingsInputRow}>
                     <Text style={styles.labelText}>Rating</Text>
                     <Switch
-                    trackColor={{ false: "#767577", true: "#81b0ff" }}
-                    thumbColor={dayMode ? "#f5dd4b" : "#f4f3f4"}
-                    ios_backgroundColor="#3e3e3e"
+                    style={{margin: 10}}
+                    trackColor={{ false: backgroundColor, true: backgroundColor }}
+                    thumbColor={iconColor}
+                    ios_backgroundColor={backgroundColor}
                     onValueChange={()=>setDayMode(!dayMode)}
                     value={dayMode}
                     />
                 </View>
-                <View style={styles.inputRowOverlay}>
+                <View style={styles.settingsInputRow}>
                     <Text style={styles.labelText}>Sign Out</Text>
-                    <TouchableOpacity  onPress={async ()=>{
+                    <TouchableOpacity
+                    style={{margin: 10}}
+                      onPress={async ()=>{
                             setShowSettings(false)
                             await signOut(getAuth())
                             navigation.navigate("Login")}}>
-                            <AntDesign name="logout" size={50} color="black" />
+                            <AntDesign name="logout" size={35} color={iconColor} />
                     </TouchableOpacity>
                 </View>
             </Overlay>
@@ -154,17 +165,17 @@ export default function FeedScreen(props){
                 overlayStyle={styles.overlay}
                 isVisible={makePostOverlay}
                 onBackdropPress={()=>setMakePostOverlay(false)}>
-                <View>
-                    <View style={styles.topRow}>
-                        <TouchableOpacity
-                        title={"Cancel"}
-                        onPress={()=>{
-                            setMakePostOverlay(false)
-                        }}>
-                            <MaterialIcons name="cancel" size={45} color={heartColor} />
-                        </TouchableOpacity>
+                <View style={styles.topRow}>
+                    <TouchableOpacity
+                    title={"Cancel"}
+                    onPress={()=>{
+                        setMakePostOverlay(false)
+                    }}>
+                        <MaterialIcons name="cancel" size={45} color={heartColor} />
+                    </TouchableOpacity>
 
-                    </View>
+                </View>
+                <View style={{marginTop: 10}}>
                     <View style={styles.inputRowOverlay}>
                         <Text style={styles.labelText}>Title</Text>
                         <TextInput
@@ -269,17 +280,17 @@ export default function FeedScreen(props){
                 overlayStyle={styles.overlay}
                 isVisible={showOverlay}
                 onBackdropPress={()=>setShowOverlay(false)}>
-                <View>
-                    <View style={styles.topRow}>
-                        <TouchableOpacity
-                        title={"Cancel"}
-                        onPress={()=>{
-                            setImage(profile.image)
-                            setShowOverlay(false)
-                        }}>
-                            <MaterialIcons name="cancel" size={45} color={heartColor} />
-                        </TouchableOpacity>
-                    </View>
+                <View style={styles.topRow}>
+                    <TouchableOpacity
+                    title={"Cancel"}
+                    onPress={()=>{
+                        setImage(profile.image)
+                        setShowOverlay(false)
+                    }}>
+                        <MaterialIcons name="cancel" size={45} color={heartColor} />
+                    </TouchableOpacity>
+                </View>
+                <View style={{marginTop: 10}}>
                     <View style={styles.inputRowOverlay}>
                         <Text style={styles.labelText}>First Name</Text>
                         <TextInput
@@ -331,8 +342,15 @@ export default function FeedScreen(props){
     )}
 
 const styles = {
+    settingsInputRow:{
+        marginTop: 10,
+        width: "100%",
+        alignItems: "center"
+    },
     topRow:{
-        width:"100%",
+        position: "absolute",
+        top: 0,
+        left: 0,
         flexDirection: "row",
         justifyContent: "start"
     },
@@ -404,7 +422,8 @@ logo: {
   postTitle:{
     width: "100%",
     flexDirection: "row",
-    justifyContent: "center"
+    justifyContent: "center",
+    color: textColor
   },
     postTopSub:{
         flexDirection: "row",

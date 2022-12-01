@@ -10,7 +10,6 @@ import { SaveAndDispatch, SearchProfileData } from "../Data";
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
 
-
 const backgroundColor = "#C2EFB3"
 const postColor = "#FFFCF2"
 const textColor = "#023C40"
@@ -40,35 +39,48 @@ export default function RecipeListScreen(props){
 
     return(
             <View style={styles.content}>
-                <View style={styles.inputRow}>
-                    <Text style={styles.title}>Recipes</Text>
-                </View>
                 <View style={styles.main}>
                     <FlatList 
                     style={styles.contactStuff}
                     data={saved}
                     renderItem={({item})=>{
                     return(
-                        <View style={styles.row}>
-                            <View style={styles.left}>
-                            <TouchableOpacity
-                            onPress={()=>{
-                                updateProfile(profile.saved.filter(el => el!==item.id))
-                            }}>
-                                <MaterialIcons name="cancel" size={45} color={heartColor} />
-                            </TouchableOpacity>
-                                <Text style={styles.standard}>{item.firstName} {item.lastName}</Text>
-                                <Text style={styles.standard}>{item.title}</Text>
+                        <View style={styles.friend}>
+                            <View style={styles.topRow}>
                                 <TouchableOpacity
+                                title={"Cancel"}
                                 onPress={()=>{
-                                    navigation.navigate("SavedPost",{
-                                        post: item,
-                                     })
+                                    updateProfile(profile.saved.filter(el => el!==item.id))
                                 }}>
-                                    <Entypo name="magnifying-glass" size={50} color={iconColor} />
+                                    <MaterialIcons name="cancel" size={45} color={heartColor} />
                                 </TouchableOpacity>
                             </View>
-                    
+                            <View style={styles.regionLeft}>
+                                <Image
+                                    style={styles.profImg2}
+                                    source={{uri: item.image}}
+                                    />
+                            </View>
+                            <View style={styles.regionRight}>
+                                <View>
+                                    <View style={styles.nameRow}>
+                                        <Text style={styles.standard2Title}>{item.title} </Text>
+                                        <Text style={styles.standard2}>{item.firstName}{item.lastName}</Text>
+                                    </View>
+                                    <TouchableOpacity
+                                        style={styles.button}
+                                        onPress={()=>{
+                                            navigation.navigate("SavedPost",{
+                                                post: item,
+                                            })
+                                        }}>
+                                        <View style={{flexDirection: "row", alignItems: "center"}}>
+                                            <Text style={styles.buttonText}>Details </Text>
+                                            <Entypo name="magnifying-glass" size={25} color={postColor} />
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
                         </View>
                     )}}/>
                 </View>
@@ -76,13 +88,39 @@ export default function RecipeListScreen(props){
     )}
 
 const styles = {
+    button:{
+        color: backgroundColor,
+        backgroundColor: iconColor,
+        padding: 12.5,
+        borderRadius: 5,
+        flexDirection: "row",
+        alignItems: "center",
+        margin: 10
+    },
+    buttonText:{
+        color: postColor,
+        fontSize: 20
+    },
+    nameRow:{
+        flexDirection: "column",
+        padding: 10,
+        alignItems: "center"
+    },
+    friend:{
+        flexDirection: "column",
+        justifyContent: "space-evenly",
+        alignItems: "center",
+        backgroundColor: postColor,
+        width: "90%",
+        marginLeft: "5%",
+        padding: 10,
+        borderRadius: 5
+
+    },
     topRow:{
         flex:.2,
         flexDirection: "row",
         justifyContent: "start",
-    },
-    standard:{
-        color: textColor
     },
     row:{
         flexDirection: "row",
@@ -98,7 +136,7 @@ const styles = {
         height: "80%",
         width: "100%",
     },main:{
-        marginTop: 20
+        marginTop: 35
     },
 
     left:{
@@ -142,5 +180,35 @@ const styles = {
     title:{
         fontSize: 40,
         color: textColor
-    }
+    },
+    standard:{
+        color: textColor
+    },
+    standard2:{
+        color: textColor,
+        fontSize: 20
+    },
+    standard2Title:{
+        color: textColor,
+        fontSize: 20,
+        fontWeight: "bold"
+    },
+    profile:{
+        alignItems: "center",
+    },
+    profImg2:{
+        width: 100,
+        height: 100,
+        marginTop: 10,
+        borderColor: iconColor,
+        borderWidth: 3,
+    },
+    topRow:{
+        position: "absolute",
+        left:5,
+        top:5,
+        width:"100%",
+        flexDirection: "row",
+        justifyContent: "start"
+    },
 }

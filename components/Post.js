@@ -25,7 +25,6 @@ export const Post = (props)=>{
     const [showComments, setShowComments] = useState(false)
     const [comment, setComment] = useState("")
 
-    console.log(profile)
 
     const dispatch = useDispatch()
 
@@ -57,11 +56,13 @@ export const Post = (props)=>{
                         source={{uri: profile.image}}
                         resizeMode={"cover"}
                         />
-                        <Text style={styles.profText}>{userPost.firstName} {userPost.lastName}</Text>
-                        <Text style ={styles.profText}> on {userPost.date}</Text>
+                        <View style={{flexDirection: "column"}}>
+                        <Text style={styles.profText}>{userPost.firstName}{userPost.lastName}</Text>
+                        <Text style ={styles.profText}>{userPost.date}</Text>
+                        </View>
                     </View>
                     <View style={styles.thumb}>
-                        <Text style={styles.heartCounter}>{userPost.likes.length}</Text>
+                        <Text style={styles.heartCounter}>{userPost.likes.length} </Text>
                         <TouchableOpacity onPress={()=>{updateLikes(userPost, profile)}}>
                         {userPost.likes.filter(el=> el === profile.email).length === 0?<AntDesign name="hearto" size={24} color={heartColor} />:<AntDesign name="heart" size={24} color={heartColor} />}
                         </TouchableOpacity>
@@ -87,7 +88,10 @@ export const Post = (props)=>{
                     <TouchableOpacity style={styles.button} onPress={()=>{
                             setShowComments(!showComments)
                         }}>
-                        <Text style={styles.buttonText}>{!showComments?"Show Comments":"Hide Comments"}</Text>
+                        <View style={{flexDirection: "row", alignItems: "center"}}>
+                            <Text style={styles.buttonText}>{!showComments?"Show Comments":"Hide Comments"} </Text>
+                            {showComments?<AntDesign name="arrowup" size={15} color={postColor} />:<AntDesign name="arrowdown" size={15} color={postColor} />}
+                        </View>
                     </TouchableOpacity>
 
                 
@@ -163,7 +167,8 @@ const styles = {
         color: postColor
     },
     heartCounter:{
-        color: heartColor
+        color: heartColor,
+        fontSize: 16
     },
     profText:{
         color: textColor
