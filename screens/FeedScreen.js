@@ -18,7 +18,7 @@ const postColor = "#FFFCF2"
 const textColor = "#023C40"
 const iconColor = "#119DA4"
 const menuColor = "#412234"
-const heartColor = "#8BE9E0"
+const heartColor = "#e6848d"
 
 const StarRating = ({rating, setRating})=>{
     let start = [0,0,0,0,0]
@@ -28,8 +28,8 @@ const StarRating = ({rating, setRating})=>{
         <View style={styles.rating}>
             {start.map((el,ind) => 
             <TouchableOpacity key={ind} onPress={()=>{setRating(ind+1)}}>{el===1?
-                <FontAwesome name="star" size={24} color="dodgerblue" />:
-                <FontAwesome name="star-o" size={24} color="dodgerblue" />}
+                <FontAwesome name="star" size={24} color={iconColor} />:
+                <FontAwesome name="star-o" size={24} color={iconColor} />}
             </TouchableOpacity>)}
         </View>
     )
@@ -148,6 +148,17 @@ export default function FeedScreen(props){
                 isVisible={makePostOverlay}
                 onBackdropPress={()=>setMakePostOverlay(false)}>
                 <View>
+                    <View style={styles.topRow}>
+                        <TouchableOpacity
+                        title={"Cancel"}
+                        onPress={()=>{
+                            setImage(profile.image)
+                            setShowOverlay(false)
+                        }}>
+                            <MaterialIcons name="cancel" size={45} color={heartColor} />
+                        </TouchableOpacity>
+
+                    </View>
                     <View style={styles.inputRowOverlay}>
                         <Text style={styles.labelText}>Title</Text>
                         <TextInput
@@ -161,25 +172,29 @@ export default function FeedScreen(props){
                         <StarRating rating = {rating} setRating = {setRating} />
                     </View>
                     <View style={styles.inputRowOverlay}>
-                        <Text style={styles.labelText}>Image</Text>
+                        <View style={{flexDirection:"row",  justifyContent: "center", alignItems: "center"}}>
+                            <Text style={styles.labelText}>Image </Text>
+                            <TouchableOpacity  onPress={()=>{
+                                setMakePostOverlay(false)
+                                navigation.navigate("Camera",{prev:"post"})}}>
+                            <AntDesign name="camera" size={35} color={iconColor} />  
+                            </TouchableOpacity>
+                        </View>
                         {postURL===null?<Text>No picture selected yet</Text>:<Image
                         style={styles.logo}
                         source={{uri: postURL}}
                         />}
-                        <TouchableOpacity  onPress={()=>{
-                            setMakePostOverlay(false)
-                            navigation.navigate("Camera",{prev:"post"})}}>
-                          <AntDesign name="camera" size={50} color="dodgerblue" />  
-                        </TouchableOpacity>
                     </View>
                     <View style={styles.inputRowOverlay}>
-                        <Text style={styles.labelText}>Location</Text>
-                        {location[0]===0?<Text>No Location Added</Text>:<Text>Location Added</Text>}
-                        <TouchableOpacity title={"loc"} onPress={()=>{
+                        <View style={{flexDirection:"row",  justifyContent: "center", alignItems: "center"}}>
+                            <Text style={styles.labelText}>Location </Text>
+                            <TouchableOpacity title={"loc"} onPress={()=>{
                             getLocation()
                             }}>
-                            <Entypo name="location" size={50} color="dodgerblue" />    
-                        </TouchableOpacity>
+                                <Entypo name="location" size={25} color={iconColor} />    
+                            </TouchableOpacity>
+                        </View>
+                        {location[0]===0?<Text>No Location Added</Text>:<Text>Location Added</Text>}
                     </View>
                     <View style={styles.inputRowOverlay}>
                         <Text style={styles.labelText}>Description</Text>
@@ -199,22 +214,13 @@ export default function FeedScreen(props){
                     </View>
                     <View style={styles.submitRow}>
                         <TouchableOpacity
-                        title={"Cancel"}
-                        onPress={()=>{
-                            setImage(profile.image)
-                            setShowOverlay(false)
-                        }}>
-                            <MaterialIcons name="cancel" size={50} color="red" />
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
                         title={"Post"}
                         onPress={()=>{
                             addPost(profile.image, [],recipe, title, profile.firstName, profile.lastName,postURL, description, rating, location, [], profile.email, [], new Date().toLocaleDateString(), profile.friends, Date.now())
                             setMakePostOverlay(false)
                         }}
                         >
-                           <MaterialIcons name="check-circle" size={50} color="green" />
+                           <MaterialIcons name="check-circle" size={75} color={textColor} />
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -258,6 +264,16 @@ export default function FeedScreen(props){
                 isVisible={showOverlay}
                 onBackdropPress={()=>setShowOverlay(false)}>
                 <View>
+                    <View style={styles.topRow}>
+                        <TouchableOpacity
+                        title={"Cancel"}
+                        onPress={()=>{
+                            setImage(profile.image)
+                            setShowOverlay(false)
+                        }}>
+                            <MaterialIcons name="cancel" size={45} color={heartColor} />
+                        </TouchableOpacity>
+                    </View>
                     <View style={styles.inputRowOverlay}>
                         <Text style={styles.labelText}>First Name</Text>
                         <TextInput
@@ -276,7 +292,14 @@ export default function FeedScreen(props){
                     </View>
 
                     <View style={styles.inputRowOverlay}>
-                        <Text style={styles.labelText}>Image</Text>
+                        <View style={{flexDirection:"row",  justifyContent: "center", alignItems: "center"}}>
+                            <Text style={styles.labelText}>Image</Text>
+                            <TouchableOpacity  onPress={()=>{
+                                setShowOverlay(false)
+                                navigation.navigate("Camera",{prev: "profile"})}}>
+                            <AntDesign name="camera" size={35} color={iconColor} />  
+                            </TouchableOpacity>
+                        </View>
                         {profileURL===null?<Image
                         style={styles.logo}
                         source={{uri: profile.image}}
@@ -284,22 +307,8 @@ export default function FeedScreen(props){
                         style={styles.logo}
                         source={{uri: profileURL}}
                         />}
-                        <TouchableOpacity  onPress={()=>{
-                            setShowOverlay(false)
-                            navigation.navigate("Camera",{prev: "profile"})}}>
-                          <AntDesign name="camera" size={50} color="dodgerblue" />  
-                        </TouchableOpacity>
                     </View>
                     <View style={styles.submitRow}>
-                        <TouchableOpacity
-                        title={"Cancel"}
-                        onPress={()=>{
-                            setImage(profile.image)
-                            setShowOverlay(false)
-                        }}>
-                            <MaterialIcons name="cancel" size={50} color="red" />
-                        </TouchableOpacity>
-
                         <TouchableOpacity
                         title={"Post"}
                         onPress={()=>{
@@ -307,7 +316,7 @@ export default function FeedScreen(props){
                             setShowOverlay(false)
                         }}
                         >
-                           <MaterialIcons name="check-circle" size={50} color="green" />
+                           <MaterialIcons name="check-circle" size={75} color={textColor} />
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -316,6 +325,15 @@ export default function FeedScreen(props){
     )}
 
 const styles = {
+    topRow:{
+        width:"100%",
+        flexDirection: "row",
+        justifyContent: "start"
+    },
+    overlay:{
+        width: "75%",
+        backgroundColor: postColor
+    },
     all:{
         flex:1
     },
@@ -333,7 +351,8 @@ const styles = {
         flex: .2,
     },
     labelText:{
-        fontSize: 20
+        fontSize: 20,
+        color: textColor
     },
     inputRowOverlay:{
         width: "100%",
