@@ -9,6 +9,7 @@ const LOAD_PROFILE = "LOAD_POST"
 const UPDATE_SORT = "UPDATE_SORT"
 const SEARCH_PROFILE = "SEARCH_PROFILE"
 const SAVE_PICTURE = "SAVE_PICTURE"
+const UPDATE_COLOR = "UPDATE_COLOR"
 
 const initialPosts = []
 const intitialProfile = [{firstName:"",lastName:"", password: "mypassword",image:"profilePic.png", reposts: [1], posts: [1,2], saved: [3], friends:[1]}]
@@ -16,23 +17,39 @@ const initialFriends = []
 const initialSaved = []
 
 
-
+const colors = {day:{
+    backgroundColor: "#C2EFB3",
+    postColor: "#FFFCF2",
+    textColor: "#023C40",
+    iconColor: "#119DA4",
+    menuColor: "#412234",
+    heartColor: "#e6848d"
+},night:{
+    backgroundColor: "black",
+    postColor: "black",
+    textColor: "black",
+    iconColor: "black",
+    menuColor: "black",
+    heartColor: "black"
+}}
 
 const initialState = {
     profile: intitialProfile[0],
     posts: initialPosts,
     friends: initialFriends,
-    saved: initialSaved
+    saved: initialSaved,
+    color: colors.day
   }
 
 
-const updateSort =(state, name, order)=>{
+const updateColor = (state, status) =>{
+    console.log(status)
     return {
         ...state,
-        name: name,
-        order: order
+        color: status?colors.day:colors.night,
     }
 }
+
 
 const loadPost = (state, newPosts) =>{
     return {
@@ -53,6 +70,7 @@ const loadProfile = (state, profile, posts, friends, saved) =>{
 
 
 const rootReducer =(state=initialState, action)=>{
+    console.log(action)
     switch (action.type){
         case ADD_PROFILE: 
         case UPDATE_PROFILE:
@@ -64,8 +82,8 @@ const rootReducer =(state=initialState, action)=>{
         case DELETE_POST:
         case ADD_POST:
             return loadPost(state, action.payload.posts)
-        case UPDATE_SORT:
-            return updateSort(state, action.payload.name, action.payload.order)
+        case UPDATE_COLOR:
+            return updateColor(state, action.payload.status)
         default:
             return state
     }
@@ -74,4 +92,4 @@ const rootReducer =(state=initialState, action)=>{
 
 
 
-export {rootReducer, LOAD_PROFILE, LOAD_POST, UPDATE_PROFILE, UPDATE_POST, ADD_PROFILE, ADD_POST, DELETE_PROFILE, DELETE_POST, UPDATE_SORT, SEARCH_PROFILE, SAVE_PICTURE}
+export {rootReducer, LOAD_PROFILE, LOAD_POST, UPDATE_PROFILE, UPDATE_POST, ADD_PROFILE, ADD_POST, DELETE_PROFILE, DELETE_POST, UPDATE_SORT, SEARCH_PROFILE, SAVE_PICTURE, UPDATE_COLOR}

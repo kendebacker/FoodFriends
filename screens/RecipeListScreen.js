@@ -10,14 +10,11 @@ import { SaveAndDispatch, SearchProfileData } from "../Data";
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
 
-const backgroundColor = "#C2EFB3"
-const postColor = "#FFFCF2"
-const textColor = "#023C40"
-const iconColor = "#119DA4"
-const menuColor = "#412234"
-const heartColor = "#e6848d"
 
 export default function RecipeListScreen(props){
+
+    const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
+    const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
 
     const {navigation, route} = props
     
@@ -87,128 +84,131 @@ export default function RecipeListScreen(props){
             </View>
     )}
 
-const styles = {
-    button:{
-        color: backgroundColor,
-        backgroundColor: iconColor,
-        padding: 12.5,
-        borderRadius: 5,
-        flexDirection: "row",
-        alignItems: "center",
-        margin: 10
-    },
-    buttonText:{
-        color: postColor,
-        fontSize: 20
-    },
-    nameRow:{
-        flexDirection: "column",
-        padding: 10,
-        alignItems: "center"
-    },
-    friend:{
-        flexDirection: "column",
-        justifyContent: "space-evenly",
-        alignItems: "center",
-        backgroundColor: postColor,
-        width: "90%",
-        marginLeft: "5%",
-        padding: 10,
-        borderRadius: 5
-
-    },
-    topRow:{
-        flex:.2,
-        flexDirection: "row",
-        justifyContent: "start",
-    },
-    row:{
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        alignItems: "center",
-        backgroundColor: postColor,
-        width: "90%",
-        marginLeft: "5%",
-        padding: 10,
-        borderRadius: 5
-    },
-    contactStuff:{
-        height: "80%",
-        width: "100%",
-    },main:{
-        marginTop: 35
-    },
-
-    left:{
-      width: "100%" ,
-      flexDirection: "row",
-      justifyContent: "space-evenly",
-      alignItems: "center"
-
-    },
-    right:{
-        width: "50%" ,
-        flexDirection: "row",
-        justifyContent: "space-evenly"
-  
-      },
-    emailInput:{
-        borderWidth: 1
-    },
-    overlay:{
-        column: "row",
-        width: "50%",
-        height: "50%"
-    },
-    inputRow:{
-        marginTop: 30,
-        width: "100%",
-        flexDirection: "row",
-        justifyContent: "center"
-    },
-    label:{
-        alignText:"center"
-    },
-    input:{
-        alignText:"center"
-    },
-    content:{
-        flexDirection: "column",
-        flex: 1,
-        backgroundColor: backgroundColor
-    },
-    title:{
-        fontSize: 40,
-        color: textColor
-    },
-    standard:{
-        color: textColor
-    },
-    standard2:{
-        color: textColor,
-        fontSize: 20
-    },
-    standard2Title:{
-        color: textColor,
-        fontSize: 20,
-        fontWeight: "bold"
-    },
-    profile:{
-        alignItems: "center",
-    },
-    profImg2:{
-        width: 100,
-        height: 100,
-        marginTop: 10,
-        borderColor: iconColor,
-        borderWidth: 3,
-    },
-    topRow:{
-        position: "absolute",
-        left:5,
-        top:5,
-        width:"100%",
-        flexDirection: "row",
-        justifyContent: "start"
-    },
-}
+    const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, heartColor) =>{
+        const styles = {
+            button:{
+                color: backgroundColor,
+                backgroundColor: iconColor,
+                padding: 12.5,
+                borderRadius: 5,
+                flexDirection: "row",
+                alignItems: "center",
+                margin: 10
+            },
+            buttonText:{
+                color: postColor,
+                fontSize: 20
+            },
+            nameRow:{
+                flexDirection: "column",
+                padding: 10,
+                alignItems: "center"
+            },
+            friend:{
+                flexDirection: "column",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                backgroundColor: postColor,
+                width: "90%",
+                marginLeft: "5%",
+                padding: 10,
+                borderRadius: 5
+        
+            },
+            topRow:{
+                flex:.2,
+                flexDirection: "row",
+                justifyContent: "start",
+            },
+            row:{
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                backgroundColor: postColor,
+                width: "90%",
+                marginLeft: "5%",
+                padding: 10,
+                borderRadius: 5
+            },
+            contactStuff:{
+                height: "80%",
+                width: "100%",
+            },main:{
+                marginTop: 35
+            },
+        
+            left:{
+              width: "100%" ,
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              alignItems: "center"
+        
+            },
+            right:{
+                width: "50%" ,
+                flexDirection: "row",
+                justifyContent: "space-evenly"
+          
+              },
+            emailInput:{
+                borderWidth: 1
+            },
+            overlay:{
+                column: "row",
+                width: "50%",
+                height: "50%"
+            },
+            inputRow:{
+                marginTop: 30,
+                width: "100%",
+                flexDirection: "row",
+                justifyContent: "center"
+            },
+            label:{
+                alignText:"center"
+            },
+            input:{
+                alignText:"center"
+            },
+            content:{
+                flexDirection: "column",
+                flex: 1,
+                backgroundColor: backgroundColor
+            },
+            title:{
+                fontSize: 40,
+                color: textColor
+            },
+            standard:{
+                color: textColor
+            },
+            standard2:{
+                color: textColor,
+                fontSize: 20
+            },
+            standard2Title:{
+                color: textColor,
+                fontSize: 20,
+                fontWeight: "bold"
+            },
+            profile:{
+                alignItems: "center",
+            },
+            profImg2:{
+                width: 100,
+                height: 100,
+                marginTop: 10,
+                borderColor: iconColor,
+                borderWidth: 3,
+            },
+            topRow:{
+                position: "absolute",
+                left:5,
+                top:5,
+                width:"100%",
+                flexDirection: "row",
+                justifyContent: "start"
+            },
+        }
+        return(styles)
+    }

@@ -9,16 +9,6 @@ import { SaveAndDispatch } from "../Data";
 import { useDispatch, useSelector } from "react-redux";
 
 
-const backgroundColor = "#C2EFB3"
-const postColor = "#FFFCF2"
-const textColor = "#023C40"
-const iconColor = "#119DA4"
-const menuColor = "#412234"
-const heartColor = "#e6848d"
-
-
-
-
 let app
 const apps = getApps()
 if (apps.length == 0) { 
@@ -30,6 +20,8 @@ const auth = getAuth(app)
 
 
 const CreateAccountBox=({navigation})=>{
+    const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
+    const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
 
     const dispatch = useDispatch()
 
@@ -87,6 +79,8 @@ const CreateAccountBox=({navigation})=>{
 
 const LoginBox=({navigation})=>{
     const dispatch = useDispatch()
+    const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
+    const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -122,6 +116,8 @@ const LoginBox=({navigation})=>{
 }
 
 export default function MakeAccountScreen(props){
+    const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
+    const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
 
     const {navigation, route} = props
 
@@ -162,93 +158,97 @@ export default function MakeAccountScreen(props){
             </View>
     )}
 
-const styles = {
-    button:{
-        marginTop: 10,
-        color: backgroundColor,
-        backgroundColor: iconColor,
-        padding: 12.5,
-        borderRadius: 5
-    },
-    buttonText:{
-        color: postColor
-    },
-    normalText:{
-        color: textColor
-    },
-    switchOption:{
-        flex: .33,
-        alignItems:"center",
-        justifyContent:"start",
-        flexDirection:"row"
-    },
-    labelRow:{
-        flex: .1,
-        color: textColor
-    },
-    loginContent:{
-        marginTop: 20,
-        padding: 10,
-         width: "90%",
-        flex:.7,
-        flexDirection: "column",
-        justifyContent:"start",
-        alignItems: "center"
-    },
-    signContent:{
-        marginTop: 20,
-        padding: 10,
-        width: "90%",
-        flex:.7,
-        flexDirection: "column",
-        justifyContent:"start",
-        alignItems: "center"
-    },
-    inputRow:{
-        width: "100%",
-        flexDirection: "row",
-        marginBottom: 10
-    },
-    titleRow:{
-        flex: .35,
-        justifyContent: "center"
-    },
-    title:{
-        fontSize : 50,
-        color: menuColor
-    },
-    labelTitle:{
-        fontSize : 30,
-        color: textColor
-    },
-    contentBox:{
-        flex: .35,
-        width: "90%",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: 10,
-        backgroundColor: postColor,
-        borderRadius: 5,
-        backgroundColor: postColor
-    },
-    label:{
-        alignText:"center",
-        width: "40%",
-        color: textColor
-    },
-    input:{
-        alignText:"center",
-        borderWidth: 1,
-        width: "50%",
-        height: 20,
-        color: textColor
-    },
-    content:{
-        flexDirection: "column",
-        justifyContent: "start",
-        alignItems: "center",
-        backgroundColor: backgroundColor,
-        flex:1
-    },
 
+
+const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, heartColor) =>{
+    const styles = {
+        button:{
+            marginTop: 10,
+            color: backgroundColor,
+            backgroundColor: iconColor,
+            padding: 12.5,
+            borderRadius: 5
+        },
+        buttonText:{
+            color: postColor
+        },
+        normalText:{
+            color: textColor
+        },
+        switchOption:{
+            flex: .33,
+            alignItems:"center",
+            justifyContent:"start",
+            flexDirection:"row"
+        },
+        labelRow:{
+            flex: .1,
+            color: textColor
+        },
+        loginContent:{
+            marginTop: 20,
+            padding: 10,
+             width: "90%",
+            flex:.7,
+            flexDirection: "column",
+            justifyContent:"start",
+            alignItems: "center"
+        },
+        signContent:{
+            marginTop: 20,
+            padding: 10,
+            width: "90%",
+            flex:.7,
+            flexDirection: "column",
+            justifyContent:"start",
+            alignItems: "center"
+        },
+        inputRow:{
+            width: "100%",
+            flexDirection: "row",
+            marginBottom: 10
+        },
+        titleRow:{
+            flex: .35,
+            justifyContent: "center"
+        },
+        title:{
+            fontSize : 50,
+            color: menuColor
+        },
+        labelTitle:{
+            fontSize : 30,
+            color: textColor
+        },
+        contentBox:{
+            flex: .35,
+            width: "90%",
+            flexDirection: "column",
+            alignItems: "center",
+            padding: 10,
+            backgroundColor: postColor,
+            borderRadius: 5,
+            backgroundColor: postColor
+        },
+        label:{
+            alignText:"center",
+            width: "40%",
+            color: textColor
+        },
+        input:{
+            alignText:"center",
+            borderWidth: 1,
+            width: "50%",
+            height: 20,
+            color: textColor
+        },
+        content:{
+            flexDirection: "column",
+            justifyContent: "start",
+            alignItems: "center",
+            backgroundColor: backgroundColor,
+            flex:1
+        },
+    }
+    return(styles)
 }

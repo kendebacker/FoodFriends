@@ -10,15 +10,10 @@ import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 import { FontAwesome5 } from '@expo/vector-icons'; 
 
-const backgroundColor = "#C2EFB3"
-const postColor = "#FFFCF2"
-const textColor = "#023C40"
-const iconColor = "#119DA4"
-const menuColor = "#412234"
-const heartColor = "#8BE9E0"
-
-
 const StarRating = ({rating})=>{
+    const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
+    const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
+
     let start = [0,0,0,0,0]
     start = start.map((el,ind)=> el = ind<rating?1:0)
 
@@ -34,6 +29,8 @@ const StarRating = ({rating})=>{
 }
 
 export default function PostScreen(props){
+    const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
+    const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
 
     const {navigation, route} = props
     const item = route.params.post
@@ -112,88 +109,92 @@ export default function PostScreen(props){
         </View>
     )}
 
-    const styles = {
-        scrollView:{
-            flex: .9
-        },
-        headingRowTop:{
-            flex: .1
-        },
-        button:{
-            marginTop: 10,
-            color: backgroundColor,
-            backgroundColor: iconColor,
-            padding: 12.5,
-            borderRadius: 5
-        },
-        buttonText:{
-            color: postColor
-        },
-        content:{
-            marginTop: 10
-        },
-        subtitle:{
-            fontSize: 25,
-            marginTop:10,
-            color: textColor
-        },
-        thumb:{flexDirection: "row"},
-        rating:{
-            flexDirection: "row",
-            width: "100%",
+    const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, heartColor) =>{
+        const styles = {
+            scrollView:{
+                flex: .9
+            },
+            headingRowTop:{
+                flex: .1
+            },
+            button:{
+                marginTop: 10,
+                color: backgroundColor,
+                backgroundColor: iconColor,
+                padding: 12.5,
+                borderRadius: 5
+            },
+            buttonText:{
+                color: postColor
+            },
+            content:{
+                marginTop: 10
+            },
+            subtitle:{
+                fontSize: 25,
+                marginTop:10,
+                color: textColor
+            },
+            thumb:{flexDirection: "row"},
+            rating:{
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "center",
+                marginTop: 10
+            },
+        middleContent:{
             justifyContent: "center",
-            marginTop: 10
+            width: "100%",
+            flexDirection: "column",
+            alignItems: "center",
+            flex: .2,
+            marginTop: 10,
+            alignItems: "center"
         },
-    middleContent:{
-        justifyContent: "center",
-        width: "100%",
-        flexDirection: "column",
-        alignItems: "center",
-        flex: .2,
-        marginTop: 10,
-        alignItems: "center"
-    },
-    logo: {
-        width: 100,
-        height: 100,
-      },
-      postTitle:{
-        flex: .15,
-        width: "100%",
-        flexDirection: "row",
-        justifyContent: "center",
-      },
-      title:{
-        fontSize: 45,
-        color: textColor
-      },
-        postTop:{
+        logo: {
+            width: 100,
+            height: 100,
+          },
+          postTitle:{
+            flex: .15,
             width: "100%",
             flexDirection: "row",
-            justifyContent: "space-between"
-        },
-        inputRow:{
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-            paddingTop: 20
-        },
-        feedContainer:{
-            width: "100%",
-            backgroundColor:"blue",
-            height: "80%",
-        },
-        post:{
-            width: "100%",
-            backgroundColor: postColor,
-            marginTop: "5%",
-            padding: 10,
-            borderRadius: 5,
-            flex: 1,
-            justifyContent: "start"
-        },
-    
-        content:{
-            flexDirection: "column"
+            justifyContent: "center",
+          },
+          title:{
+            fontSize: 45,
+            color: textColor
+          },
+            postTop:{
+                width: "100%",
+                flexDirection: "row",
+                justifyContent: "space-between"
+            },
+            inputRow:{
+                width: "100%",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                paddingTop: 20
+            },
+            feedContainer:{
+                width: "100%",
+                backgroundColor:"blue",
+                height: "80%",
+            },
+            post:{
+                width: "100%",
+                backgroundColor: postColor,
+                marginTop: "5%",
+                padding: 10,
+                borderRadius: 5,
+                flex: 1,
+                justifyContent: "start"
+            },
+        
+            content:{
+                flexDirection: "column"
+            }
         }
+        return(styles)
     }
+    

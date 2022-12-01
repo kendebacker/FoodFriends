@@ -3,7 +3,7 @@ import {signOut, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, si
 import { useEffect, useState } from "react"
 import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Platform, Linking, ScrollView , Switch} from "react-native";
 import { Overlay , Input, Button} from "@rneui/themed";
-import { ADD_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
+import { ADD_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE, UPDATE_COLOR } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { SaveAndDispatch } from "../Data";
 import { FontAwesome } from '@expo/vector-icons';
@@ -13,16 +13,12 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { Post } from "../components/Post";
 
-const backgroundColor = "#C2EFB3"
-const postColor = "#FFFCF2"
-const textColor = "#023C40"
-const iconColor = "#119DA4"
-const menuColor = "#412234"
-const heartColor = "#e6848d"
 
 const StarRating = ({rating, setRating})=>{
     let start = [0,0,0,0,0]
     start = start.map((el,ind)=> el = ind<rating?1:0)
+    const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
+    const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
 
     return(
         <View style={styles.rating}>
@@ -38,6 +34,9 @@ const StarRating = ({rating, setRating})=>{
 
 export default function FeedScreen(props){
 
+    
+    const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
+    const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
     const {navigation, route} = props
 
     const dispatch = useDispatch()
@@ -96,6 +95,16 @@ export default function FeedScreen(props){
         SaveAndDispatch(action, dispatch)
     }
 
+
+    const updateColor = (status)=>{
+        dispatch({
+            type: UPDATE_COLOR,
+            payload: {
+                status: status
+            }
+        })
+    }
+
     const addPost = (profImage,comments, recipe,title, firstName, lastName,foodImage, description, rating, location, likes, poster, reposts, date, friends, id)=>{
         const action = {
             type: ADD_POST,
@@ -145,7 +154,9 @@ export default function FeedScreen(props){
                     trackColor={{ false: backgroundColor, true: backgroundColor }}
                     thumbColor={iconColor}
                     ios_backgroundColor={backgroundColor}
-                    onValueChange={()=>setDayMode(!dayMode)}
+                    onValueChange={()=>{
+                        updateColor(!dayMode)
+                        setDayMode(!dayMode)}}
                     value={dayMode}
                     />
                 </View>
@@ -341,129 +352,134 @@ export default function FeedScreen(props){
         </View>
     )}
 
-const styles = {
-    settingsInputRow:{
-        marginTop: 10,
-        width: "100%",
-        alignItems: "center"
-    },
-    topRow:{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        flexDirection: "row",
-        justifyContent: "start"
-    },
-    overlay:{
-        width: "75%",
-        backgroundColor: postColor
-    },
-    all:{
-        flex:1
-    },
-    mainBody:{
-        flex:7
-    },
-    commentLine:{
-        flexDirection: "column"
-    },
 
-    commentsList:{
+const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, heartColor) =>{
+    const styles2 = {
+        settingsInputRow:{
+            marginTop: 10,
+            width: "100%",
+            alignItems: "center"
+        },
+        topRow:{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            flexDirection: "row",
+            justifyContent: "start"
+        },
+        overlay:{
+            width: "75%",
+            backgroundColor: postColor
+        },
+        all:{
+            flex:1
+        },
+        mainBody:{
+            flex:7
+        },
+        commentLine:{
+            flexDirection: "column"
+        },
+    
+        commentsList:{
+            width: "100%",
+            backgroundColor:"purple",
+            height: "20%",
+            flex: .2,
+        },
+        labelText:{
+            fontSize: 20,
+            color: textColor
+        },
+        inputRowOverlay:{
+            width: "100%",
+            flexDirection: "column",
+            paddingTop: 20,
+            alignItems: "center"
+        },
+        inputRow:{
+            flex:.2,
+            width: "100%",
+            padding: 20,
+            flexDirection: "col",
+            alignItems: "center",
+            backgroundColor: backgroundColor
+        },
+        submitRow:{
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            padding: 15
+        },
+        thumb:{flexDirection: "row"},
+        rating:{
+            flexDirection: "row",
+            width: "100%",
+            justifyContent: "center"
+        },
+    middleContent:{
+        flex:.5,
+        justifyContent: "center",
         width: "100%",
-        backgroundColor:"purple",
-        height: "20%",
-        flex: .2,
+        flexDirection: "row"
     },
-    labelText:{
-        fontSize: 20,
-        color: textColor
-    },
-    inputRowOverlay:{
-        width: "100%",
-        flexDirection: "column",
-        paddingTop: 20,
-        alignItems: "center"
-    },
-    inputRow:{
-        flex:.2,
-        width: "100%",
-        padding: 20,
-        flexDirection: "col",
-        alignItems: "center",
-        backgroundColor: backgroundColor
-    },
-    submitRow:{
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        padding: 15
-    },
-    thumb:{flexDirection: "row"},
-    rating:{
-        flexDirection: "row",
-        width: "100%",
-        justifyContent: "center"
-    },
-middleContent:{
-    flex:.5,
-    justifyContent: "center",
-    width: "100%",
-    flexDirection: "row"
-},
-profImg:{
-    width: 50,
-    height: 50,
-    marginRight: 5,
-    borderRadius: "50%"
-},
-logo: {
-    width: 100,
-    height: 100,
-  },
-  postTitle:{
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "center",
-    color: textColor
-  },
-    postTopSub:{
-        flexDirection: "row",
-        justifyContent: "start",
+    profImg:{
+        width: 50,
         height: 50,
-        alignItems: "center"
+        marginRight: 5,
+        borderRadius: "50%"
     },
-    postTop:{
+    logo: {
+        width: 100,
+        height: 100,
+      },
+      postTitle:{
         width: "100%",
         flexDirection: "row",
-        justifyContent: "space-between"
-    },inputRow:{
-        width: "100%",
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        paddingTop: 20,
-        backgroundColor: backgroundColor
-    },
-    feedContainer:{
-        width: "100%",
-        backgroundColor: backgroundColor,
-        height: "90%",
-    },
-    post:{
-        width: "90%",
-        backgroundColor: postColor,
-        marginLeft: "5%",
-        marginTop: "5%",
-        padding: 10,
-        borderRadius: 5,
-        flex:1
-    },
-    textInput:{
-        borderWidth: 1,
-        padding: 2,
-        width: "75%"
-    },
-
-    content:{
-        flexDirection: "column",
-        flex:1
+        justifyContent: "center",
+        color: textColor
+      },
+        postTopSub:{
+            flexDirection: "row",
+            justifyContent: "start",
+            height: 50,
+            alignItems: "center"
+        },
+        postTop:{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "space-between"
+        },inputRow:{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            paddingTop: 20,
+            backgroundColor: backgroundColor
+        },
+        feedContainer:{
+            width: "100%",
+            backgroundColor: backgroundColor,
+            height: "90%",
+        },
+        post:{
+            width: "90%",
+            backgroundColor: postColor,
+            marginLeft: "5%",
+            marginTop: "5%",
+            padding: 10,
+            borderRadius: 5,
+            flex:1
+        },
+        textInput:{
+            borderWidth: 1,
+            padding: 2,
+            width: "75%"
+        },
+    
+        content:{
+            flexDirection: "column",
+            flex:1
+        }
     }
-}
+    
+    return(styles2)
+}    

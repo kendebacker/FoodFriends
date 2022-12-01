@@ -12,14 +12,12 @@ import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons'; 
 
-const backgroundColor = "#C2EFB3"
-const postColor = "#FFFCF2"
-const textColor = "#023C40"
-const iconColor = "#119DA4"
-const menuColor = "#412234"
-const heartColor = "#e6848d"
 
 export const Post = (props)=>{
+
+    const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
+    const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
+    const styles2 = getStyles2(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
     const {navigation, userPost, profile} = props
 
     const [showComments, setShowComments] = useState(false)
@@ -132,152 +130,159 @@ export const Post = (props)=>{
     )
 }
 
-const styles2={
-    inputRowComment:{
-        flexDirection: "row",
-        justifyContent: "space-evenly"
-    },
-    inputRow:{
+const getStyles2 = (backgroundColor, postColor, textColor, iconColor, menuColor, heartColor) =>{
+    const styles2={
+        inputRowComment:{
+            flexDirection: "row",
+            justifyContent: "space-evenly"
+        },
+        inputRow:{
+            flexDirection: "row"
+        },
+        poster:{
+            fontWeight: "bold"
+        },
+        comments:{
+            marginTop: 25,
+            width: "100%",
+            backgroundColor: postColor,
+            flex: .25,
+            height:100,
+            flexDirection: "column"
+        },row:{
+            flexDirection: "row",
+            margin: 1
+        }
+    }
+    return(styles2)
+}
+
+const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, heartColor) =>{
+    const styles = {
+        button:{
+            color: backgroundColor,
+            backgroundColor: iconColor,
+            padding: 12.5,
+            borderRadius: 5
+        },
+        buttonText:{
+            color: postColor
+        },
+        heartCounter:{
+            color: heartColor,
+            fontSize: 16
+        },
+        profText:{
+            color: textColor
+        },
+        all:{
+            flex:1
+        },
+        mainBody:{
+            flex:7
+        },
+        commentLine:{
+            flexDirection: "column"
+        },
+    
+        commentsList:{
+            width: "100%",
+            backgroundColor:"purple",
+            height: "20%",
+            flex: .2,
+        },
+        labelText:{
+            fontSize: 20
+        },
+        inputRowOverlay:{
+            width: "100%",
+            flexDirection: "column",
+            paddingTop: 20,
+            alignItems: "center"
+        },
+        inputRow:{
+            flex:.2,
+            width: "100%",
+            padding: 20,
+            flexDirection: "col",
+            alignItems: "center"
+        },
+        submitRow:{
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            padding: 15
+        },
+        thumb:{flexDirection: "row"},
+        rating:{
+            flexDirection: "row",
+            width: "100%",
+            justifyContent: "center"
+        },
+    middleContent:{
+        flex:.5,
+        justifyContent: "center",
+        width: "100%",
         flexDirection: "row"
     },
-    poster:{
-        fontWeight: "bold"
-    },
-    comments:{
-        marginTop: 25,
-        width: "100%",
-        backgroundColor: postColor,
-        flex: .25,
-        height:100,
-        flexDirection: "column"
-    },row:{
-        flexDirection: "row",
-        margin: 1
-    }
-}
-
-const styles = {
-    button:{
-        color: backgroundColor,
-        backgroundColor: iconColor,
-        padding: 12.5,
-        borderRadius: 5
-    },
-    buttonText:{
-        color: postColor
-    },
-    heartCounter:{
-        color: heartColor,
-        fontSize: 16
-    },
-    profText:{
-        color: textColor
-    },
-    all:{
-        flex:1
-    },
-    mainBody:{
-        flex:7
-    },
-    commentLine:{
-        flexDirection: "column"
-    },
-
-    commentsList:{
-        width: "100%",
-        backgroundColor:"purple",
-        height: "20%",
-        flex: .2,
-    },
-    labelText:{
-        fontSize: 20
-    },
-    inputRowOverlay:{
-        width: "100%",
-        flexDirection: "column",
-        paddingTop: 20,
-        alignItems: "center"
-    },
-    inputRow:{
-        flex:.2,
-        width: "100%",
-        padding: 20,
-        flexDirection: "col",
-        alignItems: "center"
-    },
-    submitRow:{
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        padding: 15
-    },
-    thumb:{flexDirection: "row"},
-    rating:{
-        flexDirection: "row",
-        width: "100%",
-        justifyContent: "center"
-    },
-middleContent:{
-    flex:.5,
-    justifyContent: "center",
-    width: "100%",
-    flexDirection: "row"
-},
-profImg:{
-    width: 50,
-    height: 50,
-    marginRight: 5,
-    borderRadius: "50%",
-    borderColor: iconColor,
-    borderWidth: 3,
-
-},
-logo: {
-    width: 100,
-    height: 100,
-  },
-  postTitle:{
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "center"
-  },
-    postTopSub:{
-        flexDirection: "row",
-        justifyContent: "start",
+    profImg:{
+        width: 50,
         height: 50,
-        alignItems: "center"
+        marginRight: 5,
+        borderRadius: "50%",
+        borderColor: iconColor,
+        borderWidth: 3,
+    
     },
-    postTop:{
+    logo: {
+        width: 100,
+        height: 100,
+      },
+      postTitle:{
         width: "100%",
         flexDirection: "row",
-        justifyContent: "space-between"
-    },inputRow:{
-        width: "100%",
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        paddingTop: 20
-    },
-    feedContainer:{
-        width: "100%",
-        backgroundColor:"blue",
-        height: "90%",
-    },
-    post:{
-        width: "90%",
-        backgroundColor: postColor,
-        marginLeft: "5%",
-        marginTop: "5%",
-        padding: 10,
-        borderRadius: 5,
-        flex:1
-    },
-    textInput:{
-        borderWidth: 1,
-        padding: 2,
-        width: "75%"
-    },
-
-    content:{
-        flexDirection: "column",
-        flex:1
+        justifyContent: "center"
+      },
+        postTopSub:{
+            flexDirection: "row",
+            justifyContent: "start",
+            height: 50,
+            alignItems: "center"
+        },
+        postTop:{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "space-between"
+        },inputRow:{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            paddingTop: 20
+        },
+        feedContainer:{
+            width: "100%",
+            backgroundColor:"blue",
+            height: "90%",
+        },
+        post:{
+            width: "90%",
+            backgroundColor: postColor,
+            marginLeft: "5%",
+            marginTop: "5%",
+            padding: 10,
+            borderRadius: 5,
+            flex:1
+        },
+        textInput:{
+            borderWidth: 1,
+            padding: 2,
+            width: "75%"
+        },
+    
+        content:{
+            flexDirection: "column",
+            flex:1
+        }
     }
+    return(styles)
 }
+
