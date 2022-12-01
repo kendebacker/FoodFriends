@@ -96,6 +96,7 @@ export const Post = (props)=>{
             {showComments?
             <View>
                 <ScrollView style={styles2.comments}>
+                    {userPost.comments.length===0?<View style={{width: "100%", alignItems: "center"}}><Text>No Comments Yet</Text></View>:
                     <FlatList 
                     style={{flexGrow: 0}}
                     data={userPost.comments}
@@ -105,17 +106,21 @@ export const Post = (props)=>{
                                 <Text style={styles2.poster}>{item.poster}: </Text>
                                 <Text>{item.post}</Text>
                         </View>
-                    )}}/>
+                    )}}/>}
                 </ScrollView>
-                <View style={styles2.inputRow}>
+                <View style={styles2.inputRowComment}>
                     <TextInput
                         style={styles.textInput}
                         placeholder="comment"
                         value={comment}
                         onChangeText={(text)=>setComment(text)}/>
-                    <Button title={"add"} onPress={()=>{
-                    updateComments()
-                    setComment("")}}/>
+                    <TouchableOpacity style={styles.button} onPress={()=>{
+                            updateComments()
+                            setComment("")
+                        }}>
+                        <Text style={styles.buttonText}>{"Post"}</Text>
+                    </TouchableOpacity>
+            
                 </View>
             </View>
         :""}
@@ -124,6 +129,10 @@ export const Post = (props)=>{
 }
 
 const styles2={
+    inputRowComment:{
+        flexDirection: "row",
+        justifyContent: "space-evenly"
+    },
     inputRow:{
         flexDirection: "row"
     },
@@ -133,12 +142,11 @@ const styles2={
     comments:{
         marginTop: 25,
         width: "100%",
-        backgroundColor:"green",
+        backgroundColor: postColor,
         flex: .25,
         height:100,
         flexDirection: "column"
     },row:{
-        backgroundColor: "blue",
         flexDirection: "row",
         margin: 1
     }

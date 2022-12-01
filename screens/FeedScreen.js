@@ -129,19 +129,25 @@ export default function FeedScreen(props){
                 overlayStyle={styles.overlay}
                 isVisible={showSettings}
                 onBackdropPress={()=>setShowSettings(false)}>
-                <Switch
+                <View style={styles.inputRowOverlay}>
+                    <Text style={styles.labelText}>Rating</Text>
+                    <Switch
                     trackColor={{ false: "#767577", true: "#81b0ff" }}
                     thumbColor={dayMode ? "#f5dd4b" : "#f4f3f4"}
                     ios_backgroundColor="#3e3e3e"
                     onValueChange={()=>setDayMode(!dayMode)}
                     value={dayMode}
-                />
-                <TouchableOpacity  onPress={async ()=>{
-                        setShowSettings(false)
-                        await signOut(getAuth())
-                        navigation.navigate("Login")}}>
-                        <AntDesign name="logout" size={50} color="black" />
-                </TouchableOpacity>
+                    />
+                </View>
+                <View style={styles.inputRowOverlay}>
+                    <Text style={styles.labelText}>Sign Out</Text>
+                    <TouchableOpacity  onPress={async ()=>{
+                            setShowSettings(false)
+                            await signOut(getAuth())
+                            navigation.navigate("Login")}}>
+                            <AntDesign name="logout" size={50} color="black" />
+                    </TouchableOpacity>
+                </View>
             </Overlay>
             <Overlay
                 overlayStyle={styles.overlay}
