@@ -15,8 +15,11 @@ import { FontAwesome5 } from '@expo/vector-icons';
 const StarRating = ({rating})=>{
     let start = [0,0,0,0,0]
     start = start.map((el,ind)=> el = ind<rating?1:0)
+    const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
+    const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
 
     return(
+        
         <View style={styles.rating}>
             {start.map((el,ind) => 
             <View key={ind} >{el===1?

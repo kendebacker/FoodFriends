@@ -123,8 +123,8 @@ const loadProfileAndDispatch = async (action, dispatch) =>{
     const userProf = userData.data()
     let posts = []
     if(userProf.friends.length > 0){
-        const q1 = await getDocs(query(collection(db, post), where("poster", "in", userProf.friends)))
-        posts = dataLoader(q1)
+        const q1 = await getDocs(query(collection(db, post), where("poster", "in", userProf.friends),  orderBy("timestamp")))
+        posts = dataLoader(q1).reverse()
     }
     let friends = []
     if(userProf.friends.length > 0){
@@ -162,7 +162,8 @@ const addPostAndDispatch = async (action, dispatch) =>{
         reposts: reposts,
         date: date,
         id: `${poster}${id}`,
-        comments: comments
+        comments: comments,
+        timestamp: Date.now()
     })
     loadPostAndDispatch(action, dispatch)
 }
@@ -170,9 +171,10 @@ const addPostAndDispatch = async (action, dispatch) =>{
 
 const updatePostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {comments, recipe, title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date, id}= payload
+    const {timestamp, comments, recipe, title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date, id}= payload
     const toUpdate = doc(collection(db, post),id)
     const newVersion= {
+        timestamp: timestamp,
         recipe: recipe,
         title: title,
         firstName: firstName,
@@ -211,8 +213,8 @@ const deletePostAndDispatch = async (action, dispatch) =>{
 const loadPostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
     const {friends}= payload
-    const q = await getDocs(query(collection(db, post), where("poster", "in", friends)))
-    const newItems = dataLoader(q)
+    const q = await getDocs(query(collection(db, post), where("poster", "in", friends), orderBy("timestamp")))
+    const newItems = dataLoader(q).reverse()
     let newAction = {
         ...action,
         payload: {posts: newItems}

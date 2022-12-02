@@ -30,7 +30,6 @@ function FeedTabs(){
         <Stack.Navigator name="Feed" initialRouteName="FeedScreen" screenOptions={{headerShown: false}}>
             <Stack.Screen name="FeedScreen" component={FeedScreen}/>
             <Stack.Screen name="Post" component={PostScreen}/>
-            <Stack.Screen name="Camera" component={CameraScreen}/>
         </Stack.Navigator>
     )
 }
@@ -74,6 +73,8 @@ function TabNavigator(){
                     ]
                   }}>
                 <Tabs.Screen name="Login" component={MakeAccountScreen} options={{tabBarButton: () => null,tabBarStyle: {display: "none"}}}/>
+
+                <Tabs.Screen name="Camera" component={CameraScreen} options={{tabBarButton: () => null,tabBarStyle: {display: "none"}}}/>
 
                     <Tabs.Screen name="Feed" component={FeedTabs} options={{
                         tabBarIcon:({color})=>{

@@ -10,6 +10,8 @@ const UPDATE_SORT = "UPDATE_SORT"
 const SEARCH_PROFILE = "SEARCH_PROFILE"
 const SAVE_PICTURE = "SAVE_PICTURE"
 const UPDATE_COLOR = "UPDATE_COLOR"
+const PROFILE_OVERLAY = "PROFILE_OVERLAY"
+const POST_OVERLAY = "POST_OVERLAY"
 
 const initialPosts = []
 const intitialProfile = [{firstName:"",lastName:"", password: "mypassword",image:"profilePic.png", reposts: [1], posts: [1,2], saved: [3], friends:[1]}]
@@ -38,18 +40,36 @@ const initialState = {
     posts: initialPosts,
     friends: initialFriends,
     saved: initialSaved,
-    color: colors.day
+    color: colors.day,
+    setPost: false,
+    setProfile: false,
+    postURL: "https://firebasestorage.googleapis.com/v0/b/ken-homework-5.appspot.com/o/Screen%20Shot%202022-11-30%20at%2010.16.54%20PM.png?alt=media&token=b89c852e-c1b1-4516-a494-0534cd2267ce",
+    profileURL:"https://firebasestorage.googleapis.com/v0/b/ken-homework-5.appspot.com/o/Screen%20Shot%202022-11-30%20at%2010.16.54%20PM.png?alt=media&token=b89c852e-c1b1-4516-a494-0534cd2267ce"
   }
 
 
 const updateColor = (state, status) =>{
-    console.log(status)
     return {
         ...state,
         color: status?colors.day:colors.night,
     }
 }
 
+const setPostOverlay = (state, status, url) =>{
+    return {
+        ...state,
+        setPost: status,
+        postURL: url,
+    }
+}
+
+const setProfileOverlay = (state, status, url) =>{
+    return {
+        ...state,
+        setProfile: status,
+        profileURL: url,
+    }
+}
 
 const loadPost = (state, newPosts) =>{
     return {
@@ -70,7 +90,6 @@ const loadProfile = (state, profile, posts, friends, saved) =>{
 
 
 const rootReducer =(state=initialState, action)=>{
-    console.log(action)
     switch (action.type){
         case ADD_PROFILE: 
         case UPDATE_PROFILE:
@@ -84,6 +103,10 @@ const rootReducer =(state=initialState, action)=>{
             return loadPost(state, action.payload.posts)
         case UPDATE_COLOR:
             return updateColor(state, action.payload.status)
+        case PROFILE_OVERLAY:
+            return setProfileOverlay(state, action.payload.status, action.payload.profileURL)
+        case POST_OVERLAY:
+            return setPostOverlay(state, action.payload.status, action.payload.postURL)
         default:
             return state
     }
@@ -92,4 +115,4 @@ const rootReducer =(state=initialState, action)=>{
 
 
 
-export {rootReducer, LOAD_PROFILE, LOAD_POST, UPDATE_PROFILE, UPDATE_POST, ADD_PROFILE, ADD_POST, DELETE_PROFILE, DELETE_POST, UPDATE_SORT, SEARCH_PROFILE, SAVE_PICTURE, UPDATE_COLOR}
+export {rootReducer, LOAD_PROFILE, LOAD_POST, UPDATE_PROFILE, UPDATE_POST, ADD_PROFILE, ADD_POST, DELETE_PROFILE, DELETE_POST, UPDATE_SORT, SEARCH_PROFILE, SAVE_PICTURE, UPDATE_COLOR, PROFILE_OVERLAY, POST_OVERLAY}

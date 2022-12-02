@@ -24,7 +24,16 @@ const CreateAccountBox=({navigation})=>{
     const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
 
     const dispatch = useDispatch()
-
+    const profileURL = useSelector(state => state.profileURL)
+    const setProfile = (img)=>{
+        dispatch({
+            type: PROFILE_OVERLAY,
+            payload:{
+                status: true,
+                profileURL: img
+            }
+        })
+    }
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [checkPassword, setCheckPassword] = useState("")
@@ -64,6 +73,7 @@ const CreateAccountBox=({navigation})=>{
                     try{
                         const userInfo = await createUserWithEmailAndPassword(auth,email, password)
                         addProfile( email)
+                        setProfile(profileURL)
                         navigation.navigate("Feed")
                     }catch(error){
                         Alert.alert("error occured")

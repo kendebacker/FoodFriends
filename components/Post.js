@@ -55,7 +55,7 @@ export const Post = (props)=>{
                         resizeMode={"cover"}
                         />
                         <View style={{flexDirection: "column"}}>
-                        <Text style={styles.profText}>{userPost.firstName}{userPost.lastName}</Text>
+                        <Text style={styles.profText}>{userPost.firstName} {userPost.lastName}</Text>
                         <Text style ={styles.profText}>{userPost.date}</Text>
                         </View>
                     </View>
