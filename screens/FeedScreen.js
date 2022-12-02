@@ -3,7 +3,7 @@ import {signOut, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, si
 import { useEffect, useState } from "react"
 import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Platform, Linking, ScrollView , Switch} from "react-native";
 import { Overlay , Input, Button} from "@rneui/themed";
-import { ADD_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE, UPDATE_COLOR } from "../Reducer";
+import { ADD_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE, UPDATE_COLOR, PROFILE_OVERLAY, POST_OVERLAY } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { SaveAndDispatch } from "../Data";
 import { FontAwesome } from '@expo/vector-icons';
@@ -39,12 +39,40 @@ export default function FeedScreen(props){
     const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
     const {navigation, route} = props
 
+    const postURL =useSelector(state => state.postURL)
+    const profileURL = useSelector(state => state.profileURL)
+    const makePostOverlay = useSelector(state => state.setPost)
+    const showOverlay = useSelector(state => state.setProfile)
+
+
+    const placeholder = "https://firebasestorage.googleapis.com/v0/b/ken-homework-5.appspot.com/o/Screen%20Shot%202022-11-30%20at%2010.16.54%20PM.png?alt=media&token=b89c852e-c1b1-4516-a494-0534cd2267ce"
+    const placeholderProfile = "https://firebasestorage.googleapis.com/v0/b/ken-homework-5.appspot.com/o/Screen%20Shot%202022-11-29%20at%2010.12.42%20PM.png?alt=media&token=20deda07-8d92-4aac-b957-8f8883d9fc9e"
+
+    const setPost = (status, img)=>{
+        dispatch({
+            type: POST_OVERLAY,
+            payload:{
+                status: status,
+                postURL: img
+            }
+        })
+    }
+
+    const setProfile = (status, img)=>{
+        dispatch({
+            type: PROFILE_OVERLAY,
+            payload:{
+                status: status,
+                profileURL: img
+            }
+        })
+    }
+
+
     const dispatch = useDispatch()
     const posts = useSelector(state => state.posts)
     const profile = useSelector(state => state.profile)
     const [showSettings, setShowSettings] = useState(false)
-    const [makePostOverlay, setMakePostOverlay] = useState(camera!==undefined)
-    const [showOverlay, setShowOverlay] = useState(profile.firstName==="")
     const [firstName, setFirstName] = useState(profile.firstName)
     const [image, setImage] = useState(profile.image)
     const [lastName, setLastName] = useState(profile.lastName)
@@ -55,19 +83,14 @@ export default function FeedScreen(props){
     const [location, setLocation] = useState([0,0])
     const [dayMode, setDayMode] = useState(true)
 
-    const placeholderPic = "https://firebasestorage.googleapis.com/v0/b/ken-homework-5.appspot.com/o/Screen%20Shot%202022-11-30%20at%2010.16.54%20PM.png?alt=media&token=b89c852e-c1b1-4516-a494-0534cd2267ce"
-    const camera = route.params
-    const postURL = route.params===undefined?placeholderPic:route.params.postURL
-    const profileURL = route.params===undefined?placeholderPic:route.params.profileURL
-
 
     useEffect(()=>{
-        setMakePostOverlay(postURL !== placeholderPic)
-        setShowOverlay(profileURL !== placeholderPic)
+        setPost(makePostOverlay, postURL)
+        setProfile(showOverlay, profileURL)
         setImage(profile.image)
         setLastName(profile.lastName)
         setFirstName(profile.firstName)
-    }, [postURL, profileURL, profile.lastName, profile.firstName, profile.image])
+    }, [profile.lastName])
 
 
 
@@ -175,12 +198,12 @@ export default function FeedScreen(props){
             <Overlay
                 overlayStyle={styles.overlay}
                 isVisible={makePostOverlay}
-                onBackdropPress={()=>setMakePostOverlay(false)}>
+                onBackdropPress={()=>setPost(false, postURL)}>
                 <View style={styles.topRow}>
                     <TouchableOpacity
                     title={"Cancel"}
                     onPress={()=>{
-                        setMakePostOverlay(false)
+                        setPost(false, postURL)
                     }}>
                         <MaterialIcons name="cancel" size={45} color={heartColor} />
                     </TouchableOpacity>
@@ -203,8 +226,8 @@ export default function FeedScreen(props){
                         <View style={{flexDirection:"row",  justifyContent: "center", alignItems: "center"}}>
                             <Text style={styles.labelText}>Image </Text>
                             <TouchableOpacity  onPress={()=>{
-                                setMakePostOverlay(false)
-                                navigation.navigate("Camera",{prev:"post"})}}>
+                                setPost(false, postURL)
+                                navigation.navigate("Camera", {prev:"post"})}}>
                             <AntDesign name="camera" size={35} color={iconColor} />  
                             </TouchableOpacity>
                         </View>
@@ -245,7 +268,7 @@ export default function FeedScreen(props){
                         title={"Post"}
                         onPress={()=>{
                             addPost(profile.image, [],recipe, title, profile.firstName, profile.lastName,postURL, description, rating, location, [], profile.email, [], new Date().toLocaleDateString(), profile.friends, Date.now())
-                            setMakePostOverlay(false)
+                            setPost(false, placeholder)
                         }}
                         >
                            <MaterialIcons name="check-circle" size={75} color={textColor} />
@@ -268,12 +291,12 @@ export default function FeedScreen(props){
                         <FontAwesome name="refresh" size={30} color={textColor} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{      
-                        setMakePostOverlay(true)
+                       setPost(true, postURL)
                         }}>
                         <MaterialIcons name="post-add" size={30} color={textColor} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{      
-                        setShowOverlay(true)
+                    <TouchableOpacity onPress={()=>{   
+                        setProfile(true, profileURL)   
                         }}>
                         <FontAwesome name="user" size={30} color={textColor} />
                     </TouchableOpacity>
@@ -290,13 +313,13 @@ export default function FeedScreen(props){
             <Overlay
                 overlayStyle={styles.overlay}
                 isVisible={showOverlay}
-                onBackdropPress={()=>setShowOverlay(false)}>
+                onBackdropPress={()=>setProfile(false, profileURL)}>
                 <View style={styles.topRow}>
                     <TouchableOpacity
                     title={"Cancel"}
                     onPress={()=>{
                         setImage(profile.image)
-                        setShowOverlay(false)
+                        setProfile(false, profileURL)
                     }}>
                         <MaterialIcons name="cancel" size={45} color={heartColor} />
                     </TouchableOpacity>
@@ -323,8 +346,8 @@ export default function FeedScreen(props){
                         <View style={{flexDirection:"row",  justifyContent: "center", alignItems: "center"}}>
                             <Text style={styles.labelText}>Image</Text>
                             <TouchableOpacity  onPress={()=>{
-                                setShowOverlay(false)
-                                navigation.navigate("Camera",{prev: "profile"})}}>
+                                setProfile(false, profileURL)
+                                navigation.navigate("Camera", {prev: "profile"})}}>
                             <AntDesign name="camera" size={35} color={iconColor} />  
                             </TouchableOpacity>
                         </View>
@@ -340,8 +363,8 @@ export default function FeedScreen(props){
                         <TouchableOpacity
                         title={"Post"}
                         onPress={()=>{
-                            updateProfile(firstName, lastName, profileURL?profile.image:profileURL)
-                            setShowOverlay(false)
+                            updateProfile(firstName, lastName, profileURL)
+                            setProfile(false, profileURL)
                         }}
                         >
                            <MaterialIcons name="check-circle" size={75} color={textColor} />
