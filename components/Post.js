@@ -67,7 +67,7 @@ export const Post = (props)=>{
                     </View>
                 </View>
                 <View style={styles.postTitle}>
-                    <Text>{userPost.title}</Text>
+                    <Text style={styles.titleText}>{userPost.title}</Text>
                 </View>
                 <View style={styles.middleContent}>
                 <Image
@@ -96,9 +96,9 @@ export const Post = (props)=>{
                 </View>
             </View>
             {showComments?
-            <View>
+            <View style={{alignItems:"center"}}>
                 <ScrollView style={styles2.comments}>
-                    {userPost.comments.length===0?<View style={{width: "100%", alignItems: "center"}}><Text>No Comments Yet</Text></View>:
+                    {userPost.comments.length===0?<View style={{width: "100%", alignItems: "center"}}><Text style={{color:textColor}}>No Comments Yet</Text></View>:
                     <FlatList 
                     style={{flexGrow: 0}}
                     data={userPost.comments}
@@ -116,11 +116,11 @@ export const Post = (props)=>{
                         placeholder="comment"
                         value={comment}
                         onChangeText={(text)=>setComment(text)}/>
-                    <TouchableOpacity style={styles.button} onPress={()=>{
+                    <TouchableOpacity style={styles.postButton} onPress={()=>{
                             updateComments()
                             setComment("")
                         }}>
-                        <Text style={styles.buttonText}>{"Post"}</Text>
+                        <AntDesign name="plus" size={20} color={postColor} />
                     </TouchableOpacity>
             
                 </View>
@@ -134,7 +134,7 @@ const getStyles2 = (backgroundColor, postColor, textColor, iconColor, menuColor,
     const styles2={
         inputRowComment:{
             flexDirection: "row",
-            justifyContent: "space-evenly"
+            justifyContent: "center",
         },
         inputRow:{
             flexDirection: "row"
@@ -144,7 +144,7 @@ const getStyles2 = (backgroundColor, postColor, textColor, iconColor, menuColor,
         },
         comments:{
             marginTop: 25,
-            width: "100%",
+            width: "90%",
             backgroundColor: postColor,
             flex: .25,
             height:100,
@@ -159,6 +159,17 @@ const getStyles2 = (backgroundColor, postColor, textColor, iconColor, menuColor,
 
 const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, heartColor) =>{
     const styles = {
+        titleText:{
+            color: textColor,
+            fontSize: 26
+        },
+        postButton:{
+            color: backgroundColor,
+            backgroundColor: iconColor,
+            padding: 5,
+            borderRadius: 5,
+            marginLeft: 5
+        },
         button:{
             color: backgroundColor,
             backgroundColor: iconColor,
@@ -234,13 +245,15 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
     
     },
     logo: {
-        width: 100,
-        height: 100,
+        width: "75%",
+        aspectRatio: 1,
+        borderRadius: 5
       },
       postTitle:{
         width: "100%",
         flexDirection: "row",
-        justifyContent: "center"
+        justifyContent: "center",
+        marginBottom: 5
       },
         postTopSub:{
             flexDirection: "row",
@@ -274,8 +287,8 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
         },
         textInput:{
             borderWidth: 1,
-            padding: 2,
-            width: "75%"
+            borderColor: textColor,
+            width: "79%",
         },
     
         content:{

@@ -59,11 +59,11 @@ export default function RecipeListScreen(props){
                                     />
                             </View>
                             <View style={styles.regionRight}>
-                                <View>
                                     <View style={styles.nameRow}>
                                         <Text style={styles.standard2Title}>{item.title} </Text>
                                         <Text style={styles.standard2}>{item.firstName}{item.lastName}</Text>
                                     </View>
+                                    <View style={{flexDirection: "row", justifyContent: "center"}}>
                                     <TouchableOpacity
                                         style={styles.button}
                                         onPress={()=>{
@@ -71,12 +71,10 @@ export default function RecipeListScreen(props){
                                                 post: item,
                                             })
                                         }}>
-                                        <View style={{flexDirection: "row", alignItems: "center"}}>
                                             <Text style={styles.buttonText}>Details </Text>
                                             <Entypo name="magnifying-glass" size={25} color={postColor} />
-                                        </View>
                                     </TouchableOpacity>
-                                </View>
+                                    </View>
                             </View>
                         </View>
                     )}}/>
@@ -86,18 +84,23 @@ export default function RecipeListScreen(props){
 
     const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, heartColor) =>{
         const styles = {
+            regionRight:{
+                flexDirection: "column"
+            },
             button:{
+
                 color: backgroundColor,
                 backgroundColor: iconColor,
                 padding: 12.5,
                 borderRadius: 5,
                 flexDirection: "row",
+                justifyContent: "center",
                 alignItems: "center",
                 margin: 10
             },
             buttonText:{
                 color: postColor,
-                fontSize: 20
+                fontSize: 20,
             },
             nameRow:{
                 flexDirection: "column",
@@ -195,11 +198,11 @@ export default function RecipeListScreen(props){
                 alignItems: "center",
             },
             profImg2:{
-                width: 100,
-                height: 100,
-                marginTop: 10,
+                width: "75%",
+                aspectRatio: 1,
+                marginTop: 25,
                 borderColor: iconColor,
-                borderWidth: 3,
+                borderRadius: 5
             },
             topRow:{
                 position: "absolute",

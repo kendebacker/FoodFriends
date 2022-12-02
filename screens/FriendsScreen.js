@@ -49,7 +49,7 @@ export default function FriendsScreen(props){
 
 
     return(
-        <View style={styles.allContent}>
+        <View style={styles.allContent} onPress={()=>Keyboard.dismiss()}>
             <Overlay
                 overlayStyle={styles.overlay}
                 isVisible={showOverlay}

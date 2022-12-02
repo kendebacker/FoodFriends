@@ -75,13 +75,12 @@ export default function PostScreen(props){
                 <View style={styles.postTitle}>
                     <Text style={styles.title}>{item.title}</Text>
                 </View>
-                {!item.image?
                 <View style={styles.middleContent}>
                 <Image
                         style={styles.logo}
                         source={{uri: item.image}}
                         />
-                </View>:""}
+                </View>
                 <View style={styles.middleContent}>
                     <Text style={styles.subtitle}>Location: </Text>
                     {item.location.length >0?
@@ -155,8 +154,9 @@ export default function PostScreen(props){
             alignItems: "center"
         },
         logo: {
-            width: 100,
-            height: 100,
+            width: "75%",
+            aspectRatio: 1,
+            borderRadius: 5
           },
           postTitle:{
             flex: .15,

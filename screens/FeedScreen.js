@@ -1,7 +1,7 @@
 import {getApps, initializeApp} from "firebase/app"
 import {signOut, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { useEffect, useState } from "react"
-import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Platform, Linking, ScrollView , Switch} from "react-native";
+import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Platform, Linking, ScrollView , Switch, Keyboard} from "react-native";
 import { Overlay , Input, Button} from "@rneui/themed";
 import { ADD_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE, UPDATE_COLOR, PROFILE_OVERLAY, POST_OVERLAY } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
@@ -156,7 +156,7 @@ export default function FeedScreen(props){
 
 
     return(
-        <View style={styles.all}>
+        <View style={styles.all} onPress={()=>Keyboard.dismiss()}>
             <Overlay
                 overlayStyle={styles.overlay}
                 isVisible={showSettings}
@@ -196,9 +196,10 @@ export default function FeedScreen(props){
                 </View>
             </Overlay>
             <Overlay
-                overlayStyle={styles.overlay}
+                overlayStyle={styles.overlayPost}
                 isVisible={makePostOverlay}
-                onBackdropPress={()=>setPost(false, postURL)}>
+                onBackdropPress={()=>setPost(false, postURL)}
+                onPress={()=>Keyboard.dismiss()}>
                 <View style={styles.topRow}>
                     <TouchableOpacity
                     title={"Cancel"}
@@ -209,6 +210,7 @@ export default function FeedScreen(props){
                     </TouchableOpacity>
 
                 </View>
+                <ScrollView style={{width:"100%", height: "80%"}}>
                 <View style={{marginTop: 10}}>
                     <View style={styles.inputRowOverlay}>
                         <Text style={styles.labelText}>Title</Text>
@@ -232,7 +234,7 @@ export default function FeedScreen(props){
                             </TouchableOpacity>
                         </View>
                         {postURL===null?<Text>No picture selected yet</Text>:<Image
-                        style={styles.logo}
+                        style={styles.postPreview}
                         source={{uri: postURL}}
                         />}
                     </View>
@@ -250,6 +252,7 @@ export default function FeedScreen(props){
                     <View style={styles.inputRowOverlay}>
                         <Text style={styles.labelText}>Description</Text>
                         <TextInput
+                        multiline={true}
                         style={styles.textInput}
                         placeholder={"description"}
                         value={description}
@@ -258,11 +261,14 @@ export default function FeedScreen(props){
                     <View style={styles.inputRowOverlay}>
                         <Text style={styles.labelText}>Recipe</Text>
                         <TextInput
-                        style={styles.textInput}
+                        multiline={true}
+                        style={styles.textInputTest}
                         placeholder="description"
                         value={recipe}
                         onChangeText={(text)=>setRecipe(text)}/>
                     </View>
+                    </View>
+                    </ScrollView>
                     <View style={styles.submitRow}>
                         <TouchableOpacity
                         title={"Post"}
@@ -273,7 +279,6 @@ export default function FeedScreen(props){
                         >
                            <MaterialIcons name="check-circle" size={75} color={textColor} />
                         </TouchableOpacity>
-                    </View>
                 </View>
             </Overlay>
 
@@ -313,7 +318,8 @@ export default function FeedScreen(props){
             <Overlay
                 overlayStyle={styles.overlay}
                 isVisible={showOverlay}
-                onBackdropPress={()=>setProfile(false, profileURL)}>
+                onBackdropPress={()=>setProfile(false, profileURL)}
+                onPress={()=>Keyboard.dismiss()}>
                 <View style={styles.topRow}>
                     <TouchableOpacity
                     title={"Cancel"}
@@ -352,10 +358,10 @@ export default function FeedScreen(props){
                             </TouchableOpacity>
                         </View>
                         {profileURL===null?<Image
-                        style={styles.logo}
+                        style={styles.profilePreview}
                         source={{uri: profile.image}}
                         />:<Image
-                        style={styles.logo}
+                        style={styles.profilePreview}
                         source={{uri: profileURL}}
                         />}
                     </View>
@@ -378,6 +384,21 @@ export default function FeedScreen(props){
 
 const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, heartColor) =>{
     const styles2 = {
+        textInputTest:{
+            height: 30,
+            width: 100,
+            borderWidth: 1
+        },
+        profilePreview:{
+            width:100,
+            aspectRatio: 1,
+            borderRadius: "50%"
+        },
+        postPreview:{
+            width: "50%",
+            aspectRatio: 1,
+            borderRadius: 5
+        },
         settingsInputRow:{
             marginTop: 10,
             width: "100%",
@@ -388,10 +409,16 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
             top: 0,
             left: 0,
             flexDirection: "row",
-            justifyContent: "start"
+            justifyContent: "start",
+            zIndex: 100
+        },
+        overlayPost:{
+            height: "85%",
+            width: "85%",
+            backgroundColor: postColor
         },
         overlay:{
-            width: "75%",
+            width: "85%",
             backgroundColor: postColor
         },
         all:{
@@ -431,7 +458,7 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
         submitRow:{
             flexDirection: "row",
             justifyContent: "space-evenly",
-            padding: 15
+            padding: 0
         },
         thumb:{flexDirection: "row"},
         rating:{

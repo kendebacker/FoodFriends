@@ -9,6 +9,8 @@ import { SaveAndDispatch } from "../Data";
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 import { FontAwesome5 } from '@expo/vector-icons'; 
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+
 
 
 const StarRating = ({rating})=>{
@@ -74,13 +76,12 @@ export default function PostScreen(props){
                 <View style={styles.postTitle}>
                     <Text style={styles.title}>{item.title}</Text>
                 </View>
-                {!item.image?
                 <View style={styles.middleContent}>
                 <Image
                         style={styles.logo}
                         source={{uri: item.image}}
                         />
-                </View>:""}
+                </View>
                 <View style={styles.middleContent}>
                     <Text style={styles.subtitle}>Location: </Text>
                     {item.location.length >0?
@@ -103,7 +104,8 @@ export default function PostScreen(props){
                 <View style={styles.inputRow}>
                     {profile.saved.filter(el => el === item.id).length > 0?"":
                     <TouchableOpacity style={styles.button} onPress={()=>{updateProfile([...profile.saved, item.id])}}>
-                        <Text style={styles.buttonText}>Save</Text>
+                        <Text style={styles.buttonText}>Save </Text>
+                         <MaterialCommunityIcons name="content-save" size={24} color={postColor} /> 
                     </TouchableOpacity>}
                 </View>
             </ScrollView>
@@ -116,17 +118,20 @@ export default function PostScreen(props){
                 flex: .9
             },
             headingRowTop:{
-                flex: .1
+                flex: .05
             },
             button:{
                 marginTop: 10,
                 color: backgroundColor,
                 backgroundColor: iconColor,
+                flexDirection: "row",
+                justifyContent: "center",
                 padding: 12.5,
                 borderRadius: 5
             },
             buttonText:{
-                color: postColor
+                color: postColor,
+                fontSize: 20
             },
             content:{
                 marginTop: 10
@@ -153,8 +158,9 @@ export default function PostScreen(props){
             alignItems: "center"
         },
         logo: {
-            width: 100,
-            height: 100,
+            width: "75%",
+            aspectRatio: 1,
+            borderRadius: 5
           },
           postTitle:{
             flex: .15,
@@ -175,7 +181,8 @@ export default function PostScreen(props){
                 width: "100%",
                 flexDirection: "row",
                 justifyContent: "space-evenly",
-                paddingTop: 20
+                paddingTop: 20,
+                paddingBottom: 20
             },
             feedContainer:{
                 width: "100%",

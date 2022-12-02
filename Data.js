@@ -110,7 +110,7 @@ const updateProfileAndDispatch = async (action, dispatch) =>{
             ...postsToUpdate[x],
             firstName: firstName,
             lastName, lastName,
-            image: image,
+            profImage: image,
         }
         await updateDoc(toUpdate, newVersion)
     }
@@ -171,9 +171,10 @@ const addPostAndDispatch = async (action, dispatch) =>{
 
 const updatePostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
-    const {timestamp, comments, recipe, title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date, id}= payload
+    const {timestamp,profImage, comments, recipe, title, firstName, lastName,image, description, rating, location, likes, poster, reposts, date, id}= payload
     const toUpdate = doc(collection(db, post),id)
     const newVersion= {
+        profImage, profImage,
         timestamp: timestamp,
         recipe: recipe,
         title: title,
