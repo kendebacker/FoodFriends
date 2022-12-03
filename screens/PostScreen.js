@@ -89,7 +89,7 @@ export default function PostScreen(props){
                         <FontAwesome5 name="map-marked-alt" size={36} color={iconColor} />
                     </TouchableOpacity>:""}
                 </View>
-                <View style={styles.middleContent}>
+                <View style={styles.middleContentText}>
                     <Text style={styles.subtitle}>Recipe: </Text>
                     <Text style={styles.content}>{item.recipe}</Text>
                 </View>
@@ -97,7 +97,7 @@ export default function PostScreen(props){
                     <Text style={styles.subtitle}>Rating: </Text>
                     <StarRating rating={item.rating}/>
                 </View>
-                <View style={styles.middleContent}>
+                <View style={styles.middleContentText}>
                     <Text style={styles.subtitle}>Description: </Text>
                     <Text style={styles.content}>{item.description}</Text>
                 </View>
@@ -134,7 +134,7 @@ export default function PostScreen(props){
                 fontSize: 20
             },
             content:{
-                marginTop: 10
+                marginTop: 10,
             },
             subtitle:{
                 fontSize: 25,
@@ -156,6 +156,15 @@ export default function PostScreen(props){
             flex: .2,
             marginTop: 10,
             alignItems: "center"
+        },middleContentText:{
+            justifyContent: "center",
+            width: "90%",
+            flexDirection: "column",
+            alignItems: "center",
+            flex: .2,
+            marginTop: 10,
+            alignItems: "center",
+            marginLeft: "5%"
         },
         logo: {
             width: "75%",
@@ -196,7 +205,7 @@ export default function PostScreen(props){
                 padding: 10,
                 borderRadius: 5,
                 flex: 1,
-                justifyContent: "start"
+                justifyContent: "start",
             },
         
             content:{

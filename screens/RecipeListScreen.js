@@ -61,7 +61,7 @@ export default function RecipeListScreen(props){
                             <View style={styles.regionRight}>
                                     <View style={styles.nameRow}>
                                         <Text style={styles.standard2Title}>{item.title} </Text>
-                                        <Text style={styles.standard2}>{item.firstName}{item.lastName}</Text>
+                                        <Text style={styles.standard2}>{item.firstName} {item.lastName}</Text>
                                     </View>
                                     <View style={{flexDirection: "row", justifyContent: "center"}}>
                                     <TouchableOpacity
@@ -115,7 +115,8 @@ export default function RecipeListScreen(props){
                 width: "90%",
                 marginLeft: "5%",
                 padding: 10,
-                borderRadius: 5
+                borderRadius: 5,
+                marginBottom: 20
         
             },
             topRow:{
@@ -134,7 +135,7 @@ export default function RecipeListScreen(props){
                 borderRadius: 5
             },
             contactStuff:{
-                height: "80%",
+                height: "100%",
                 width: "100%",
             },main:{
                 marginTop: 35

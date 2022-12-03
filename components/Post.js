@@ -36,7 +36,7 @@ export const Post = (props)=>{
     }
 
     const updateComments = ()=>{
-        let newComments = [...userPost.comments, {post: comment, poster: profile.firstName}]
+        let newComments = [...userPost.comments, {post: comment, poster: `${profile.firstName} ${profile.lastName}`, image: profile.image}]
         const action = {
             type: UPDATE_POST,
             payload: {...userPost, comments: newComments, friends: profile.friends}
@@ -103,8 +103,13 @@ export const Post = (props)=>{
                     style={{flexGrow: 0}}
                     data={userPost.comments}
                     renderItem={({item})=>{
+                        console.log(item)
                     return(
                         <View style={styles2.row}>
+                                <Image
+                                style={styles2.commentlogo}
+                                source={{uri: item.image}}
+                                />
                                 <Text style={styles2.poster}>{item.poster}: </Text>
                                 <Text>{item.post}</Text>
                         </View>
@@ -132,6 +137,13 @@ export const Post = (props)=>{
 
 const getStyles2 = (backgroundColor, postColor, textColor, iconColor, menuColor, heartColor) =>{
     const styles2={
+        commentlogo:{
+            borderColor: iconColor,
+            borderWidth: 2,
+            width: 25,
+            aspectRatio: 1,
+            borderRadius: "50%"
+        },
         inputRowComment:{
             flexDirection: "row",
             justifyContent: "center",
@@ -151,7 +163,9 @@ const getStyles2 = (backgroundColor, postColor, textColor, iconColor, menuColor,
             flexDirection: "column"
         },row:{
             flexDirection: "row",
-            margin: 1
+            margin: 1,
+            alignItems: "center",
+            width: "100%",
         }
     }
     return(styles2)
@@ -161,7 +175,8 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
     const styles = {
         titleText:{
             color: textColor,
-            fontSize: 26
+            fontSize: 26,
+            borderRadius: "50%"
         },
         postButton:{
             color: backgroundColor,

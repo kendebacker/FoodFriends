@@ -18,21 +18,23 @@ const intitialProfile = [{firstName:"",lastName:"", password: "mypassword",image
 const initialFriends = []
 const initialSaved = []
 
-
+// sky  = #00b2d6
 const colors = {day:{
-    backgroundColor: "#00b2d6",
+    backgroundColor: "#01416e",
     postColor: "#FFFCF2",
     textColor: "#01416e",
     iconColor: "#007cba",
     menuColor: "#01416e",
-    heartColor: "#e6848d"
+    heartColor: "#e6848d",
+    topMenu:"#00b2d6"
 },night:{
     backgroundColor: "#007cba",
     postColor: "#01416e",
     textColor: "#00b2d6",
     iconColor: "#00b2d6",
     menuColor: "#007cba",
-    heartColor: "#b1d887"
+    heartColor: "#b1d887",
+    topMenu:"#b1d887"
 }}
 
 const initialState = {

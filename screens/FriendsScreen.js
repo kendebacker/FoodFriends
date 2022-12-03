@@ -53,12 +53,16 @@ export default function FriendsScreen(props){
             <Overlay
                 overlayStyle={styles.overlay}
                 isVisible={showOverlay}
-                onBackdropPress={()=>setShowOverlay(false)}>
+                onBackdropPress={()=>{
+                setShowOverlay(false)
+                setEmail("")
+                setFriend(null)}}>
                 <View style={styles.topRow}>
                     <TouchableOpacity
                     title={"Cancel"}
                     onPress={()=>{
                         setEmail("")
+                        setFriend(null)
                         setShowOverlay(false)
                     }}>
                         <MaterialIcons name="cancel" size={45} color={heartColor} />
@@ -94,6 +98,7 @@ export default function FriendsScreen(props){
                         <TouchableOpacity style={styles.button} onPress={()=>{
                             updateProfile(profile.friends.filter(el => el ===friend.email).length==0?[...profile.friends,friend.email]:profile.friends)
                             setEmail("")
+                            setFriend(null)
                             setShowOverlay(false)
                         }}>
                             <Text style={styles.buttonText}>{"Add Friend"}</Text>
@@ -127,8 +132,7 @@ export default function FriendsScreen(props){
                                 />
 
                             <View style={styles.nameRow}>
-                                <Text style={styles.standard2}>{item.firstName}</Text>
-                                <Text style={styles.standard2}>{item.lastName}</Text>
+                                <Text style={styles.standard2}>{item.firstName} {item.lastName}</Text>
                             </View>
                         </View>
                     )}}}/>
@@ -208,7 +212,7 @@ const getStyles=(backgroundColor, postColor, textColor, iconColor, menuColor, he
             fontSize: 16
         },
         contactStuff:{
-            height: "80%",
+            height: "83%",
             width: "100%",
         },
         buttonRow:{
@@ -224,7 +228,8 @@ const getStyles=(backgroundColor, postColor, textColor, iconColor, menuColor, he
             width: "90%",
             marginLeft: "5%",
             padding: 10,
-            borderRadius: 5
+            borderRadius: 5,
+            marginBottom: 20
     
         },
         inputLabel:{
@@ -238,7 +243,7 @@ const getStyles=(backgroundColor, postColor, textColor, iconColor, menuColor, he
             width: "75%"
         },
         inputRow:{
-            marginTop: 30,
+            marginTop: 0,
             width: "100%",
             flexDirection: "row",
             justifyContent: "center"
@@ -252,7 +257,8 @@ const getStyles=(backgroundColor, postColor, textColor, iconColor, menuColor, he
         },
         content:{
             flexDirection: "column",
-            marginTop: 35
+            marginTop: 35,
+            flex: 1
         }
     }
     return(styles)

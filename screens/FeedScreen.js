@@ -35,7 +35,7 @@ const StarRating = ({rating, setRating})=>{
 export default function FeedScreen(props){
 
     
-    const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
+    const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor,topMenu} = useSelector(state => state.color)
     const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
     const {navigation, route} = props
 
@@ -290,23 +290,23 @@ export default function FeedScreen(props){
                     <TouchableOpacity onPress={()=>{      
                         setShowSettings(true)
                         }}>
-                        <MaterialIcons name="settings" size={30} color={textColor} />
+                        <MaterialIcons name="settings" size={30} color={topMenu} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{      
                         const loadPost = {type: LOAD_POST, payload:{friends: profile.friends}}
                         SaveAndDispatch(loadPost, dispatch)
                         }}>
-                        <FontAwesome name="refresh" size={30} color={textColor} />
+                        <FontAwesome name="refresh" size={30} color={topMenu} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{      
                        setPost(true, postURL)
                         }}>
-                        <MaterialIcons name="post-add" size={30} color={textColor} />
+                        <MaterialIcons name="post-add" size={30} color={topMenu} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{   
                         setProfile(true, profileURL)   
                         }}>
-                        <FontAwesome name="user" size={30} color={textColor} />
+                        <FontAwesome name="user" size={30} color={topMenu} />
                     </TouchableOpacity>
                 </View>
                 <FlatList 
@@ -505,13 +505,14 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
             width: "100%",
             flexDirection: "row",
             justifyContent: "space-evenly",
-            paddingTop: 20,
+            paddingTop: 30,
+            paddingBottom: 5,
             backgroundColor: backgroundColor
         },
         feedContainer:{
             width: "100%",
             backgroundColor: backgroundColor,
-            height: "90%",
+            height: "95%",
         },
         post:{
             width: "90%",
