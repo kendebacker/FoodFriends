@@ -20,19 +20,19 @@ const initialSaved = []
 
 
 const colors = {day:{
-    backgroundColor: "#C2EFB3",
+    backgroundColor: "#00b2d6",
     postColor: "#FFFCF2",
-    textColor: "#023C40",
-    iconColor: "#119DA4",
-    menuColor: "#023C40",
+    textColor: "#01416e",
+    iconColor: "#007cba",
+    menuColor: "#01416e",
     heartColor: "#e6848d"
 },night:{
-    backgroundColor: "#023C40",
-    postColor: "#119DA4",
-    textColor: "#FFFCF2",
-    iconColor: "#C2EFB3",
-    menuColor: "#023C40",
-    heartColor: "#e6848d"
+    backgroundColor: "#007cba",
+    postColor: "#01416e",
+    textColor: "#00b2d6",
+    iconColor: "#00b2d6",
+    menuColor: "#007cba",
+    heartColor: "#b1d887"
 }}
 
 const initialState = {

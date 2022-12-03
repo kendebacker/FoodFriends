@@ -1,7 +1,7 @@
 import {getApps, initializeApp} from "firebase/app"
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { useState , useEffect} from "react"
-import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert } from "react-native";
+import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Keyboard } from "react-native";
 import {  Button} from "@rneui/themed";
 import {firebaseConfig} from "../Secrets"
 import { ADD_PROFILE, LOAD_PROFILE, LOAD_POST } from "../Reducer";
@@ -19,7 +19,7 @@ if (apps.length == 0) {
 const auth = getAuth(app)
 
 
-const CreateAccountBox=({navigation})=>{
+const CreateAccountBox=({navigation, setSignIn})=>{
     const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
     const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
 
@@ -66,17 +66,20 @@ const CreateAccountBox=({navigation})=>{
                 </View>
                 <View style={styles.inputRow}>
                     <Text style = {styles.label}>Password</Text>
-                    <TextInput style={styles.input} onChangeText={(text)=>{setPassword(text)}} value={password}/>
+                    <TextInput  style={styles.input} onChangeText={(text)=>{setPassword(text)}} value={password}/>
                 </View>
                 <TouchableOpacity style={styles.button} onPress={ async ()=>{
                  if(password !==""  && email !==""){
                     try{
-                        const userInfo = await createUserWithEmailAndPassword(auth,email, password)
+                        await createUserWithEmailAndPassword(auth,email, password)
                         addProfile( email)
                         setProfile(profileURL)
                         navigation.navigate("Feed")
+                        setPassword("")
+                        setEmail("")
+                        setSignIn(true)
                     }catch(error){
-                        Alert.alert("error occured")
+                        
                     }}
                 }}>
                     <Text style={styles.buttonText}>Sign up</Text> 
@@ -113,8 +116,10 @@ const LoginBox=({navigation})=>{
                         const loadProfile = {type: LOAD_PROFILE , payload:{email:userInfo.user.email}}
                         SaveAndDispatch(loadProfile, dispatch)
                         navigation.navigate("Feed")
+                        setPassword("")
+                        setEmail("")
                     }catch(error){
-                        Alert.alert("error occured")
+                        
                     }}
                 }}>
                     <Text style={styles.buttonText}>Login</Text> 
@@ -146,17 +151,21 @@ export default function MakeAccountScreen(props){
 
     const [signIn, setSignIn] = useState(true)
 
+    const logo = "https://firebasestorage.googleapis.com/v0/b/ken-homework-5.appspot.com/o/Triangle%201.png?alt=media&token=f1622f38-1a9d-4956-8b02-15e532124bf6"
 
     return(
-            <View style={styles.content}>
-                <View style={styles.titleRow}>
-                    <Text style={styles.title}>{"FoodFriends"}</Text>
+            <View onPress={()=>Keyboard.dismiss()} style={styles.content}>
+                <View style={{flex: .05}}></View>
+                <View onPress={()=>Keyboard.dismiss()} style={styles.titleRow}>
+                    <Image
+                    style={styles.logo}
+                    source={{uri: logo}} />
                 </View>
                 <View style={styles.labelRow}>
                     <Text style={styles.labelTitle}>{signIn?"Login":"Sign Up"}</Text>
                 </View>
                 <View style={styles.contentBox}>
-                    {signIn?<LoginBox navigation ={navigation}/>:<CreateAccountBox navigation ={navigation}/>}
+                    {signIn?<LoginBox navigation ={navigation}/>:<CreateAccountBox setSignIn={setSignIn} navigation ={navigation}/>}
                     <View style={styles.switchOption}>
                         <Text style={styles.normalText}>{signIn?"New? ":"Want to login? "}</Text>
                         <TouchableOpacity onPress={()=>{setSignIn(!signIn)}}>
@@ -171,16 +180,23 @@ export default function MakeAccountScreen(props){
 
 
 const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, heartColor) =>{
+
     const styles = {
+        logo:{
+            height: "70%",
+            aspectRatio: 1
+        },
         button:{
-            marginTop: 10,
+
+            marginTop: 15,
             color: backgroundColor,
             backgroundColor: iconColor,
             padding: 12.5,
             borderRadius: 5
         },
         buttonText:{
-            color: postColor
+            color: postColor,
+            fontSize: 20
         },
         normalText:{
             color: textColor
@@ -228,7 +244,7 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
         },
         labelTitle:{
             fontSize : 30,
-            color: textColor
+            color: postColor
         },
         contentBox:{
             flex: .35,
@@ -238,7 +254,6 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
             padding: 10,
             backgroundColor: postColor,
             borderRadius: 5,
-            backgroundColor: postColor
         },
         label:{
             alignText:"center",
@@ -250,13 +265,14 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
             borderWidth: 1,
             width: "50%",
             height: 20,
-            color: textColor
+            color: textColor,
+            borderColor: textColor
         },
         content:{
             flexDirection: "column",
             justifyContent: "start",
             alignItems: "center",
-            backgroundColor: backgroundColor,
+            backgroundColor: textColor,
             flex:1
         },
     }

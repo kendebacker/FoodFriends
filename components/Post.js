@@ -36,7 +36,7 @@ export const Post = (props)=>{
     }
 
     const updateComments = ()=>{
-        let newComments = [...userPost.comments, {post: comment, poster: userPost.firstName}]
+        let newComments = [...userPost.comments, {post: comment, poster: profile.firstName}]
         const action = {
             type: UPDATE_POST,
             payload: {...userPost, comments: newComments, friends: profile.friends}
@@ -51,7 +51,7 @@ export const Post = (props)=>{
                     <View style={styles.postTopSub}>
                         <Image
                         style={styles.profImg}
-                        source={{uri: profile.image}}
+                        source={{uri: userPost.profImage}}
                         resizeMode={"cover"}
                         />
                         <View style={{flexDirection: "column"}}>

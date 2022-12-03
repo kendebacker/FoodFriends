@@ -46,7 +46,6 @@ export default function FeedScreen(props){
 
 
     const placeholder = "https://firebasestorage.googleapis.com/v0/b/ken-homework-5.appspot.com/o/Screen%20Shot%202022-11-30%20at%2010.16.54%20PM.png?alt=media&token=b89c852e-c1b1-4516-a494-0534cd2267ce"
-    const placeholderProfile = "https://firebasestorage.googleapis.com/v0/b/ken-homework-5.appspot.com/o/Screen%20Shot%202022-11-29%20at%2010.12.42%20PM.png?alt=media&token=20deda07-8d92-4aac-b957-8f8883d9fc9e"
 
     const setPost = (status, img)=>{
         dispatch({
@@ -99,7 +98,7 @@ export default function FeedScreen(props){
         // https://stackoverflow.com/questions/43214062/open-maps-google-maps-in-react-native
         let locationAllowed = await Location.requestForegroundPermissionsAsync().status
         if (locationAllowed !== 'granted') {
-            Alert.alert("You have not allowed geo-location")
+            
           }
         const curLocation = await Location.getCurrentPositionAsync({})
         setLocation([curLocation.coords.latitude,curLocation.coords.longitude]);
@@ -252,9 +251,8 @@ export default function FeedScreen(props){
                     <View style={styles.inputRowOverlay}>
                         <Text style={styles.labelText}>Description</Text>
                         <TextInput
-                        multiline={true}
                         style={styles.textInput}
-                        placeholder={"description"}
+                        placeholder={"Description"}
                         value={description}
                         onChangeText={(text)=>setDescription(text)}/>
                     </View>
@@ -263,7 +261,7 @@ export default function FeedScreen(props){
                         <TextInput
                         multiline={true}
                         style={styles.textInputTest}
-                        placeholder="description"
+                        placeholder="Recipe"
                         value={recipe}
                         onChangeText={(text)=>setRecipe(text)}/>
                     </View>
@@ -275,6 +273,11 @@ export default function FeedScreen(props){
                         onPress={()=>{
                             addPost(profile.image, [],recipe, title, profile.firstName, profile.lastName,postURL, description, rating, location, [], profile.email, [], new Date().toLocaleDateString(), profile.friends, Date.now())
                             setPost(false, placeholder)
+                            setTitle("")
+                            setDescription("")
+                            setRecipe("")
+                            setRating(1)
+                            setLocation([0,0])
                         }}
                         >
                            <MaterialIcons name="check-circle" size={75} color={textColor} />
@@ -318,14 +321,14 @@ export default function FeedScreen(props){
             <Overlay
                 overlayStyle={styles.overlay}
                 isVisible={showOverlay}
-                onBackdropPress={()=>setProfile(false, profileURL)}
+                onBackdropPress={()=>setProfile(false, profile.image)}
                 onPress={()=>Keyboard.dismiss()}>
                 <View style={styles.topRow}>
                     <TouchableOpacity
                     title={"Cancel"}
                     onPress={()=>{
                         setImage(profile.image)
-                        setProfile(false, profileURL)
+                        setProfile(false, profile.image)
                     }}>
                         <MaterialIcons name="cancel" size={45} color={heartColor} />
                     </TouchableOpacity>
@@ -352,7 +355,7 @@ export default function FeedScreen(props){
                         <View style={{flexDirection:"row",  justifyContent: "center", alignItems: "center"}}>
                             <Text style={styles.labelText}>Image</Text>
                             <TouchableOpacity  onPress={()=>{
-                                setProfile(false, profileURL)
+                                setProfile(false, profile.image)
                                 navigation.navigate("Camera", {prev: "profile"})}}>
                             <AntDesign name="camera" size={35} color={iconColor} />  
                             </TouchableOpacity>
@@ -362,7 +365,7 @@ export default function FeedScreen(props){
                         source={{uri: profile.image}}
                         />:<Image
                         style={styles.profilePreview}
-                        source={{uri: profileURL}}
+                        source={{uri: profile.image}}
                         />}
                     </View>
                     <View style={styles.submitRow}>
@@ -385,8 +388,8 @@ export default function FeedScreen(props){
 const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, heartColor) =>{
     const styles2 = {
         textInputTest:{
-            height: 30,
-            width: 100,
+           
+            width: "75%",
             borderWidth: 1
         },
         profilePreview:{
