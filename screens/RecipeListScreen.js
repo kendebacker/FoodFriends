@@ -20,7 +20,7 @@ export default function RecipeListScreen(props){
     
     const dispatch = useDispatch()
     const profile = useSelector(state => state.profile)
-    const saved = useSelector(state => state.saved)
+    const saved = useSelector(state => state.saved).sort((a,b)=>a.title.localeCompare(b.title))
 
     const updateProfile = (saved)=>{
         const action = {
@@ -138,7 +138,7 @@ export default function RecipeListScreen(props){
                 height: "100%",
                 width: "100%",
             },main:{
-                marginTop: 35
+                marginTop: 20
             },
         
             left:{

@@ -55,6 +55,7 @@ export default function PostScreen(props){
 
 
     const openMap= ()=>{
+        //https://stackoverflow.com/questions/43214062/open-maps-google-maps-in-react-native
         const url = Platform.select({
             ios: `maps:0,0?q=${item.title}@${item.location[0]},${item.location[1]}`,
             android: `geo:0,0?q=${item.location[0]},${item.location[1]}(${item.title})`

@@ -65,13 +65,9 @@ function TabNavigator(){
                     tabBarInactiveTintColor: useSelector(state => state.color).menuColor,
                     tabBarActiveBackgroundColor: useSelector(state => state.color).iconColor,
                     tabBarInactiveBackgroundColor:  useSelector(state => state.color).iconColor,
-                    tabBarStyle: [
-                      {
-                        "display": "flex"
-                      },
-                      null
-                    ]
                   }}>
+
+                {/*https://stackoverflow.com/questions/64296571/how-to-hide-a-specific-tab-bar-item-from-a-bottom-tab-bar-when-using-react-n*/}
                 <Tabs.Screen name="Login" component={MakeAccountScreen} options={{tabBarButton: () => null,tabBarStyle: {display: "none"}}}/>
 
                 <Tabs.Screen name="Camera" component={CameraScreen} options={{tabBarButton: () => null,tabBarStyle: {display: "none"}}}/>

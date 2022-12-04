@@ -26,7 +26,7 @@ const colors = {day:{
     iconColor: "#007cba",
     menuColor: "#01416e",
     heartColor: "#e6848d",
-    topMenu:"#00b2d6"
+    topMenu:"#FFFCF2"
 },night:{
     backgroundColor: "#007cba",
     postColor: "#01416e",

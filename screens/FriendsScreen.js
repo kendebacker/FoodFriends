@@ -20,7 +20,7 @@ export default function FriendsScreen(props){
     
     const dispatch = useDispatch()
     const profile = useSelector(state => state.profile)
-    const friends = useSelector(state => state.friends)
+    const friends = useSelector(state => state.friends).sort((a,b)=>a.lastName.localeCompare(b.lastName))
 
 
     const [email, setEmail] = useState("")
@@ -96,7 +96,7 @@ export default function FriendsScreen(props){
                                 <Text style={styles.standard}>{friend.firstName} {friend.lastName}</Text>
                             </View>
                         <TouchableOpacity style={styles.button} onPress={()=>{
-                            updateProfile(profile.friends.filter(el => el ===friend.email).length==0?[...profile.friends,friend.email]:profile.friends)
+                            updateProfile(profile.friends.filter(el => el ===friend.email).length==0?[friend.email,...profile.friends]:profile.friends)
                             setEmail("")
                             setFriend(null)
                             setShowOverlay(false)
@@ -212,7 +212,7 @@ const getStyles=(backgroundColor, postColor, textColor, iconColor, menuColor, he
             fontSize: 16
         },
         contactStuff:{
-            height: "83%",
+            height: "100%",
             width: "100%",
         },
         buttonRow:{
@@ -243,6 +243,8 @@ const getStyles=(backgroundColor, postColor, textColor, iconColor, menuColor, he
             width: "75%"
         },
         inputRow:{
+            bottom: 10,
+            position: "absolute",
             marginTop: 0,
             width: "100%",
             flexDirection: "row",
@@ -257,7 +259,7 @@ const getStyles=(backgroundColor, postColor, textColor, iconColor, menuColor, he
         },
         content:{
             flexDirection: "column",
-            marginTop: 35,
+            marginTop: 20,
             flex: 1
         }
     }

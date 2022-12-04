@@ -119,6 +119,7 @@ export default function FeedScreen(props){
 
 
     const updateColor = (status)=>{
+        setDayMode(status)
         dispatch({
             type: UPDATE_COLOR,
             payload: {
@@ -178,7 +179,7 @@ export default function FeedScreen(props){
                     ios_backgroundColor={backgroundColor}
                     onValueChange={()=>{
                         updateColor(!dayMode)
-                        setDayMode(!dayMode)}}
+                        }}
                     value={!dayMode}
                     />
                 </View>
@@ -365,7 +366,7 @@ export default function FeedScreen(props){
                         source={{uri: profile.image}}
                         />:<Image
                         style={styles.profilePreview}
-                        source={{uri: profile.image}}
+                        source={{uri: profileURL}}
                         />}
                     </View>
                     <View style={styles.submitRow}>
@@ -395,7 +396,9 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
         profilePreview:{
             width:100,
             aspectRatio: 1,
-            borderRadius: "50%"
+            borderRadius: "50%",
+            borderWidth: 3,
+            borderColor: iconColor
         },
         postPreview:{
             width: "50%",
@@ -450,14 +453,6 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
             paddingTop: 20,
             alignItems: "center"
         },
-        inputRow:{
-            flex:.2,
-            width: "100%",
-            padding: 20,
-            flexDirection: "col",
-            alignItems: "center",
-            backgroundColor: backgroundColor
-        },
         submitRow:{
             flexDirection: "row",
             justifyContent: "space-evenly",
@@ -501,18 +496,18 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
             width: "100%",
             flexDirection: "row",
             justifyContent: "space-between"
-        },inputRow:{
+        }
+        ,inputRow:{
             width: "100%",
             flexDirection: "row",
             justifyContent: "space-evenly",
-            paddingTop: 30,
+            paddingTop: 20,
             paddingBottom: 5,
-            backgroundColor: backgroundColor
         },
         feedContainer:{
             width: "100%",
             backgroundColor: backgroundColor,
-            height: "95%",
+            height: "100%",
         },
         post:{
             width: "90%",
@@ -531,7 +526,8 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
     
         content:{
             flexDirection: "column",
-            flex:1
+            flex:1,
+            backgroundColor: backgroundColor
         }
     }
     
