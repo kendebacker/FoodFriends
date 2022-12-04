@@ -20,7 +20,7 @@ export default function RecipeListScreen(props){
     
     const dispatch = useDispatch()
     const profile = useSelector(state => state.profile)
-    const saved = useSelector(state => state.saved).sort((a,b)=>a.title.localeCompare(b.title))
+    const saved = useSelector(state => state.saved).slice().sort((a,b)=>a.title.localeCompare(b.title))
 
     const updateProfile = (saved)=>{
         const action = {
@@ -181,19 +181,27 @@ export default function RecipeListScreen(props){
             },
             title:{
                 fontSize: 40,
-                color: textColor
+                color: textColor,
+                fontFamily: 'Helvetica Neue'
+
             },
             standard:{
-                color: textColor
+                color: textColor,
+                fontFamily: 'Helvetica Neue'
+
             },
             standard2:{
                 color: textColor,
-                fontSize: 20
+                fontSize: 20,
+                fontFamily: 'Helvetica Neue'
+
             },
             standard2Title:{
                 color: textColor,
                 fontSize: 20,
-                fontWeight: "bold"
+                fontWeight: "bold",
+                fontFamily: 'Helvetica Neue'
+
             },
             profile:{
                 alignItems: "center",

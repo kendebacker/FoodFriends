@@ -176,7 +176,9 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
         titleText:{
             color: textColor,
             fontSize: 26,
-            borderRadius: "50%"
+            borderRadius: "50%",
+            fontFamily: 'Helvetica Neue'
+
         },
         postButton:{
             color: backgroundColor,
@@ -192,14 +194,18 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
             borderRadius: 5
         },
         buttonText:{
-            color: postColor
+            color: postColor,
+            fontFamily: 'Helvetica Neue'
+
         },
         heartCounter:{
             color: heartColor,
             fontSize: 16
         },
         profText:{
-            color: textColor
+            color: textColor,
+            fontFamily: 'Helvetica Neue'
+
         },
         all:{
             flex:1
@@ -218,7 +224,9 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
             flex: .2,
         },
         labelText:{
-            fontSize: 20
+            fontSize: 20,
+            fontFamily: 'Helvetica Neue'
+
         },
         inputRowOverlay:{
             width: "100%",
@@ -268,7 +276,7 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
         width: "100%",
         flexDirection: "row",
         justifyContent: "center",
-        marginBottom: 5
+        marginBottom: 5,
       },
         postTopSub:{
             flexDirection: "row",

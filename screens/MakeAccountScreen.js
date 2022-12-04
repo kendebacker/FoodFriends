@@ -199,7 +199,9 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
             fontSize: 20
         },
         normalText:{
-            color: textColor
+            color: textColor,
+            fontFamily: 'Helvetica Neue'
+
         },
         switchOption:{
             flex: .33,
@@ -209,7 +211,9 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
         },
         labelRow:{
             flex: .1,
-            color: textColor
+            color: textColor,
+            fontFamily: 'Helvetica Neue'
+
         },
         loginContent:{
             marginTop: 20,
@@ -258,7 +262,9 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
         label:{
             alignText:"center",
             width: "40%",
-            color: textColor
+            color: textColor,
+            fontFamily: 'Helvetica Neue'
+
         },
         input:{
             alignText:"center",
@@ -266,13 +272,16 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
             width: "50%",
             height: 20,
             color: textColor,
-            borderColor: textColor
+            borderColor: textColor,
+            fontFamily: 'Helvetica Neue'
+
         },
         content:{
             flexDirection: "column",
             justifyContent: "start",
             alignItems: "center",
             backgroundColor: textColor,
+            fontFamily: 'Helvetica Neue',
             flex:1
         },
     }

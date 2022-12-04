@@ -140,7 +140,9 @@ export default function PostScreen(props){
             subtitle:{
                 fontSize: 25,
                 marginTop:10,
-                color: textColor
+                color: textColor,
+                fontFamily: 'Helvetica Neue'
+
             },
             thumb:{flexDirection: "row"},
             rating:{
@@ -180,7 +182,9 @@ export default function PostScreen(props){
           },
           title:{
             fontSize: 45,
-            color: textColor
+            color: textColor,
+            fontFamily: 'Helvetica Neue'
+
           },
             postTop:{
                 width: "100%",

@@ -114,7 +114,9 @@ export default function CameraScreen(props){
         const styles = {
             titleText:{
                 fontSize: 20,
-                color: textColor
+                color: textColor,
+                fontFamily: 'Helvetica Neue'
+
             },
             overlay:{
                 padding: 20,

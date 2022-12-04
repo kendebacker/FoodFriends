@@ -20,7 +20,7 @@ export default function FriendsScreen(props){
     
     const dispatch = useDispatch()
     const profile = useSelector(state => state.profile)
-    const friends = useSelector(state => state.friends).sort((a,b)=>a.lastName.localeCompare(b.lastName))
+    const friends = useSelector(state => state.friends).slice().sort((a,b)=>a.lastName.localeCompare(b.lastName))
 
 
     const [email, setEmail] = useState("")
@@ -156,11 +156,15 @@ const getStyles=(backgroundColor, postColor, textColor, iconColor, menuColor, he
             padding: 10,
         },
         standard:{
-            color: textColor
+            color: textColor,            
+            fontFamily: 'Helvetica Neue'
+
         },
         standard2:{
             color: textColor,
-            fontSize: 20
+            fontSize: 20,
+            fontFamily: 'Helvetica Neue'
+
         },
         profile:{
             alignItems: "center",
@@ -235,7 +239,9 @@ const getStyles=(backgroundColor, postColor, textColor, iconColor, menuColor, he
         inputLabel:{
             padding: 10, 
             color: textColor,
-            fontSize: 20
+            fontSize: 20,
+            fontFamily: 'Helvetica Neue'
+
         },
         emailInput:{
             borderWidth: 1,

@@ -81,6 +81,7 @@ export default function FeedScreen(props){
     const [recipe, setRecipe] = useState("")
     const [location, setLocation] = useState([0,0])
     const [dayMode, setDayMode] = useState(true)
+    const [inceptionOverlay, setInceptionOverlay] = useState(false)
 
 
     useEffect(()=>{
@@ -95,12 +96,12 @@ export default function FeedScreen(props){
 
 
     const getLocation=async()=>{
-        // https://stackoverflow.com/questions/43214062/open-maps-google-maps-in-react-native
+        setInceptionOverlay(true)
         let locationAllowed = await Location.requestForegroundPermissionsAsync().status
         if (locationAllowed !== 'granted') {
-            
           }
         const curLocation = await Location.getCurrentPositionAsync({})
+        setInceptionOverlay(false)
         setLocation([curLocation.coords.latitude,curLocation.coords.longitude]);
     }
 
@@ -200,6 +201,12 @@ export default function FeedScreen(props){
                 isVisible={makePostOverlay}
                 onBackdropPress={()=>setPost(false, postURL)}
                 onPress={()=>Keyboard.dismiss()}>
+                <Overlay
+                overlayStyle={styles.inceptionOverlay}
+                isVisible={inceptionOverlay}
+                onBackdropPress={()=>setInceptionOverlay(false)}>
+                    <Text style={styles.titleText}>Fetching Location...</Text>
+                </Overlay>
                 <View style={styles.topRow}>
                     <TouchableOpacity
                     title={"Cancel"}
@@ -305,7 +312,7 @@ export default function FeedScreen(props){
                         <MaterialIcons name="post-add" size={30} color={topMenu} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{   
-                        setProfile(true, profileURL)   
+                        setProfile(true, profile.image)   
                         }}>
                         <FontAwesome name="user" size={30} color={topMenu} />
                     </TouchableOpacity>
@@ -388,6 +395,17 @@ export default function FeedScreen(props){
 
 const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, heartColor) =>{
     const styles2 = {
+        titleText:{
+            fontSize: 20,
+            color: textColor,
+            fontFamily: 'Helvetica Neue'
+        },
+        inceptionOverlay:{
+            padding: 20,
+            width: "90%",
+            justifyContent: "center",
+            alignItems: "center"
+        },
         textInputTest:{
            
             width: "75%",
@@ -428,7 +446,7 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
             backgroundColor: postColor
         },
         all:{
-            flex:1
+            flex:1,
         },
         mainBody:{
             flex:7
@@ -445,7 +463,9 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
         },
         labelText:{
             fontSize: 20,
-            color: textColor
+            color: textColor,
+            fontFamily: 'Helvetica Neue'
+
         },
         inputRowOverlay:{
             width: "100%",
@@ -484,7 +504,9 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
         width: "100%",
         flexDirection: "row",
         justifyContent: "center",
-        color: textColor
+        color: textColor,
+        fontFamily: 'Helvetica Neue'
+
       },
         postTopSub:{
             flexDirection: "row",
