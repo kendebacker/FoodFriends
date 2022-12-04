@@ -45,7 +45,7 @@ const CreateAccountBox=({navigation, setSignIn})=>{
                 email:email,
                 firstName:"",
                 lastName:"",
-                image: "https://firebasestorage.googleapis.com/v0/b/ken-homework-5.appspot.com/o/Screen%20Shot%202022-11-29%20at%2010.12.42%20PM.png?alt=media&token=20deda07-8d92-4aac-b957-8f8883d9fc9e",
+                image: "https://firebasestorage.googleapis.com/v0/b/ken-homework-5.appspot.com/o/Screen%20Shot%202022-12-03%20at%207.09.23%20PM.png?alt=media&token=fc70b561-82a6-4261-9b8e-8abd24bcb552",
                 reposts: [], 
                 posts: [],
                 saved: [],
@@ -151,7 +151,7 @@ export default function MakeAccountScreen(props){
 
     const [signIn, setSignIn] = useState(true)
 
-    const logo = "https://firebasestorage.googleapis.com/v0/b/ken-homework-5.appspot.com/o/Triangle%201.png?alt=media&token=f1622f38-1a9d-4956-8b02-15e532124bf6"
+    const logo = "https://firebasestorage.googleapis.com/v0/b/ken-homework-5.appspot.com/o/Triangle%201.png?alt=media&token=36a8a298-4b59-4f53-9425-e187afa60b3b"
 
     return(
             <View onPress={()=>Keyboard.dismiss()} style={styles.content}>
