@@ -9,8 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { SaveAndDispatch, myDB } from "../Data";
 import { Entypo } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons'; 
-
-
+import { LogBox } from 'react-native';
+LogBox.ignoreAllLogs()
 
 export default function FriendsScreen(props){
     const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)

@@ -206,8 +206,9 @@ export default function PostScreen(props){
             post:{
                 width: "100%",
                 backgroundColor: postColor,
-                marginTop: "5%",
+                marginTop: 20,
                 padding: 10,
+                paddingTop:0,
                 borderRadius: 5,
                 flex: 1,
                 justifyContent: "start",

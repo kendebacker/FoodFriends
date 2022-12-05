@@ -101,6 +101,7 @@ export default function CameraScreen(props){
                             const imgUrl = await savePicture(action)
                             setTaken(false)
                             setShowOverlay(false)
+                            setCameraView(true)
                             route.params.prev ==="profile"?profileOverlay(imgUrl):postOverlay(imgUrl)
                             navigation.navigate("FeedScreen")
                             }}>

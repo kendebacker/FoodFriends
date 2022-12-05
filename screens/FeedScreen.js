@@ -191,6 +191,7 @@ export default function FeedScreen(props){
                       onPress={async ()=>{
                             setShowSettings(false)
                             await signOut(getAuth())
+                            updateColor(true)
                             navigation.navigate("Login")}}>
                             <AntDesign name="logout" size={35} color={iconColor} />
                     </TouchableOpacity>
