@@ -1,7 +1,7 @@
 import { TouchableOpacity, Text, View, FlatList, Image } from "react-native";
-import {UPDATE_PROFILE } from "../Reducer";
+import {UPDATE_PROFILE } from "../Data/Reducer";
 import { useDispatch, useSelector } from "react-redux";
-import { SaveAndDispatch } from "../Data";
+import { SaveAndDispatch } from "../Data/Data";
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
 

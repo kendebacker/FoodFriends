@@ -3,8 +3,8 @@ import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWith
 import { useState , useEffect} from "react"
 import {TextInput, TouchableOpacity, Text, View, Image, Keyboard } from "react-native";
 import {firebaseConfig} from "../Secrets"
-import { ADD_PROFILE, LOAD_PROFILE } from "../Reducer";
-import { SaveAndDispatch } from "../Data";
+import { ADD_PROFILE, LOAD_PROFILE } from "../Data/Reducer";
+import { SaveAndDispatch } from "../Data/Data";
 import { useDispatch, useSelector } from "react-redux";
 
 let app

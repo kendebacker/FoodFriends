@@ -1,16 +1,9 @@
-import {getApps, initializeApp} from "firebase/app"
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
-import { useEffect, useState } from "react"
-import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Platform, Linking, ScrollView , Switch} from "react-native";
-import { Overlay , Input, Button} from "@rneui/themed";
-import { ADD_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
+import { useState } from "react"
+import {TextInput, TouchableOpacity, Text, View, FlatList, Image, ScrollView } from "react-native";
+import {  UPDATE_POST } from "../Data/Reducer";
 import { useDispatch, useSelector } from "react-redux";
-import { SaveAndDispatch } from "../Data";
-import { FontAwesome } from '@expo/vector-icons';
-import * as Location from 'expo-location';
+import { SaveAndDispatch } from "../Data/Data";
 import { AntDesign } from '@expo/vector-icons'; 
-import { Entypo } from '@expo/vector-icons'; 
-import { MaterialIcons } from '@expo/vector-icons'; 
 
 
 export const Post = (props)=>{
@@ -22,7 +15,6 @@ export const Post = (props)=>{
 
     const [showComments, setShowComments] = useState(false)
     const [comment, setComment] = useState("")
-
 
     const dispatch = useDispatch()
 
@@ -216,7 +208,7 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
         commentLine:{
             flexDirection: "column"
         },
-    
+
         commentsList:{
             width: "100%",
             backgroundColor:"purple",
@@ -252,32 +244,32 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
             width: "100%",
             justifyContent: "center"
         },
-    middleContent:{
-        flex:.5,
-        justifyContent: "center",
-        width: "100%",
-        flexDirection: "row"
-    },
-    profImg:{
-        width: 50,
-        height: 50,
-        marginRight: 5,
-        borderRadius: "50%",
-        borderColor: iconColor,
-        borderWidth: 3,
-    
-    },
-    logo: {
-        width: "75%",
-        aspectRatio: 1,
-        borderRadius: 5
-      },
-      postTitle:{
-        width: "100%",
-        flexDirection: "row",
-        justifyContent: "center",
-        marginBottom: 5,
-      },
+        middleContent:{
+            flex:.5,
+            justifyContent: "center",
+            width: "100%",
+            flexDirection: "row"
+        },
+        profImg:{
+            width: 50,
+            height: 50,
+            marginRight: 5,
+            borderRadius: "50%",
+            borderColor: iconColor,
+            borderWidth: 3,
+        
+        },
+        logo: {
+            width: "75%",
+            aspectRatio: 1,
+            borderRadius: 5
+        },
+        postTitle:{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "center",
+            marginBottom: 5,
+        },
         postTopSub:{
             flexDirection: "row",
             justifyContent: "start",

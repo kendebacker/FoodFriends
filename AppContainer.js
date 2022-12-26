@@ -1,6 +1,6 @@
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
-import {rootReducer} from "./Reducer"
+import {rootReducer} from "./Data/Reducer"
 import {TabNavigator} from './TabNavigator.js';
 
 const store = configureStore({

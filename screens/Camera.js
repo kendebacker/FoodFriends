@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import { TouchableOpacity, Text, View,  } from "react-native";
 import { Overlay } from "@rneui/themed";
-import { SAVE_PICTURE,  PROFILE_OVERLAY, POST_OVERLAY } from "../Reducer";
+import { SAVE_PICTURE,  PROFILE_OVERLAY, POST_OVERLAY } from "../Data/Reducer";
 import { useDispatch, useSelector } from "react-redux";
-import { savePicture } from "../Data"
+import { savePicture } from "../Data/Data"
 import { Camera, CameraType } from "expo-camera";
 import { AntDesign } from '@expo/vector-icons'; 
 import { Ionicons } from '@expo/vector-icons'; 

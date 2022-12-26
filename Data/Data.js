@@ -2,7 +2,7 @@ import { ADD_PROFILE,LOAD_PROFILE, LOAD_POST, ADD_POST, DELETE_PROFILE, DELETE_P
 import {getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage"
 import { initializeApp, getApps } from "firebase/app"
 import { setDoc, getFirestore, collection, getDocs, doc, getDoc, updateDoc, deleteDoc, query, where, orderBy } from "firebase/firestore"
-import { firebaseConfig } from "./Secrets"
+import { firebaseConfig } from "../Secrets"
 import { getAuth } from "firebase/auth"
 
 const [profile, post] = ["profiles", "posts"]

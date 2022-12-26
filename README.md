@@ -1,0 +1,1 @@
+This is FoodFriends, a social media application for sharing food.

@@ -2,9 +2,9 @@ import {signOut, getAuth} from 'firebase/auth'
 import { useEffect, useState } from "react"
 import {TextInput, TouchableOpacity, Text, View, FlatList, Image, ScrollView , Switch, Keyboard} from "react-native";
 import { Overlay } from "@rneui/themed";
-import { ADD_POST, LOAD_POST, UPDATE_PROFILE, UPDATE_COLOR, PROFILE_OVERLAY, POST_OVERLAY } from "../Reducer";
+import { ADD_POST, LOAD_POST, UPDATE_PROFILE, UPDATE_COLOR, PROFILE_OVERLAY, POST_OVERLAY } from "../Data/Reducer";
 import { useDispatch, useSelector } from "react-redux";
-import { SaveAndDispatch } from "../Data";
+import { SaveAndDispatch } from "../Data/Data";
 import { FontAwesome } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 import { AntDesign } from '@expo/vector-icons'; 

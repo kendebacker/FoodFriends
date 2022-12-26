@@ -1,7 +1,7 @@
 import {TouchableOpacity, Text, View, Image, Linking, Platform, ScrollView } from "react-native";
-import { UPDATE_PROFILE } from "../Reducer";
+import { UPDATE_PROFILE } from "../Data/Reducer";
 import { useDispatch, useSelector } from "react-redux";
-import { SaveAndDispatch } from "../Data";
+import { SaveAndDispatch } from "../Data/Data";
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 import { FontAwesome5 } from '@expo/vector-icons'; 

@@ -2,9 +2,9 @@ import { collection, getDocs, query, where } from "firebase/firestore"
 import { useState } from "react"
 import {TextInput, TouchableOpacity, Text, View, FlatList, Alert, Image } from "react-native";
 import { Overlay} from "@rneui/themed";
-import {UPDATE_PROFILE } from "../Reducer";
+import {UPDATE_PROFILE } from "../Data/Reducer";
 import { useDispatch, useSelector } from "react-redux";
-import { SaveAndDispatch, myDB } from "../Data";
+import { SaveAndDispatch, myDB } from "../Data/Data";
 import { Entypo } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { LogBox } from 'react-native';
