@@ -1,13 +1,11 @@
 import {getApps, initializeApp} from "firebase/app"
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth'
 import { useState , useEffect} from "react"
-import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Keyboard } from "react-native";
-import {  Button} from "@rneui/themed";
+import {TextInput, TouchableOpacity, Text, View, Image, Keyboard } from "react-native";
 import {firebaseConfig} from "../Secrets"
-import { ADD_PROFILE, LOAD_PROFILE, LOAD_POST } from "../Reducer";
+import { ADD_PROFILE, LOAD_PROFILE } from "../Reducer";
 import { SaveAndDispatch } from "../Data";
 import { useDispatch, useSelector } from "react-redux";
-
 
 let app
 const apps = getApps()
@@ -17,7 +15,6 @@ if (apps.length == 0) {
     app = apps[0];
   }
 const auth = getAuth(app)
-
 
 const CreateAccountBox=({navigation, setSignIn})=>{
     const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
@@ -36,7 +33,6 @@ const CreateAccountBox=({navigation, setSignIn})=>{
     }
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [checkPassword, setCheckPassword] = useState("")
 
     const addProfile = (email)=>{
         const action = {
@@ -55,7 +51,6 @@ const CreateAccountBox=({navigation, setSignIn})=>{
         }
         SaveAndDispatch(action, dispatch)
     }
-
 
     return(
         <View>
@@ -91,6 +86,7 @@ const CreateAccountBox=({navigation, setSignIn})=>{
 }
 
 const LoginBox=({navigation})=>{
+
     const dispatch = useDispatch()
     const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
     const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
@@ -124,7 +120,6 @@ const LoginBox=({navigation})=>{
                 }}>
                     <Text style={styles.buttonText}>Login</Text> 
                 </TouchableOpacity>
-        
             </View>
         </View>
     )
@@ -136,9 +131,7 @@ export default function MakeAccountScreen(props){
 
     const {navigation, route} = props
 
-
     const dispatch = useDispatch()
-
 
     useEffect(()=>{ onAuthStateChanged(auth, user=>{
         if(user){
@@ -177,10 +170,7 @@ export default function MakeAccountScreen(props){
             </View>
     )}
 
-
-
 const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, heartColor) =>{
-
     const styles = {
         logo:{
             height: "70%",

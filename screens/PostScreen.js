@@ -1,17 +1,11 @@
-import {getApps, initializeApp} from "firebase/app"
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
-import { useState } from "react"
-import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Linking, Platform, ScrollView } from "react-native";
-import { Overlay , Input, Button} from "@rneui/themed";
-import { ADD_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
+import { TouchableOpacity, Text, View, Image, Linking, Platform, ScrollView } from "react-native";
+import { UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { SaveAndDispatch } from "../Data";
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-
-
 
 const StarRating = ({rating})=>{
     const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
@@ -53,7 +47,6 @@ export default function PostScreen(props){
         SaveAndDispatch(action, dispatch)
     }
 
-
     const openMap= ()=>{
         //https://stackoverflow.com/questions/43214062/open-maps-google-maps-in-react-native
         const url = Platform.select({
@@ -62,7 +55,6 @@ export default function PostScreen(props){
           });
           Linking.openURL(url);
     }
-
 
     return(
         <View style={styles.post}>
@@ -151,29 +143,29 @@ export default function PostScreen(props){
                 justifyContent: "center",
                 marginTop: 10
             },
-        middleContent:{
-            justifyContent: "center",
-            width: "100%",
-            flexDirection: "column",
-            alignItems: "center",
-            flex: .2,
-            marginTop: 10,
-            alignItems: "center"
-        },middleContentText:{
-            justifyContent: "center",
-            width: "90%",
-            flexDirection: "column",
-            alignItems: "center",
-            flex: .2,
-            marginTop: 10,
-            alignItems: "center",
-            marginLeft: "5%"
-        },
-        logo: {
-            width: "75%",
-            aspectRatio: 1,
-            borderRadius: 5
-          },
+            middleContent:{
+                justifyContent: "center",
+                width: "100%",
+                flexDirection: "column",
+                alignItems: "center",
+                flex: .2,
+                marginTop: 10,
+                alignItems: "center"
+            },middleContentText:{
+                justifyContent: "center",
+                width: "90%",
+                flexDirection: "column",
+                alignItems: "center",
+                flex: .2,
+                marginTop: 10,
+                alignItems: "center",
+                marginLeft: "5%"
+            },
+            logo: {
+                width: "75%",
+                aspectRatio: 1,
+                borderRadius: 5
+            },
           postTitle:{
             flex: .15,
             width: "100%",

@@ -1,12 +1,9 @@
 import { ADD_PROFILE,LOAD_PROFILE, LOAD_POST, ADD_POST, DELETE_PROFILE, DELETE_POST, UPDATE_PROFILE, UPDATE_POST ,SEARCH_PROFILE, SAVE_PICTURE} from "./Reducer"
 import {getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage"
 import { initializeApp, getApps } from "firebase/app"
-import { setDoc, getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy } from "firebase/firestore"
+import { setDoc, getFirestore, collection, getDocs, doc, getDoc, updateDoc, deleteDoc, query, where, orderBy } from "firebase/firestore"
 import { firebaseConfig } from "./Secrets"
 import { getAuth } from "firebase/auth"
-
-
-
 
 const [profile, post] = ["profiles", "posts"]
 
@@ -68,7 +65,6 @@ export const savePicture=async (action)=>{
     }
 }
 
-
 const addProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
     const {email, firstName, lastName, image, reposts, posts, saved, friends}= payload
@@ -85,7 +81,6 @@ const addProfileAndDispatch = async (action, dispatch) =>{
     })
     loadProfileAndDispatch(action, dispatch)
 }
-
 
 const updateProfileAndDispatch = async (action, dispatch) =>{
     const {payload} = action
@@ -116,7 +111,6 @@ const updateProfileAndDispatch = async (action, dispatch) =>{
     }
     loadProfileAndDispatch(action, dispatch)
 }
-
 
 const loadProfileAndDispatch = async (action, dispatch) =>{
     const userData = await getDoc(doc(db, profile, getCred().currentUser.uid))
@@ -167,7 +161,6 @@ const addPostAndDispatch = async (action, dispatch) =>{
     })
     loadPostAndDispatch(action, dispatch)
 }
-
 
 const updatePostAndDispatch = async (action, dispatch) =>{
     const {payload} = action
@@ -223,7 +216,6 @@ const loadPostAndDispatch = async (action, dispatch) =>{
     dispatch(newAction)
 }
 
-
 export const SaveAndDispatch =async(action, dispatch)=>{
     const {type} = action
     switch(type){
@@ -255,5 +247,4 @@ export const SaveAndDispatch =async(action, dispatch)=>{
             savePictureAndDispatch(action, dispatch)
             return 
     }
-
 }

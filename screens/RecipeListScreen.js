@@ -1,15 +1,9 @@
-import {getApps, initializeApp} from "firebase/app"
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
-import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy } from "firebase/firestore"
-import { useState } from "react"
-import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image } from "react-native";
-import { Overlay , Input, Button} from "@rneui/themed";
-import {SEARCH_PROFILE, DELETE_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
+import { TouchableOpacity, Text, View, FlatList, Image } from "react-native";
+import {UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
-import { SaveAndDispatch, SearchProfileData } from "../Data";
+import { SaveAndDispatch } from "../Data";
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
-
 
 export default function RecipeListScreen(props){
 
@@ -32,7 +26,6 @@ export default function RecipeListScreen(props){
         }
         SaveAndDispatch(action, dispatch)
     }
-
 
     return(
             <View style={styles.content}>
