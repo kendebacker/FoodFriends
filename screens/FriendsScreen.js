@@ -1,10 +1,8 @@
-import {getApps, initializeApp} from "firebase/app"
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
-import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy } from "firebase/firestore"
+import { collection, getDocs, query, where } from "firebase/firestore"
 import { useState } from "react"
-import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image } from "react-native";
-import { Overlay , Input, Button} from "@rneui/themed";
-import {SEARCH_PROFILE, DELETE_PROFILE, LOAD_POST, UPDATE_POST, UPDATE_PROFILE } from "../Reducer";
+import {TextInput, TouchableOpacity, Text, View, FlatList, Alert, Image } from "react-native";
+import { Overlay} from "@rneui/themed";
+import {UPDATE_PROFILE } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { SaveAndDispatch, myDB } from "../Data";
 import { Entypo } from '@expo/vector-icons'; 
@@ -22,7 +20,6 @@ export default function FriendsScreen(props){
     const profile = useSelector(state => state.profile)
     const friends = useSelector(state => state.friends).slice().sort((a,b)=>a.lastName.localeCompare(b.lastName))
 
-
     const [email, setEmail] = useState("")
     const [showOverlay, setShowOverlay] = useState(false)
     const [friend, setFriend] = useState(null)
@@ -35,7 +32,6 @@ export default function FriendsScreen(props){
         setFriend(items.length ===0?0:items[0])
     }
 
-
     const updateProfile = (friends)=>{
         const action = {
             type: UPDATE_PROFILE,
@@ -46,7 +42,6 @@ export default function FriendsScreen(props){
         }
         SaveAndDispatch(action, dispatch)
     }
-
 
     return(
         <View style={styles.allContent} onPress={()=>Keyboard.dismiss()}>

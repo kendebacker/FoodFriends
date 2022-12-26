@@ -1,9 +1,8 @@
-import {getApps, initializeApp} from "firebase/app"
-import {signOut, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import {signOut, getAuth} from 'firebase/auth'
 import { useEffect, useState } from "react"
-import {TextInput, StyleSheet, TouchableOpacity, Text, View, FlatList, Alert, Image, Platform, Linking, ScrollView , Switch, Keyboard} from "react-native";
-import { Overlay , Input, Button} from "@rneui/themed";
-import { ADD_POST, LOAD_POST, UPDATE_POST, UPDATE_PROFILE, UPDATE_COLOR, PROFILE_OVERLAY, POST_OVERLAY } from "../Reducer";
+import {TextInput, TouchableOpacity, Text, View, FlatList, Image, ScrollView , Switch, Keyboard} from "react-native";
+import { Overlay } from "@rneui/themed";
+import { ADD_POST, LOAD_POST, UPDATE_PROFILE, UPDATE_COLOR, PROFILE_OVERLAY, POST_OVERLAY } from "../Reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { SaveAndDispatch } from "../Data";
 import { FontAwesome } from '@expo/vector-icons';
@@ -12,7 +11,6 @@ import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { Post } from "../components/Post";
-
 
 const StarRating = ({rating, setRating})=>{
     let start = [0,0,0,0,0]
@@ -31,10 +29,8 @@ const StarRating = ({rating, setRating})=>{
     )
 }
 
-
 export default function FeedScreen(props){
 
-    
     const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor,topMenu} = useSelector(state => state.color)
     const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
     const {navigation, route} = props
@@ -43,7 +39,6 @@ export default function FeedScreen(props){
     const profileURL = useSelector(state => state.profileURL)
     const makePostOverlay = useSelector(state => state.setPost)
     const showOverlay = useSelector(state => state.setProfile)
-
 
     const placeholder = "https://firebasestorage.googleapis.com/v0/b/ken-homework-5.appspot.com/o/Screen%20Shot%202022-12-03%20at%207.09.23%20PM.png?alt=media&token=fc70b561-82a6-4261-9b8e-8abd24bcb552"
 
@@ -67,7 +62,6 @@ export default function FeedScreen(props){
         })
     }
 
-
     const dispatch = useDispatch()
     const posts = useSelector(state => state.posts)
     const profile = useSelector(state => state.profile)
@@ -83,7 +77,6 @@ export default function FeedScreen(props){
     const [dayMode, setDayMode] = useState(true)
     const [inceptionOverlay, setInceptionOverlay] = useState(false)
 
-
     useEffect(()=>{
         setPost(makePostOverlay, postURL)
         setProfile(showOverlay, profileURL)
@@ -91,9 +84,6 @@ export default function FeedScreen(props){
         setLastName(profile.lastName)
         setFirstName(profile.firstName)
     }, [profile.lastName])
-
-
-
 
     const getLocation=async()=>{
         setInceptionOverlay(true)
@@ -117,7 +107,6 @@ export default function FeedScreen(props){
         }
         SaveAndDispatch(action, dispatch)
     }
-
 
     const updateColor = (status)=>{
         setDayMode(status)
@@ -153,8 +142,6 @@ export default function FeedScreen(props){
         }
         SaveAndDispatch(action, dispatch)
     }
-
-
 
     return(
         <View style={styles.all} onPress={()=>Keyboard.dismiss()}>
@@ -327,6 +314,7 @@ export default function FeedScreen(props){
                     <Post userPost={item} navigation={navigation} profile={profile}/>
                 )}}/>
                 </View>
+
             <Overlay
                 overlayStyle={styles.overlay}
                 isVisible={showOverlay}
@@ -479,36 +467,38 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
             justifyContent: "space-evenly",
             padding: 0
         },
-        thumb:{flexDirection: "row"},
+        thumb:{
+            flexDirection: "row"
+        },
         rating:{
             flexDirection: "row",
             width: "100%",
             justifyContent: "center"
         },
-    middleContent:{
-        flex:.5,
-        justifyContent: "center",
-        width: "100%",
-        flexDirection: "row"
-    },
-    profImg:{
-        width: 50,
-        height: 50,
-        marginRight: 5,
-        borderRadius: "50%"
-    },
-    logo: {
-        width: 100,
-        height: 100,
-      },
-      postTitle:{
-        width: "100%",
-        flexDirection: "row",
-        justifyContent: "center",
-        color: textColor,
-        fontFamily: 'Helvetica Neue'
+        middleContent:{
+            flex:.5,
+            justifyContent: "center",
+            width: "100%",
+            flexDirection: "row"
+        },
+        profImg:{
+            width: 50,
+            height: 50,
+            marginRight: 5,
+            borderRadius: "50%"
+        },
+        logo: {
+            width: 100,
+            height: 100,
+        },
+        postTitle:{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "center",
+            color: textColor,
+            fontFamily: 'Helvetica Neue'
 
-      },
+        },
         postTopSub:{
             flexDirection: "row",
             justifyContent: "start",
@@ -553,6 +543,5 @@ const getStyles = (backgroundColor, postColor, textColor, iconColor, menuColor, 
             backgroundColor: backgroundColor
         }
     }
-    
     return(styles2)
 }    

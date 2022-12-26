@@ -49,7 +49,6 @@ const initialState = {
     profileURL:"https://firebasestorage.googleapis.com/v0/b/ken-homework-5.appspot.com/o/Screen%20Shot%202022-12-03%20at%207.09.23%20PM.png?alt=media&token=fc70b561-82a6-4261-9b8e-8abd24bcb552"
   }
 
-
 const updateColor = (state, status) =>{
     return {
         ...state,
@@ -80,7 +79,6 @@ const loadPost = (state, newPosts) =>{
     }
 }
 
-
 const loadProfile = (state, profile, posts, friends, saved) =>{
     return {
     ...state,
@@ -89,7 +87,6 @@ const loadProfile = (state, profile, posts, friends, saved) =>{
     friends: friends,
     saved: saved
 }}
-
 
 const rootReducer =(state=initialState, action)=>{
     switch (action.type){
@@ -113,8 +110,5 @@ const rootReducer =(state=initialState, action)=>{
             return state
     }
 }
-
-
-
 
 export {rootReducer, LOAD_PROFILE, LOAD_POST, UPDATE_PROFILE, UPDATE_POST, ADD_PROFILE, ADD_POST, DELETE_PROFILE, DELETE_POST, UPDATE_SORT, SEARCH_PROFILE, SAVE_PICTURE, UPDATE_COLOR, PROFILE_OVERLAY, POST_OVERLAY}
