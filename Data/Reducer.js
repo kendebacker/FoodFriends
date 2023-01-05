@@ -18,7 +18,6 @@ const intitialProfile = [{firstName:"",lastName:"", password: "mypassword",image
 const initialFriends = []
 const initialSaved = []
 
-// sky  = #00b2d6
 const colors = {day:{
     backgroundColor: "#01416e",
     postColor: "#FFFCF2",
