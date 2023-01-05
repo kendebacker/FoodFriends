@@ -11,3 +11,4 @@ This is FoodFriends, a social media application for sharing food. The app is bui
 9. Ability to Customize Profile Appearance 
 10. Light Mode/ Dark Mode 
 
+Check out the [demo video on YouTube](https://www.youtube.com/watch?v=CFA_TfF0b5k).
