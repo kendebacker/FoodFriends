@@ -8,10 +8,9 @@ import { Camera, CameraType } from "expo-camera";
 import { AntDesign } from '@expo/vector-icons'; 
 import { Ionicons } from '@expo/vector-icons'; 
 
-
-
 export default function CameraScreen(props){
 
+    let theCamera = undefined
     const {navigation, route} = props
     const {backgroundColor, postColor, textColor, iconColor, menuColor, heartColor} = useSelector(state => state.color)
     const styles = getStyles(backgroundColor, postColor, textColor, iconColor, menuColor, heartColor)
@@ -23,6 +22,10 @@ export default function CameraScreen(props){
     const [cameraView, setCameraView] = useState(true)
     const [taken, setTaken] = useState(false)
     const [showOverlay, setShowOverlay] = useState(false)
+
+    useEffect( ()=>{
+        getPermission()
+    },[])
 
     const getPermission = async ()=>{
         const {status} = await Camera.requestCameraPermissionsAsync()
@@ -49,11 +52,6 @@ export default function CameraScreen(props){
         })
     }
 
-    useEffect( ()=>{
-        getPermission()
-    },[])
-
-    let theCamera = undefined;
     return(
         <View style={styles.content}>
             <Overlay
