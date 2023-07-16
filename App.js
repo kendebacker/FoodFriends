@@ -1,7 +1,5 @@
-import KensApp from "./AppContainer"
+import KensApp from "./AppContainer";
 
 export default function App() {
-  return (
-    <KensApp/>
-  );
+  return <KensApp />;
 }
